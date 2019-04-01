@@ -444,128 +444,145 @@
                                     444 ;previous                  Allocated with name '_main_previous_65537_7'
                                     445 ;key                       Allocated to registers r2 r3 
                                     446 ;i                         Allocated to registers r4 r5 
-                                    447 ;------------------------------------------------------------
-                                    448 ;	Lab3-main.c:20: int main() {
-                                    449 ;	-----------------------------------------
-                                    450 ;	 function main
-                                    451 ;	-----------------------------------------
-      0000FF                        452 _main:
-                                    453 ;	Lab3-main.c:22: P2=0b11111110;
-      0000FF 75 A0 FE         [24]  454 	mov	_P2,#0xfe
-                                    455 ;	Lab3-main.c:23: short count = 1;
-      000102 75 1A 01         [24]  456 	mov	_main_count_65537_7,#0x01
-      000105 75 1B 00         [24]  457 	mov	(_main_count_65537_7 + 1),#0x00
-                                    458 ;	Lab3-main.c:26: short previous = -1;
-      000108 75 1C FF         [24]  459 	mov	_main_previous_65537_7,#0xff
-      00010B 75 1D FF         [24]  460 	mov	(_main_previous_65537_7 + 1),#0xff
-                                    461 ;	Lab3-main.c:30: while (1) {
-      00010E                        462 00108$:
-                                    463 ;	Lab3-main.c:32: P2    =count^0b11111111;
-      00010E 74 FF            [12]  464 	mov	a,#0xff
-      000110 65 1A            [12]  465 	xrl	a,_main_count_65537_7
-      000112 FA               [12]  466 	mov	r2,a
-      000113 8A A0            [24]  467 	mov	_P2,r2
-                                    468 ;	Lab3-main.c:33: count *=2;
-      000115 E5 1A            [12]  469 	mov	a,_main_count_65537_7
-      000117 25 1A            [12]  470 	add	a,_main_count_65537_7
-      000119 F5 1A            [12]  471 	mov	_main_count_65537_7,a
-      00011B E5 1B            [12]  472 	mov	a,(_main_count_65537_7 + 1)
-      00011D 33               [12]  473 	rlc	a
-      00011E F5 1B            [12]  474 	mov	(_main_count_65537_7 + 1),a
-                                    475 ;	Lab3-main.c:35: short key = keyPressed();
-      000120 12 00 97         [24]  476 	lcall	_keyPressed
-      000123 AA 82            [24]  477 	mov	r2,dpl
-      000125 AB 83            [24]  478 	mov	r3,dph
-                                    479 ;	Lab3-main.c:36: if (key != -1 && key != previous) {
-      000127 BA FF 05         [24]  480 	cjne	r2,#0xff,00139$
-      00012A BB FF 02         [24]  481 	cjne	r3,#0xff,00139$
-      00012D 80 2A            [24]  482 	sjmp	00102$
-      00012F                        483 00139$:
-      00012F EA               [12]  484 	mov	a,r2
-      000130 B5 1C 06         [24]  485 	cjne	a,_main_previous_65537_7,00140$
-      000133 EB               [12]  486 	mov	a,r3
-      000134 B5 1D 02         [24]  487 	cjne	a,(_main_previous_65537_7 + 1),00140$
-      000137 80 20            [24]  488 	sjmp	00102$
-      000139                        489 00140$:
-                                    490 ;	Lab3-main.c:38: previous = key;
-      000139 8A 1C            [24]  491 	mov	_main_previous_65537_7,r2
-      00013B 8B 1D            [24]  492 	mov	(_main_previous_65537_7 + 1),r3
-                                    493 ;	Lab3-main.c:40: num[0] =num[1];
-      00013D AC 12            [24]  494 	mov	r4,((_num + 0x0002) + 0)
-      00013F AD 13            [24]  495 	mov	r5,((_num + 0x0002) + 1)
-      000141 8C 10            [24]  496 	mov	(_num + 0),r4
-      000143 8D 11            [24]  497 	mov	(_num + 1),r5
-                                    498 ;	Lab3-main.c:41: num[1] =num[2];
-      000145 AC 14            [24]  499 	mov	r4,((_num + 0x0004) + 0)
-      000147 AD 15            [24]  500 	mov	r5,((_num + 0x0004) + 1)
-      000149 8C 12            [24]  501 	mov	((_num + 0x0002) + 0),r4
-      00014B 8D 13            [24]  502 	mov	((_num + 0x0002) + 1),r5
-                                    503 ;	Lab3-main.c:42: num[2] =num[3];			
-      00014D AC 16            [24]  504 	mov	r4,((_num + 0x0006) + 0)
-      00014F AD 17            [24]  505 	mov	r5,((_num + 0x0006) + 1)
-      000151 8C 14            [24]  506 	mov	((_num + 0x0004) + 0),r4
-      000153 8D 15            [24]  507 	mov	((_num + 0x0004) + 1),r5
-                                    508 ;	Lab3-main.c:43: num[3] = key;
-      000155 8A 16            [24]  509 	mov	((_num + 0x0006) + 0),r2
-      000157 8B 17            [24]  510 	mov	((_num + 0x0006) + 1),r3
-      000159                        511 00102$:
-                                    512 ;	Lab3-main.c:47: row++;
-      000159 05 18            [12]  513 	inc	_row
-      00015B E4               [12]  514 	clr	a
-      00015C B5 18 02         [24]  515 	cjne	a,_row,00141$
-      00015F 05 19            [12]  516 	inc	(_row + 1)
-      000161                        517 00141$:
-                                    518 ;	Lab3-main.c:48: if (count == 0x10) {
-      000161 74 10            [12]  519 	mov	a,#0x10
-      000163 B5 1A 06         [24]  520 	cjne	a,_main_count_65537_7,00142$
-      000166 E4               [12]  521 	clr	a
-      000167 B5 1B 02         [24]  522 	cjne	a,(_main_count_65537_7 + 1),00142$
-      00016A 80 02            [24]  523 	sjmp	00143$
-      00016C                        524 00142$:
-      00016C 80 0A            [24]  525 	sjmp	00120$
-      00016E                        526 00143$:
-                                    527 ;	Lab3-main.c:49: count = 1;
-      00016E 75 1A 01         [24]  528 	mov	_main_count_65537_7,#0x01
-                                    529 ;	Lab3-main.c:50: row   = 0;
-      000171 E4               [12]  530 	clr	a
-      000172 F5 1B            [12]  531 	mov	(_main_count_65537_7 + 1),a
-      000174 F5 18            [12]  532 	mov	_row,a
-      000176 F5 19            [12]  533 	mov	(_row + 1),a
-                                    534 ;	Lab3-main.c:53: for(short i = 0; i < 4; i++)
-      000178                        535 00120$:
-      000178 7C 00            [12]  536 	mov	r4,#0x00
-      00017A 7D 00            [12]  537 	mov	r5,#0x00
-      00017C                        538 00111$:
-      00017C C3               [12]  539 	clr	c
-      00017D EC               [12]  540 	mov	a,r4
-      00017E 94 04            [12]  541 	subb	a,#0x04
-      000180 ED               [12]  542 	mov	a,r5
-      000181 64 80            [12]  543 	xrl	a,#0x80
-      000183 94 80            [12]  544 	subb	a,#0x80
-      000185 50 87            [24]  545 	jnc	00108$
-                                    546 ;	Lab3-main.c:54: P1  = table[i] + num[i];
-      000187 EC               [12]  547 	mov	a,r4
-      000188 2C               [12]  548 	add	a,r4
-      000189 FA               [12]  549 	mov	r2,a
-      00018A ED               [12]  550 	mov	a,r5
-      00018B 33               [12]  551 	rlc	a
-      00018C EA               [12]  552 	mov	a,r2
-      00018D 24 08            [12]  553 	add	a,#_table
-      00018F F9               [12]  554 	mov	r1,a
-      000190 87 07            [24]  555 	mov	ar7,@r1
-      000192 EA               [12]  556 	mov	a,r2
-      000193 24 10            [12]  557 	add	a,#_num
-      000195 F9               [12]  558 	mov	r1,a
-      000196 E7               [12]  559 	mov	a,@r1
-      000197 2F               [12]  560 	add	a,r7
-      000198 F5 90            [12]  561 	mov	_P1,a
-                                    562 ;	Lab3-main.c:53: for(short i = 0; i < 4; i++)
-      00019A 0C               [12]  563 	inc	r4
-      00019B BC 00 DE         [24]  564 	cjne	r4,#0x00,00111$
-      00019E 0D               [12]  565 	inc	r5
-                                    566 ;	Lab3-main.c:57: }
-      00019F 80 DB            [24]  567 	sjmp	00111$
-                                    568 	.area CSEG    (CODE)
-                                    569 	.area CONST   (CODE)
-                                    570 	.area XINIT   (CODE)
-                                    571 	.area CABS    (ABS,CODE)
+                                    447 ;j                         Allocated to registers r6 r7 
+                                    448 ;------------------------------------------------------------
+                                    449 ;	Lab3-main.c:20: int main() {
+                                    450 ;	-----------------------------------------
+                                    451 ;	 function main
+                                    452 ;	-----------------------------------------
+      0000FF                        453 _main:
+                                    454 ;	Lab3-main.c:22: P2=0b11111110;
+      0000FF 75 A0 FE         [24]  455 	mov	_P2,#0xfe
+                                    456 ;	Lab3-main.c:23: short count = 1;
+      000102 75 1A 01         [24]  457 	mov	_main_count_65537_7,#0x01
+      000105 75 1B 00         [24]  458 	mov	(_main_count_65537_7 + 1),#0x00
+                                    459 ;	Lab3-main.c:26: short previous = -1;
+      000108 75 1C FF         [24]  460 	mov	_main_previous_65537_7,#0xff
+      00010B 75 1D FF         [24]  461 	mov	(_main_previous_65537_7 + 1),#0xff
+                                    462 ;	Lab3-main.c:30: while (1) {
+      00010E                        463 00109$:
+                                    464 ;	Lab3-main.c:32: P2    =count^0b11111111;
+      00010E 74 FF            [12]  465 	mov	a,#0xff
+      000110 65 1A            [12]  466 	xrl	a,_main_count_65537_7
+      000112 FA               [12]  467 	mov	r2,a
+      000113 8A A0            [24]  468 	mov	_P2,r2
+                                    469 ;	Lab3-main.c:33: count *=2;
+      000115 E5 1A            [12]  470 	mov	a,_main_count_65537_7
+      000117 25 1A            [12]  471 	add	a,_main_count_65537_7
+      000119 F5 1A            [12]  472 	mov	_main_count_65537_7,a
+      00011B E5 1B            [12]  473 	mov	a,(_main_count_65537_7 + 1)
+      00011D 33               [12]  474 	rlc	a
+      00011E F5 1B            [12]  475 	mov	(_main_count_65537_7 + 1),a
+                                    476 ;	Lab3-main.c:35: short key = keyPressed();
+      000120 12 00 97         [24]  477 	lcall	_keyPressed
+      000123 AA 82            [24]  478 	mov	r2,dpl
+      000125 AB 83            [24]  479 	mov	r3,dph
+                                    480 ;	Lab3-main.c:36: if (key != -1 && key != previous) {
+      000127 BA FF 05         [24]  481 	cjne	r2,#0xff,00152$
+      00012A BB FF 02         [24]  482 	cjne	r3,#0xff,00152$
+      00012D 80 2A            [24]  483 	sjmp	00102$
+      00012F                        484 00152$:
+      00012F EA               [12]  485 	mov	a,r2
+      000130 B5 1C 06         [24]  486 	cjne	a,_main_previous_65537_7,00153$
+      000133 EB               [12]  487 	mov	a,r3
+      000134 B5 1D 02         [24]  488 	cjne	a,(_main_previous_65537_7 + 1),00153$
+      000137 80 20            [24]  489 	sjmp	00102$
+      000139                        490 00153$:
+                                    491 ;	Lab3-main.c:38: previous = key;
+      000139 8A 1C            [24]  492 	mov	_main_previous_65537_7,r2
+      00013B 8B 1D            [24]  493 	mov	(_main_previous_65537_7 + 1),r3
+                                    494 ;	Lab3-main.c:40: num[0] =num[1];
+      00013D AC 12            [24]  495 	mov	r4,((_num + 0x0002) + 0)
+      00013F AD 13            [24]  496 	mov	r5,((_num + 0x0002) + 1)
+      000141 8C 10            [24]  497 	mov	(_num + 0),r4
+      000143 8D 11            [24]  498 	mov	(_num + 1),r5
+                                    499 ;	Lab3-main.c:41: num[1] =num[2];
+      000145 AC 14            [24]  500 	mov	r4,((_num + 0x0004) + 0)
+      000147 AD 15            [24]  501 	mov	r5,((_num + 0x0004) + 1)
+      000149 8C 12            [24]  502 	mov	((_num + 0x0002) + 0),r4
+      00014B 8D 13            [24]  503 	mov	((_num + 0x0002) + 1),r5
+                                    504 ;	Lab3-main.c:42: num[2] =num[3];			
+      00014D AC 16            [24]  505 	mov	r4,((_num + 0x0006) + 0)
+      00014F AD 17            [24]  506 	mov	r5,((_num + 0x0006) + 1)
+      000151 8C 14            [24]  507 	mov	((_num + 0x0004) + 0),r4
+      000153 8D 15            [24]  508 	mov	((_num + 0x0004) + 1),r5
+                                    509 ;	Lab3-main.c:43: num[3] = key;
+      000155 8A 16            [24]  510 	mov	((_num + 0x0006) + 0),r2
+      000157 8B 17            [24]  511 	mov	((_num + 0x0006) + 1),r3
+      000159                        512 00102$:
+                                    513 ;	Lab3-main.c:47: row++;
+      000159 05 18            [12]  514 	inc	_row
+      00015B E4               [12]  515 	clr	a
+      00015C B5 18 02         [24]  516 	cjne	a,_row,00154$
+      00015F 05 19            [12]  517 	inc	(_row + 1)
+      000161                        518 00154$:
+                                    519 ;	Lab3-main.c:48: if (count == 0x10) {
+      000161 74 10            [12]  520 	mov	a,#0x10
+      000163 B5 1A 06         [24]  521 	cjne	a,_main_count_65537_7,00155$
+      000166 E4               [12]  522 	clr	a
+      000167 B5 1B 02         [24]  523 	cjne	a,(_main_count_65537_7 + 1),00155$
+      00016A 80 02            [24]  524 	sjmp	00156$
+      00016C                        525 00155$:
+      00016C 80 0A            [24]  526 	sjmp	00126$
+      00016E                        527 00156$:
+                                    528 ;	Lab3-main.c:49: count = 1;
+      00016E 75 1A 01         [24]  529 	mov	_main_count_65537_7,#0x01
+                                    530 ;	Lab3-main.c:50: row   = 0;
+      000171 E4               [12]  531 	clr	a
+      000172 F5 1B            [12]  532 	mov	(_main_count_65537_7 + 1),a
+      000174 F5 18            [12]  533 	mov	_row,a
+      000176 F5 19            [12]  534 	mov	(_row + 1),a
+                                    535 ;	Lab3-main.c:53: for(short i = 0; i < 4; i++) {
+      000178                        536 00126$:
+      000178 7C 00            [12]  537 	mov	r4,#0x00
+      00017A 7D 00            [12]  538 	mov	r5,#0x00
+      00017C                        539 00115$:
+      00017C C3               [12]  540 	clr	c
+      00017D EC               [12]  541 	mov	a,r4
+      00017E 94 04            [12]  542 	subb	a,#0x04
+      000180 ED               [12]  543 	mov	a,r5
+      000181 64 80            [12]  544 	xrl	a,#0x80
+      000183 94 80            [12]  545 	subb	a,#0x80
+      000185 50 87            [24]  546 	jnc	00109$
+                                    547 ;	Lab3-main.c:54: P1  = table[i] + num[i];
+      000187 EC               [12]  548 	mov	a,r4
+      000188 2C               [12]  549 	add	a,r4
+      000189 FA               [12]  550 	mov	r2,a
+      00018A ED               [12]  551 	mov	a,r5
+      00018B 33               [12]  552 	rlc	a
+      00018C EA               [12]  553 	mov	a,r2
+      00018D 24 08            [12]  554 	add	a,#_table
+      00018F F9               [12]  555 	mov	r1,a
+      000190 87 07            [24]  556 	mov	ar7,@r1
+      000192 EA               [12]  557 	mov	a,r2
+      000193 24 10            [12]  558 	add	a,#_num
+      000195 F9               [12]  559 	mov	r1,a
+      000196 E7               [12]  560 	mov	a,@r1
+      000197 2F               [12]  561 	add	a,r7
+      000198 F5 90            [12]  562 	mov	_P1,a
+                                    563 ;	Lab3-main.c:55: for(int j=0; j<1000; j++){}
+      00019A 7E 00            [12]  564 	mov	r6,#0x00
+      00019C 7F 00            [12]  565 	mov	r7,#0x00
+      00019E                        566 00112$:
+      00019E C3               [12]  567 	clr	c
+      00019F EE               [12]  568 	mov	a,r6
+      0001A0 94 E8            [12]  569 	subb	a,#0xe8
+      0001A2 EF               [12]  570 	mov	a,r7
+      0001A3 64 80            [12]  571 	xrl	a,#0x80
+      0001A5 94 83            [12]  572 	subb	a,#0x83
+      0001A7 50 07            [24]  573 	jnc	00116$
+      0001A9 0E               [12]  574 	inc	r6
+      0001AA BE 00 F1         [24]  575 	cjne	r6,#0x00,00112$
+      0001AD 0F               [12]  576 	inc	r7
+      0001AE 80 EE            [24]  577 	sjmp	00112$
+      0001B0                        578 00116$:
+                                    579 ;	Lab3-main.c:53: for(short i = 0; i < 4; i++) {
+      0001B0 0C               [12]  580 	inc	r4
+      0001B1 BC 00 C8         [24]  581 	cjne	r4,#0x00,00115$
+      0001B4 0D               [12]  582 	inc	r5
+                                    583 ;	Lab3-main.c:62: }
+      0001B5 80 C5            [24]  584 	sjmp	00115$
+                                    585 	.area CSEG    (CODE)
+                                    586 	.area CONST   (CODE)
+                                    587 	.area XINIT   (CODE)
+                                    588 	.area CABS    (ABS,CODE)

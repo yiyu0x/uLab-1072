@@ -80,9 +80,9 @@ C:   00000094  s_GSFINAL
 C:   00000097  s_CSEG                          
 C:   000000E2  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   0000010E  l_CSEG                          
-C:   000001A5  s_CONST                         
-C:   000001A5  s_XINIT                         
+C:   00000124  l_CSEG                          
+C:   000001BB  s_CONST                         
+C:   000001BB  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -310,13 +310,13 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000097    0000010E =         270. bytes (REL,CON,CODE)
+CSEG                                00000097    00000124 =         292. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000097  _keyPressed                        Lab3_main
 C:   000000FF  _main                              Lab3_main
-C:   000001A1  __sdcc_external_startup            _startup
+C:   000001B7  __sdcc_external_startup            _startup
 ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
 
 Files Linked                              [ module(s) ]

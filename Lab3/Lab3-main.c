@@ -50,8 +50,13 @@ int main() {
 			row   = 0;
 		}
 //////////////////lighting LED/////////////////////////
-		for(short i = 0; i < 4; i++)
+		for(short i = 0; i < 4; i++) {
 			P1  = table[i] + num[i];
+			for(int j=0; j<1000; j++){}
+		}
+		// for(int i=0; i<1000; i++){
+
+		// }
 	}
 
 }

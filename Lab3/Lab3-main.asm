@@ -444,6 +444,7 @@ _keyPressed:
 ;previous                  Allocated with name '_main_previous_65537_7'
 ;key                       Allocated to registers r2 r3 
 ;i                         Allocated to registers r4 r5 
+;j                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
 ;	Lab3-main.c:20: int main() {
 ;	-----------------------------------------
@@ -459,7 +460,7 @@ _main:
 	mov	_main_previous_65537_7,#0xff
 	mov	(_main_previous_65537_7 + 1),#0xff
 ;	Lab3-main.c:30: while (1) {
-00108$:
+00109$:
 ;	Lab3-main.c:32: P2    =count^0b11111111;
 	mov	a,#0xff
 	xrl	a,_main_count_65537_7
@@ -477,16 +478,16 @@ _main:
 	mov	r2,dpl
 	mov	r3,dph
 ;	Lab3-main.c:36: if (key != -1 && key != previous) {
-	cjne	r2,#0xff,00139$
-	cjne	r3,#0xff,00139$
+	cjne	r2,#0xff,00152$
+	cjne	r3,#0xff,00152$
 	sjmp	00102$
-00139$:
+00152$:
 	mov	a,r2
-	cjne	a,_main_previous_65537_7,00140$
+	cjne	a,_main_previous_65537_7,00153$
 	mov	a,r3
-	cjne	a,(_main_previous_65537_7 + 1),00140$
+	cjne	a,(_main_previous_65537_7 + 1),00153$
 	sjmp	00102$
-00140$:
+00153$:
 ;	Lab3-main.c:38: previous = key;
 	mov	_main_previous_65537_7,r2
 	mov	(_main_previous_65537_7 + 1),r3
@@ -512,18 +513,18 @@ _main:
 ;	Lab3-main.c:47: row++;
 	inc	_row
 	clr	a
-	cjne	a,_row,00141$
+	cjne	a,_row,00154$
 	inc	(_row + 1)
-00141$:
+00154$:
 ;	Lab3-main.c:48: if (count == 0x10) {
 	mov	a,#0x10
-	cjne	a,_main_count_65537_7,00142$
+	cjne	a,_main_count_65537_7,00155$
 	clr	a
-	cjne	a,(_main_count_65537_7 + 1),00142$
-	sjmp	00143$
-00142$:
-	sjmp	00120$
-00143$:
+	cjne	a,(_main_count_65537_7 + 1),00155$
+	sjmp	00156$
+00155$:
+	sjmp	00126$
+00156$:
 ;	Lab3-main.c:49: count = 1;
 	mov	_main_count_65537_7,#0x01
 ;	Lab3-main.c:50: row   = 0;
@@ -531,18 +532,18 @@ _main:
 	mov	(_main_count_65537_7 + 1),a
 	mov	_row,a
 	mov	(_row + 1),a
-;	Lab3-main.c:53: for(short i = 0; i < 4; i++)
-00120$:
+;	Lab3-main.c:53: for(short i = 0; i < 4; i++) {
+00126$:
 	mov	r4,#0x00
 	mov	r5,#0x00
-00111$:
+00115$:
 	clr	c
 	mov	a,r4
 	subb	a,#0x04
 	mov	a,r5
 	xrl	a,#0x80
 	subb	a,#0x80
-	jnc	00108$
+	jnc	00109$
 ;	Lab3-main.c:54: P1  = table[i] + num[i];
 	mov	a,r4
 	add	a,r4
@@ -559,12 +560,28 @@ _main:
 	mov	a,@r1
 	add	a,r7
 	mov	_P1,a
-;	Lab3-main.c:53: for(short i = 0; i < 4; i++)
+;	Lab3-main.c:55: for(int j=0; j<1000; j++){}
+	mov	r6,#0x00
+	mov	r7,#0x00
+00112$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xe8
+	mov	a,r7
+	xrl	a,#0x80
+	subb	a,#0x83
+	jnc	00116$
+	inc	r6
+	cjne	r6,#0x00,00112$
+	inc	r7
+	sjmp	00112$
+00116$:
+;	Lab3-main.c:53: for(short i = 0; i < 4; i++) {
 	inc	r4
-	cjne	r4,#0x00,00111$
+	cjne	r4,#0x00,00115$
 	inc	r5
-;	Lab3-main.c:57: }
-	sjmp	00111$
+;	Lab3-main.c:62: }
+	sjmp	00115$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)
