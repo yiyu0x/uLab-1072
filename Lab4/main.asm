@@ -9,6 +9,8 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
+	.globl _display
+	.globl _delay
 	.globl _timer_isr
 	.globl _CY
 	.globl _AC
@@ -106,6 +108,9 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
+	.globl _cc
+	.globl _dc
+	.globl _t
 	.globl _counter
 ;--------------------------------------------------------
 ; special function registers
@@ -226,6 +231,12 @@ _CY	=	0x00d7
 	.area DSEG    (DATA)
 _counter::
 	.ds 2
+_t::
+	.ds 2
+_dc::
+	.ds 2
+_cc::
+	.ds 2
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
@@ -302,6 +313,17 @@ __interrupt_vect:
 	clr	a
 	mov	_counter,a
 	mov	(_counter + 1),a
+;	main.c:5: int t  = 0;
+	mov	_t,a
+	mov	(_t + 1),a
+;	main.c:6: int dc = 0x70; // 十位
+	mov	_dc,#0x70
+;	1-genFromRTrack replaced	mov	(_dc + 1),#0x00
+	mov	(_dc + 1),a
+;	main.c:7: int cc = 0xb0; // 個位
+	mov	_cc,#0xb0
+;	1-genFromRTrack replaced	mov	(_cc + 1),#0x00
+	mov	(_cc + 1),a
 	.area GSFINAL (CODE)
 	ljmp	__sdcc_program_startup
 ;--------------------------------------------------------
@@ -319,7 +341,7 @@ __sdcc_program_startup:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'timer_isr'
 ;------------------------------------------------------------
-;	main.c:5: void timer_isr (void) __interrupt (1) __using (1) {
+;	main.c:8: void timer_isr (void) __interrupt (1) __using (1) {
 ;	-----------------------------------------
 ;	 function timer_isr
 ;	-----------------------------------------
@@ -334,17 +356,17 @@ _timer_isr:
 	ar0 = 0x08
 	push	acc
 	push	psw
-;	main.c:6: TH0  = PERIOD >> 8;
+;	main.c:9: TH0  = PERIOD >> 8;
 	mov	_TH0,#0x3c
-;	main.c:7: TL0  = PERIOD & 0xff;
+;	main.c:10: TL0  = PERIOD & 0xff;
 	mov	_TL0,#0xb0
-;	main.c:8: counter++;
+;	main.c:11: counter++;
 	inc	_counter
 	clr	a
 	cjne	a,_counter,00103$
 	inc	(_counter + 1)
 00103$:
-;	main.c:9: }
+;	main.c:12: }
 	pop	psw
 	pop	acc
 	reti
@@ -353,18 +375,15 @@ _timer_isr:
 ;	eliminated unneeded push/pop dph
 ;	eliminated unneeded push/pop b
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
+;Allocation info for local variables in function 'delay'
 ;------------------------------------------------------------
-;dc                        Allocated to registers r6 r7 
-;cc                        Allocated to registers r4 r5 
-;t                         Allocated to registers r2 r3 
-;i                         Allocated to registers r0 r1 
+;i                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
-;	main.c:11: int main(){
+;	main.c:14: void delay() {
 ;	-----------------------------------------
-;	 function main
+;	 function delay
 ;	-----------------------------------------
-_main:
+_delay:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -373,117 +392,154 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	main.c:12: int dc   = 0x79; // 十位
-	mov	r6,#0x79
+;	main.c:15: for(int i = 0; i < 1500; i++);
+	mov	r6,#0x00
 	mov	r7,#0x00
-;	main.c:13: int cc   = 0xb5; // 個位
-	mov	r4,#0xb5
-	mov	r5,#0x00
-;	main.c:14: int t=0;
-	mov	r2,#0x00
-	mov	r3,#0x00
-;	main.c:15: P0   = 0x30;
+00103$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xdc
+	mov	a,r7
+	xrl	a,#0x80
+	subb	a,#0x85
+	jnc	00105$
+	inc	r6
+	cjne	r6,#0x00,00103$
+	inc	r7
+	sjmp	00103$
+00105$:
+;	main.c:16: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'display'
+;------------------------------------------------------------
+;	main.c:17: void display() {
+;	-----------------------------------------
+;	 function display
+;	-----------------------------------------
+_display:
+;	main.c:18: if(t) P0 = dc;
+	mov	a,_t
+	orl	a,(_t + 1)
+	jz	00102$
+	mov	_P0,_dc
+	sjmp	00103$
+00102$:
+;	main.c:19: else  P0 = cc;
+	mov	_P0,_cc
+00103$:
+;	main.c:20: if (t == 0) t = 1;
+	mov	a,_t
+	orl	a,(_t + 1)
+	jnz	00105$
+	mov	_t,#0x01
+	mov	(_t + 1),a
+	sjmp	00106$
+00105$:
+;	main.c:21: else t = 0;			
+	clr	a
+	mov	_t,a
+	mov	(_t + 1),a
+00106$:
+;	main.c:22: delay();
+;	main.c:23: }
+	ljmp	_delay
+;------------------------------------------------------------
+;Allocation info for local variables in function 'main'
+;------------------------------------------------------------
+;	main.c:25: int main(){
+;	-----------------------------------------
+;	 function main
+;	-----------------------------------------
+_main:
+;	main.c:26: P0   = 0x30;
 	mov	_P0,#0x30
-;	main.c:16: TMOD = 0b00000001;
+;	main.c:27: TMOD = 0b00000001;
 	mov	_TMOD,#0x01
-;	main.c:17: IE   = 0x82;
+;	main.c:28: IE   = 0x82;
 	mov	_IE,#0x82
-;	main.c:18: TR0  = 1;
+;	main.c:29: TR0  = 1;
 ;	assignBit
 	setb	_TR0
-;	main.c:19: TH0  = PERIOD >> 8;
+;	main.c:30: TH0  = PERIOD >> 8;
 	mov	_TH0,#0x3c
-;	main.c:20: TL0  = PERIOD & 0xff;
+;	main.c:31: TL0  = PERIOD & 0xff;
 	mov	_TL0,#0xb0
-;	main.c:21: while (1){
-00116$:
-;	main.c:22: EA = 0;
+;	main.c:32: while (1){
+00109$:
+;	main.c:33: EA = 0;
 ;	assignBit
 	clr	_EA
-;	main.c:23: if (counter == 10) {
+;	main.c:34: if (counter == 10) {
 	mov	a,#0x0a
-	cjne	a,_counter,00159$
+	cjne	a,_counter,00133$
 	clr	a
-	cjne	a,(_counter + 1),00159$
-	sjmp	00160$
-00159$:
+	cjne	a,(_counter + 1),00133$
+	sjmp	00134$
+00133$:
 	sjmp	00107$
-00160$:
-;	main.c:24: counter = 0;
+00134$:
+;	main.c:35: counter = 0;
 	clr	a
 	mov	_counter,a
 	mov	(_counter + 1),a
-;	main.c:25: cc++;
-	inc	r4
-	cjne	r4,#0x00,00161$
-	inc	r5
-00161$:
-;	main.c:27: if(dc == 0x79 && cc == 0xba){
-	cjne	r6,#0x79,00102$
-	cjne	r7,#0x00,00102$
-	cjne	r4,#0xba,00102$
-	cjne	r5,#0x00,00102$
-;	main.c:28: dc = 0x70;
-	mov	r6,#0x70
-	mov	r7,#0x00
-;	main.c:29: cc = 0xb0;
-	mov	r4,#0xb0
-	mov	r5,#0x00
+;	main.c:36: cc++;
+	inc	_cc
+;	genFromRTrack removed	clr	a
+	cjne	a,_cc,00135$
+	inc	(_cc + 1)
+00135$:
+;	main.c:38: if(dc == 0x79 && cc == 0xba){
+	mov	a,#0x79
+	cjne	a,_dc,00136$
+	clr	a
+	cjne	a,(_dc + 1),00136$
+	sjmp	00137$
+00136$:
+	sjmp	00102$
+00137$:
+	mov	a,#0xba
+	cjne	a,_cc,00138$
+	clr	a
+	cjne	a,(_cc + 1),00138$
+	sjmp	00139$
+00138$:
+	sjmp	00102$
+00139$:
+;	main.c:39: dc = 0x70;
+	mov	_dc,#0x70
+	mov	(_dc + 1),#0x00
+;	main.c:40: cc = 0xb0;
+	mov	_cc,#0xb0
+	mov	(_cc + 1),#0x00
 00102$:
-;	main.c:32: if(cc == 0xba){
-	cjne	r4,#0xba,00107$
-	cjne	r5,#0x00,00107$
-;	main.c:33: cc = 0xb0;
-	mov	r4,#0xb0
-	mov	r5,#0x00
-;	main.c:34: dc++;
-	inc	r6
-	cjne	r6,#0x00,00168$
-	inc	r7
-00168$:
+;	main.c:43: if(cc == 0xba){
+	mov	a,#0xba
+	cjne	a,_cc,00140$
+	clr	a
+	cjne	a,(_cc + 1),00140$
+	sjmp	00141$
+00140$:
+	sjmp	00107$
+00141$:
+;	main.c:44: cc = 0xb0;
+	mov	_cc,#0xb0
+	mov	(_cc + 1),#0x00
+;	main.c:45: dc++;
+	inc	_dc
+	clr	a
+	cjne	a,_dc,00142$
+	inc	(_dc + 1)
+00142$:
 00107$:
-;	main.c:37: EA = 1;
+;	main.c:48: EA = 1;
 ;	assignBit
 	setb	_EA
-;	main.c:39: if(t) P0 = dc;
-	mov	a,r2
-	orl	a,r3
-	jz	00109$
-	mov	_P0,r6
-	sjmp	00110$
-00109$:
-;	main.c:40: else  P0 = cc;
-	mov	_P0,r4
-00110$:
-;	main.c:41: if (t == 0) t = 1;
-	mov	a,r2
-	orl	a,r3
-	jnz	00112$
-	mov	r2,#0x01
-	mov	r3,a
-	sjmp	00131$
-00112$:
-;	main.c:42: else t = 0;			
-	mov	r2,#0x00
-	mov	r3,#0x00
-;	main.c:43: for(int i = 0; i < 1000; i++){}
-00131$:
-	mov	r0,#0x00
-	mov	r1,#0x00
-00119$:
-	clr	c
-	mov	a,r0
-	subb	a,#0xe8
-	mov	a,r1
-	xrl	a,#0x80
-	subb	a,#0x83
-	jnc	00116$
-	inc	r0
-;	main.c:46: return 0;
-	cjne	r0,#0x00,00119$
-	inc	r1
-;	main.c:47: }
-	sjmp	00119$
+;	main.c:49: display();
+	lcall	_display
+;	main.c:51: return 0;
+;	main.c:52: }
+	sjmp	00109$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)

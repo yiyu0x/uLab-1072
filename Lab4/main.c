@@ -2,16 +2,27 @@
 #define PERIOD 15536
 
 unsigned int counter = 0;
+int t  = 0;
+int dc = 0x70; // 十位
+int cc = 0xb0; // 個位
 void timer_isr (void) __interrupt (1) __using (1) {
 	TH0  = PERIOD >> 8;
 	TL0  = PERIOD & 0xff;
 	counter++;
 }
 
+void delay() {
+	for(int i = 0; i < 1500; i++);
+}
+void display() {
+	if(t) P0 = dc;
+	else  P0 = cc;
+	if (t == 0) t = 1;
+	else t = 0;			
+	delay();
+}
+
 int main(){
-	int dc = 0x70; // 十位
-	int cc = 0xb0; // 個位
-	int t  = 0;
 	P0   = 0x30;
 	TMOD = 0b00000001;
 	IE   = 0x82;
@@ -35,13 +46,7 @@ int main(){
 			}			
 		}
 		EA = 1;
-
-		if(t) P0 = dc;
-		else  P0 = cc;
-		if (t == 0) t = 1;
-		else t = 0;			
-		for(int i = 0; i < 1000; i++){}
+		display();
 	}
-
 	return 0;
 }
