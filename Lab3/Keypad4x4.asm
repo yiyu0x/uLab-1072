@@ -2,15 +2,12 @@
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.8.0 #10562 (MINGW64)
 ;--------------------------------------------------------
-	.module Lab3_main
+	.module Keypad4x4
 	.optsdcc -mmcs51 --model-small
 	
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
-	.globl _main
-	.globl _keyPressed
-	.globl _LED_Display
 	.globl _CY
 	.globl _AC
 	.globl _F0
@@ -107,6 +104,7 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
+	.globl _keyPressed
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -222,24 +220,12 @@ _CY	=	0x00d7
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
-_main_table_65536_3:
-	.ds 8
-_main_num_65536_3:
-	.ds 8
-_main_row_65536_3:
-	.ds 2
-_main_previous_65537_4:
-	.ds 2
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
-;--------------------------------------------------------
-; Stack segment in internal ram 
-;--------------------------------------------------------
-	.area	SSEG
-__start__stack:
-	.ds	1
-
+	.area	OSEG    (OVR,DATA)
+_keyPressed_row_65536_2:
+	.ds 2
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
 ;--------------------------------------------------------
@@ -280,54 +266,34 @@ __start__stack:
 	.area GSFINAL (CODE)
 	.area CSEG    (CODE)
 ;--------------------------------------------------------
-; interrupt vector 
-;--------------------------------------------------------
-	.area HOME    (CODE)
-__interrupt_vect:
-	ljmp	__sdcc_gsinit_startup
-;--------------------------------------------------------
 ; global & static initialisations
 ;--------------------------------------------------------
 	.area HOME    (CODE)
 	.area GSINIT  (CODE)
 	.area GSFINAL (CODE)
 	.area GSINIT  (CODE)
-	.globl __sdcc_gsinit_startup
-	.globl __sdcc_program_startup
-	.globl __start__stack
-	.globl __mcs51_genXINIT
-	.globl __mcs51_genXRAMCLEAR
-	.globl __mcs51_genRAMCLEAR
-	.area GSFINAL (CODE)
-	ljmp	__sdcc_program_startup
 ;--------------------------------------------------------
 ; Home
 ;--------------------------------------------------------
 	.area HOME    (CODE)
 	.area HOME    (CODE)
-__sdcc_program_startup:
-	ljmp	_main
-;	return from main will return to caller
 ;--------------------------------------------------------
 ; code
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
+;Allocation info for local variables in function 'keyPressed'
 ;------------------------------------------------------------
-;table                     Allocated with name '_main_table_65536_3'
-;num                       Allocated with name '_main_num_65536_3'
-;row                       Allocated with name '_main_row_65536_3'
-;count                     Allocated to registers r4 r5 
-;number                    Allocated to registers 
-;previous                  Allocated with name '_main_previous_65537_4'
-;key                       Allocated to registers r2 r3 
+;row                       Allocated with name '_keyPressed_row_65536_2'
+;c                         Allocated to registers r4 r5 
+;col                       Allocated to registers r2 r3 
+;magic                     Allocated to registers r7 r6 
 ;------------------------------------------------------------
-;	Lab3-main.c:5: int main() {
+;	Keypad4x4.c:3: short keyPressed(short row) {
 ;	-----------------------------------------
-;	 function main
+;	 function keyPressed
 ;	-----------------------------------------
-_main:
+_keyPressed:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -336,124 +302,84 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	Lab3-main.c:6: short table[4] = {0x70, 0xb0, 0xd0, 0xe0};
-	mov	(_main_table_65536_3 + 0),#0x70
-	mov	(_main_table_65536_3 + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0002) + 0),#0xb0
-	mov	((_main_table_65536_3 + 0x0002) + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0004) + 0),#0xd0
-	mov	((_main_table_65536_3 + 0x0004) + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0006) + 0),#0xe0
-	mov	((_main_table_65536_3 + 0x0006) + 1),#0x00
-;	Lab3-main.c:7: short num[4] = {15, 15, 15, 15};
-	mov	(_main_num_65536_3 + 0),#0x0f
-	mov	(_main_num_65536_3 + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0002) + 0),#0x0f
-	mov	((_main_num_65536_3 + 0x0002) + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0004) + 0),#0x0f
-	mov	((_main_num_65536_3 + 0x0004) + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0006) + 0),#0x0f
-;	Lab3-main.c:8: short row = 0;
-	clr	a
-	mov	((_main_num_65536_3 + 0x0006) + 1),a
-	mov	_main_row_65536_3,a
-	mov	(_main_row_65536_3 + 1),a
-;	Lab3-main.c:9: P2=0b11111110;
-	mov	_P2,#0xfe
-;	Lab3-main.c:10: short count = 1;
+	mov	_keyPressed_row_65536_2,dpl
+	mov	(_keyPressed_row_65536_2 + 1),dph
+;	Keypad4x4.c:4: if((P2 & 0b11110000) != 0b11110000){
+	mov	r4,_P2
+	anl	ar4,#0xf0
+	mov	r5,#0x00
+	cjne	r4,#0xf0,00127$
+	cjne	r5,#0x00,00127$
+	sjmp	00105$
+00127$:
+;	Keypad4x4.c:5: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
 	mov	r4,#0x01
 	mov	r5,#0x00
-;	Lab3-main.c:12: short previous = -1;
-	mov	_main_previous_65537_4,#0xff
-	mov	(_main_previous_65537_4 + 1),#0xff
-;	Lab3-main.c:13: while (1) {
+	mov	r2,#0x00
+	mov	r3,#0x00
+	mov	r0,#0x00
+	mov	r1,#0x00
 00107$:
-;	Lab3-main.c:14: P2    =count^0b11111111;
-	mov	a,#0xff
-	xrl	a,r4
-	mov	r2,a
-	mov	ar3,r5
-	mov	_P2,r2
-;	Lab3-main.c:15: count *=2;
+	clr	c
+	mov	a,r0
+	subb	a,#0x04
+	mov	a,r1
+	xrl	a,#0x80
+	subb	a,#0x80
+	jnc	00105$
+;	Keypad4x4.c:6: `			short magic = ((P2 >> 4) ^ 0b11111111) & 0b00001111;
+	mov	a,_P2
+	swap	a
+	anl	a,#0x0f
+	mov	r7,a
+	xrl	ar7,#0xff
+	anl	ar7,#0x0f
+	mov	r6,#0x00
+;	Keypad4x4.c:7: if (magic == c) {
+	mov	a,r7
+	cjne	a,ar4,00108$
+	mov	a,r6
+	cjne	a,ar5,00108$
+;	Keypad4x4.c:8: return col * 4 + row;
+	mov	a,r2
+	add	a,r2
+	mov	r6,a
+	mov	a,r3
+	rlc	a
+	mov	r7,a
+	mov	a,r6
+	add	a,r6
+	mov	r6,a
+	mov	a,r7
+	rlc	a
+	mov	r7,a
+	mov	a,_keyPressed_row_65536_2
+	add	a,r6
+	mov	dpl,a
+	mov	a,(_keyPressed_row_65536_2 + 1)
+	addc	a,r7
+	mov	dph,a
+	ret
+00108$:
+;	Keypad4x4.c:5: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
 	mov	a,r4
 	add	a,r4
 	mov	r4,a
 	mov	a,r5
 	rlc	a
 	mov	r5,a
-;	Lab3-main.c:16: short key = keyPressed(row);
-	mov	dpl,_main_row_65536_3
-	mov	dph,(_main_row_65536_3 + 1)
-	push	ar5
-	push	ar4
-	lcall	_keyPressed
-	mov	r2,dpl
-	mov	r3,dph
-	pop	ar4
-	pop	ar5
-;	Lab3-main.c:17: if (key != -1 && key != previous) {
-	cjne	r2,#0xff,00127$
-	cjne	r3,#0xff,00127$
-	sjmp	00102$
-00127$:
-	mov	a,r2
-	cjne	a,_main_previous_65537_4,00128$
-	mov	a,r3
-	cjne	a,(_main_previous_65537_4 + 1),00128$
-	sjmp	00102$
-00128$:
-;	Lab3-main.c:18: previous = key;
-	mov	_main_previous_65537_4,r2
-	mov	(_main_previous_65537_4 + 1),r3
-;	Lab3-main.c:19: num[0] =num[1];
-	mov	r6,((_main_num_65536_3 + 0x0002) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0002) + 1)
-	mov	(_main_num_65536_3 + 0),r6
-	mov	(_main_num_65536_3 + 1),r7
-;	Lab3-main.c:20: num[1] =num[2];
-	mov	r6,((_main_num_65536_3 + 0x0004) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0004) + 1)
-	mov	((_main_num_65536_3 + 0x0002) + 0),r6
-	mov	((_main_num_65536_3 + 0x0002) + 1),r7
-;	Lab3-main.c:21: num[2] =num[3];			
-	mov	r6,((_main_num_65536_3 + 0x0006) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0006) + 1)
-	mov	((_main_num_65536_3 + 0x0004) + 0),r6
-	mov	((_main_num_65536_3 + 0x0004) + 1),r7
-;	Lab3-main.c:22: num[3] = key;
-	mov	((_main_num_65536_3 + 0x0006) + 0),r2
-	mov	((_main_num_65536_3 + 0x0006) + 1),r3
-00102$:
-;	Lab3-main.c:24: row++;
-	inc	_main_row_65536_3
-	clr	a
-	cjne	a,_main_row_65536_3,00129$
-	inc	(_main_row_65536_3 + 1)
-00129$:
-;	Lab3-main.c:25: if (count == 0x10) {
-	cjne	r4,#0x10,00105$
-	cjne	r5,#0x00,00105$
-;	Lab3-main.c:26: count = 1;
-	mov	r4,#0x01
-;	Lab3-main.c:27: row   = 0;
-	clr	a
-	mov	r5,a
-	mov	_main_row_65536_3,a
-	mov	(_main_row_65536_3 + 1),a
+	inc	r0
+	cjne	r0,#0x00,00131$
+	inc	r1
+00131$:
+	mov	ar2,r0
+	mov	ar3,r1
+	sjmp	00107$
 00105$:
-;	Lab3-main.c:29: LED_Display(table,num);
-	mov	_LED_Display_PARM_2,#_main_num_65536_3
-	mov	(_LED_Display_PARM_2 + 1),#0x00
-	mov	(_LED_Display_PARM_2 + 2),#0x40
-	mov	dptr,#_main_table_65536_3
-	mov	b,#0x40
-	push	ar5
-	push	ar4
-	lcall	_LED_Display
-	pop	ar4
-	pop	ar5
-;	Lab3-main.c:31: }
-	ljmp	00107$
+;	Keypad4x4.c:12: return -1;
+	mov	dptr,#0xffff
+;	Keypad4x4.c:13: }
+	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)

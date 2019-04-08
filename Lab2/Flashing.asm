@@ -2,15 +2,14 @@
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.8.0 #10562 (MINGW64)
 ;--------------------------------------------------------
-	.module Lab3_main
+	.module Flashing
 	.optsdcc -mmcs51 --model-small
 	
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
-	.globl _keyPressed
-	.globl _LED_Display
+	.globl _delay
 	.globl _CY
 	.globl _AC
 	.globl _F0
@@ -222,14 +221,8 @@ _CY	=	0x00d7
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
-_main_table_65536_3:
-	.ds 8
-_main_num_65536_3:
-	.ds 8
-_main_row_65536_3:
-	.ds 2
-_main_previous_65537_4:
-	.ds 2
+_main_table_65536_5:
+	.ds 4
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
@@ -313,21 +306,16 @@ __sdcc_program_startup:
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
+;Allocation info for local variables in function 'delay'
 ;------------------------------------------------------------
-;table                     Allocated with name '_main_table_65536_3'
-;num                       Allocated with name '_main_num_65536_3'
-;row                       Allocated with name '_main_row_65536_3'
-;count                     Allocated to registers r4 r5 
-;number                    Allocated to registers 
-;previous                  Allocated with name '_main_previous_65537_4'
-;key                       Allocated to registers r2 r3 
+;time                      Allocated to registers 
+;d1                        Allocated to registers r4 r5 
 ;------------------------------------------------------------
-;	Lab3-main.c:5: int main() {
+;	Flashing.c:5: void delay(short time) {
 ;	-----------------------------------------
-;	 function main
+;	 function delay
 ;	-----------------------------------------
-_main:
+_delay:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -336,124 +324,191 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	Lab3-main.c:6: short table[4] = {0x70, 0xb0, 0xd0, 0xe0};
-	mov	(_main_table_65536_3 + 0),#0x70
-	mov	(_main_table_65536_3 + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0002) + 0),#0xb0
-	mov	((_main_table_65536_3 + 0x0002) + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0004) + 0),#0xd0
-	mov	((_main_table_65536_3 + 0x0004) + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0006) + 0),#0xe0
-	mov	((_main_table_65536_3 + 0x0006) + 1),#0x00
-;	Lab3-main.c:7: short num[4] = {15, 15, 15, 15};
-	mov	(_main_num_65536_3 + 0),#0x0f
-	mov	(_main_num_65536_3 + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0002) + 0),#0x0f
-	mov	((_main_num_65536_3 + 0x0002) + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0004) + 0),#0x0f
-	mov	((_main_num_65536_3 + 0x0004) + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0006) + 0),#0x0f
-;	Lab3-main.c:8: short row = 0;
-	clr	a
-	mov	((_main_num_65536_3 + 0x0006) + 1),a
-	mov	_main_row_65536_3,a
-	mov	(_main_row_65536_3 + 1),a
-;	Lab3-main.c:9: P2=0b11111110;
-	mov	_P2,#0xfe
-;	Lab3-main.c:10: short count = 1;
-	mov	r4,#0x01
+	mov	__mulint_PARM_2,dpl
+	mov	(__mulint_PARM_2 + 1),dph
+;	Flashing.c:7: for (d1 = 0; d1 < time*100; d1 ++) {
+	mov	dptr,#0x0064
+	lcall	__mulint
+	mov	r6,dpl
+	mov	r7,dph
+	mov	r4,#0x00
 	mov	r5,#0x00
-;	Lab3-main.c:12: short previous = -1;
-	mov	_main_previous_65537_4,#0xff
-	mov	(_main_previous_65537_4 + 1),#0xff
-;	Lab3-main.c:13: while (1) {
-00107$:
-;	Lab3-main.c:14: P2    =count^0b11111111;
-	mov	a,#0xff
-	xrl	a,r4
-	mov	r2,a
-	mov	ar3,r5
-	mov	_P2,r2
-;	Lab3-main.c:15: count *=2;
+00103$:
+	mov	ar2,r6
+	mov	ar3,r7
+	clr	c
+	mov	a,r4
+	subb	a,r2
+	mov	a,r5
+	subb	a,r3
+	jnc	00105$
+	inc	r4
+	cjne	r4,#0x00,00103$
+	inc	r5
+	sjmp	00103$
+00105$:
+;	Flashing.c:9: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'main'
+;------------------------------------------------------------
+;table                     Allocated with name '_main_table_65536_5'
+;index                     Allocated to registers r7 
+;flag_plus                 Allocated to registers r6 
+;flag_minus                Allocated to registers r5 
+;------------------------------------------------------------
+;	Flashing.c:10: void main() {
+;	-----------------------------------------
+;	 function main
+;	-----------------------------------------
+_main:
+;	Flashing.c:11: short table[] = {0x75, 0xb0};
+	mov	(_main_table_65536_5 + 0),#0x75
+	mov	(_main_table_65536_5 + 1),#0x00
+	mov	((_main_table_65536_5 + 0x0002) + 0),#0xb0
+	mov	((_main_table_65536_5 + 0x0002) + 1),#0x00
+;	Flashing.c:12: bool index = 0;
+	mov	r7,#0x00
+;	Flashing.c:13: bool flag_plus = 1;
+	mov	r6,#0x01
+;	Flashing.c:14: bool flag_minus = 1;
+	mov	r5,#0x01
+;	Flashing.c:15: while (1) {
+00124$:
+;	Flashing.c:17: index = !index;
+	mov	a,r7
+	cjne	a,#0x01,00172$
+00172$:
+	clr	a
+	rlc	a
+;	Flashing.c:18: P1 = table[index];
+	mov	r7,a
+	mov	r4,a
 	mov	a,r4
 	add	a,r4
-	mov	r4,a
+	add	a,#_main_table_65536_5
+	mov	r1,a
+	mov	_P1,@r1
+;	Flashing.c:19: delay(50);
+	mov	dptr,#0x0032
+	push	ar7
+	push	ar6
+	push	ar5
+	lcall	_delay
+	pop	ar5
+	pop	ar6
+	pop	ar7
+;	Flashing.c:21: if (P0_0 == 0 && flag_minus) {
+	jb	_P0_0,00109$
 	mov	a,r5
-	rlc	a
-	mov	r5,a
-;	Lab3-main.c:16: short key = keyPressed(row);
-	mov	dpl,_main_row_65536_3
-	mov	dph,(_main_row_65536_3 + 1)
-	push	ar5
-	push	ar4
-	lcall	_keyPressed
-	mov	r2,dpl
-	mov	r3,dph
-	pop	ar4
-	pop	ar5
-;	Lab3-main.c:17: if (key != -1 && key != previous) {
-	cjne	r2,#0xff,00127$
-	cjne	r3,#0xff,00127$
+	jz	00109$
+;	Flashing.c:22: if (table[0] == 0x70 && table[1] == 0xb0) continue;
+	mov	a,#0x70
+	cjne	a,_main_table_65536_5,00175$
+	clr	a
+	cjne	a,(_main_table_65536_5 + 1),00175$
+	sjmp	00176$
+00175$:
 	sjmp	00102$
-00127$:
-	mov	a,r2
-	cjne	a,_main_previous_65537_4,00128$
-	mov	a,r3
-	cjne	a,(_main_previous_65537_4 + 1),00128$
-	sjmp	00102$
-00128$:
-;	Lab3-main.c:18: previous = key;
-	mov	_main_previous_65537_4,r2
-	mov	(_main_previous_65537_4 + 1),r3
-;	Lab3-main.c:19: num[0] =num[1];
-	mov	r6,((_main_num_65536_3 + 0x0002) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0002) + 1)
-	mov	(_main_num_65536_3 + 0),r6
-	mov	(_main_num_65536_3 + 1),r7
-;	Lab3-main.c:20: num[1] =num[2];
-	mov	r6,((_main_num_65536_3 + 0x0004) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0004) + 1)
-	mov	((_main_num_65536_3 + 0x0002) + 0),r6
-	mov	((_main_num_65536_3 + 0x0002) + 1),r7
-;	Lab3-main.c:21: num[2] =num[3];			
-	mov	r6,((_main_num_65536_3 + 0x0006) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0006) + 1)
-	mov	((_main_num_65536_3 + 0x0004) + 0),r6
-	mov	((_main_num_65536_3 + 0x0004) + 1),r7
-;	Lab3-main.c:22: num[3] = key;
-	mov	((_main_num_65536_3 + 0x0006) + 0),r2
-	mov	((_main_num_65536_3 + 0x0006) + 1),r3
+00176$:
+	mov	a,#0xb0
+	cjne	a,(_main_table_65536_5 + 0x0002),00177$
+	clr	a
+	cjne	a,((_main_table_65536_5 + 0x0002) + 1),00177$
+	sjmp	00124$
+00177$:
 00102$:
-;	Lab3-main.c:24: row++;
-	inc	_main_row_65536_3
+;	Flashing.c:23: flag_minus = 0;
+	mov	r5,#0x00
+;	Flashing.c:24: table[1] -= 1;
+	mov	a,(_main_table_65536_5 + 0x0002)
+	add	a,#0xff
+	mov	r3,a
+	mov	a,((_main_table_65536_5 + 0x0002) + 1)
+	addc	a,#0xff
+	mov	r4,a
+	mov	((_main_table_65536_5 + 0x0002) + 0),r3
+	mov	((_main_table_65536_5 + 0x0002) + 1),r4
+;	Flashing.c:25: if (table[1] == 0xaf) {
+	cjne	r3,#0xaf,00110$
+	cjne	r4,#0x00,00110$
+;	Flashing.c:26: table[1] = 0xb9;
+	mov	((_main_table_65536_5 + 0x0002) + 0),#0xb9
+	mov	((_main_table_65536_5 + 0x0002) + 1),#0x00
+;	Flashing.c:27: table[0]--;
+	mov	r3,(_main_table_65536_5 + 0)
+	mov	r4,(_main_table_65536_5 + 1)
+	dec	r3
+	cjne	r3,#0xff,00180$
+	dec	r4
+00180$:
+	mov	(_main_table_65536_5 + 0),r3
+	mov	(_main_table_65536_5 + 1),r4
+	sjmp	00110$
+00109$:
+;	Flashing.c:30: else if (P0_0 == 1) flag_minus = 1;
+	jnb	_P0_0,00110$
+	mov	r5,#0x01
+00110$:
+;	Flashing.c:32: if (P0_1 == 0 && flag_plus) {
+	jb	_P0_1,00120$
+	mov	a,r6
+	jz	00120$
+;	Flashing.c:33: if (table[0] == 0x79 && table[1] == 0xb9) continue;
+	mov	a,#0x79
+	cjne	a,_main_table_65536_5,00184$
 	clr	a
-	cjne	a,_main_row_65536_3,00129$
-	inc	(_main_row_65536_3 + 1)
-00129$:
-;	Lab3-main.c:25: if (count == 0x10) {
-	cjne	r4,#0x10,00105$
-	cjne	r5,#0x00,00105$
-;	Lab3-main.c:26: count = 1;
-	mov	r4,#0x01
-;	Lab3-main.c:27: row   = 0;
+	cjne	a,(_main_table_65536_5 + 1),00184$
+	sjmp	00185$
+00184$:
+	sjmp	00113$
+00185$:
+	mov	a,#0xb9
+	cjne	a,(_main_table_65536_5 + 0x0002),00186$
 	clr	a
-	mov	r5,a
-	mov	_main_row_65536_3,a
-	mov	(_main_row_65536_3 + 1),a
-00105$:
-;	Lab3-main.c:29: LED_Display(table,num);
-	mov	_LED_Display_PARM_2,#_main_num_65536_3
-	mov	(_LED_Display_PARM_2 + 1),#0x00
-	mov	(_LED_Display_PARM_2 + 2),#0x40
-	mov	dptr,#_main_table_65536_3
-	mov	b,#0x40
-	push	ar5
-	push	ar4
-	lcall	_LED_Display
-	pop	ar4
-	pop	ar5
-;	Lab3-main.c:31: }
-	ljmp	00107$
+	cjne	a,((_main_table_65536_5 + 0x0002) + 1),00186$
+	ljmp	00124$
+00186$:
+00113$:
+;	Flashing.c:34: flag_plus = 0;
+	mov	r6,#0x00
+;	Flashing.c:35: table[1] += 1;
+	mov	a,#0x01
+	add	a,(_main_table_65536_5 + 0x0002)
+	mov	r3,a
+	clr	a
+	addc	a,((_main_table_65536_5 + 0x0002) + 1)
+	mov	r4,a
+	mov	((_main_table_65536_5 + 0x0002) + 0),r3
+	mov	((_main_table_65536_5 + 0x0002) + 1),r4
+;	Flashing.c:36: if (table[1] == 0xba) {
+	cjne	r3,#0xba,00187$
+	cjne	r4,#0x00,00187$
+	sjmp	00188$
+00187$:
+	ljmp	00124$
+00188$:
+;	Flashing.c:37: table[1] = 0xb0;
+	mov	((_main_table_65536_5 + 0x0002) + 0),#0xb0
+	mov	((_main_table_65536_5 + 0x0002) + 1),#0x00
+;	Flashing.c:38: table[0]++;
+	mov	r3,(_main_table_65536_5 + 0)
+	mov	r4,(_main_table_65536_5 + 1)
+	inc	r3
+	cjne	r3,#0x00,00189$
+	inc	r4
+00189$:
+	mov	(_main_table_65536_5 + 0),r3
+	mov	(_main_table_65536_5 + 1),r4
+	ljmp	00124$
+00120$:
+;	Flashing.c:41: else if (P0_1 == 1) flag_plus = 1;
+	jb	_P0_1,00190$
+	ljmp	00124$
+00190$:
+	mov	r6,#0x01
+;	Flashing.c:43: }
+	ljmp	00124$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)

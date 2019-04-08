@@ -2,15 +2,13 @@
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 3.8.0 #10562 (MINGW64)
 ;--------------------------------------------------------
-	.module Lab3_main
+	.module LED_Display
 	.optsdcc -mmcs51 --model-small
 	
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
-	.globl _main
-	.globl _keyPressed
-	.globl _LED_Display
+	.globl _LED_Display_PARM_2
 	.globl _CY
 	.globl _AC
 	.globl _F0
@@ -107,6 +105,7 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
+	.globl _LED_Display
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -222,24 +221,14 @@ _CY	=	0x00d7
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
-_main_table_65536_3:
-	.ds 8
-_main_num_65536_3:
-	.ds 8
-_main_row_65536_3:
-	.ds 2
-_main_previous_65537_4:
-	.ds 2
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
-;--------------------------------------------------------
-; Stack segment in internal ram 
-;--------------------------------------------------------
-	.area	SSEG
-__start__stack:
-	.ds	1
-
+	.area	OSEG    (OVR,DATA)
+_LED_Display_PARM_2:
+	.ds 3
+_LED_Display_table_65536_2:
+	.ds 3
 ;--------------------------------------------------------
 ; indirectly addressable internal ram data
 ;--------------------------------------------------------
@@ -280,54 +269,34 @@ __start__stack:
 	.area GSFINAL (CODE)
 	.area CSEG    (CODE)
 ;--------------------------------------------------------
-; interrupt vector 
-;--------------------------------------------------------
-	.area HOME    (CODE)
-__interrupt_vect:
-	ljmp	__sdcc_gsinit_startup
-;--------------------------------------------------------
 ; global & static initialisations
 ;--------------------------------------------------------
 	.area HOME    (CODE)
 	.area GSINIT  (CODE)
 	.area GSFINAL (CODE)
 	.area GSINIT  (CODE)
-	.globl __sdcc_gsinit_startup
-	.globl __sdcc_program_startup
-	.globl __start__stack
-	.globl __mcs51_genXINIT
-	.globl __mcs51_genXRAMCLEAR
-	.globl __mcs51_genRAMCLEAR
-	.area GSFINAL (CODE)
-	ljmp	__sdcc_program_startup
 ;--------------------------------------------------------
 ; Home
 ;--------------------------------------------------------
 	.area HOME    (CODE)
 	.area HOME    (CODE)
-__sdcc_program_startup:
-	ljmp	_main
-;	return from main will return to caller
 ;--------------------------------------------------------
 ; code
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
+;Allocation info for local variables in function 'LED_Display'
 ;------------------------------------------------------------
-;table                     Allocated with name '_main_table_65536_3'
-;num                       Allocated with name '_main_num_65536_3'
-;row                       Allocated with name '_main_row_65536_3'
-;count                     Allocated to registers r4 r5 
-;number                    Allocated to registers 
-;previous                  Allocated with name '_main_previous_65537_4'
-;key                       Allocated to registers r2 r3 
+;num                       Allocated with name '_LED_Display_PARM_2'
+;table                     Allocated with name '_LED_Display_table_65536_2'
+;i                         Allocated to registers r3 r4 
+;j                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
-;	Lab3-main.c:5: int main() {
+;	LED_Display.c:3: void LED_Display(short table[], short num[]) {
 ;	-----------------------------------------
-;	 function main
+;	 function LED_Display
 ;	-----------------------------------------
-_main:
+_LED_Display:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -336,124 +305,76 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	Lab3-main.c:6: short table[4] = {0x70, 0xb0, 0xd0, 0xe0};
-	mov	(_main_table_65536_3 + 0),#0x70
-	mov	(_main_table_65536_3 + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0002) + 0),#0xb0
-	mov	((_main_table_65536_3 + 0x0002) + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0004) + 0),#0xd0
-	mov	((_main_table_65536_3 + 0x0004) + 1),#0x00
-	mov	((_main_table_65536_3 + 0x0006) + 0),#0xe0
-	mov	((_main_table_65536_3 + 0x0006) + 1),#0x00
-;	Lab3-main.c:7: short num[4] = {15, 15, 15, 15};
-	mov	(_main_num_65536_3 + 0),#0x0f
-	mov	(_main_num_65536_3 + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0002) + 0),#0x0f
-	mov	((_main_num_65536_3 + 0x0002) + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0004) + 0),#0x0f
-	mov	((_main_num_65536_3 + 0x0004) + 1),#0x00
-	mov	((_main_num_65536_3 + 0x0006) + 0),#0x0f
-;	Lab3-main.c:8: short row = 0;
-	clr	a
-	mov	((_main_num_65536_3 + 0x0006) + 1),a
-	mov	_main_row_65536_3,a
-	mov	(_main_row_65536_3 + 1),a
-;	Lab3-main.c:9: P2=0b11111110;
-	mov	_P2,#0xfe
-;	Lab3-main.c:10: short count = 1;
-	mov	r4,#0x01
-	mov	r5,#0x00
-;	Lab3-main.c:12: short previous = -1;
-	mov	_main_previous_65537_4,#0xff
-	mov	(_main_previous_65537_4 + 1),#0xff
-;	Lab3-main.c:13: while (1) {
+	mov	_LED_Display_table_65536_2,dpl
+	mov	(_LED_Display_table_65536_2 + 1),dph
+	mov	(_LED_Display_table_65536_2 + 2),b
+;	LED_Display.c:4: for(short i = 0; i < 4; i++) {
+	mov	r3,#0x00
+	mov	r4,#0x00
 00107$:
-;	Lab3-main.c:14: P2    =count^0b11111111;
-	mov	a,#0xff
-	xrl	a,r4
-	mov	r2,a
-	mov	ar3,r5
-	mov	_P2,r2
-;	Lab3-main.c:15: count *=2;
-	mov	a,r4
-	add	a,r4
-	mov	r4,a
-	mov	a,r5
-	rlc	a
-	mov	r5,a
-;	Lab3-main.c:16: short key = keyPressed(row);
-	mov	dpl,_main_row_65536_3
-	mov	dph,(_main_row_65536_3 + 1)
-	push	ar5
-	push	ar4
-	lcall	_keyPressed
-	mov	r2,dpl
-	mov	r3,dph
-	pop	ar4
-	pop	ar5
-;	Lab3-main.c:17: if (key != -1 && key != previous) {
-	cjne	r2,#0xff,00127$
-	cjne	r3,#0xff,00127$
-	sjmp	00102$
-00127$:
-	mov	a,r2
-	cjne	a,_main_previous_65537_4,00128$
+	clr	c
 	mov	a,r3
-	cjne	a,(_main_previous_65537_4 + 1),00128$
-	sjmp	00102$
-00128$:
-;	Lab3-main.c:18: previous = key;
-	mov	_main_previous_65537_4,r2
-	mov	(_main_previous_65537_4 + 1),r3
-;	Lab3-main.c:19: num[0] =num[1];
-	mov	r6,((_main_num_65536_3 + 0x0002) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0002) + 1)
-	mov	(_main_num_65536_3 + 0),r6
-	mov	(_main_num_65536_3 + 1),r7
-;	Lab3-main.c:20: num[1] =num[2];
-	mov	r6,((_main_num_65536_3 + 0x0004) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0004) + 1)
-	mov	((_main_num_65536_3 + 0x0002) + 0),r6
-	mov	((_main_num_65536_3 + 0x0002) + 1),r7
-;	Lab3-main.c:21: num[2] =num[3];			
-	mov	r6,((_main_num_65536_3 + 0x0006) + 0)
-	mov	r7,((_main_num_65536_3 + 0x0006) + 1)
-	mov	((_main_num_65536_3 + 0x0004) + 0),r6
-	mov	((_main_num_65536_3 + 0x0004) + 1),r7
-;	Lab3-main.c:22: num[3] = key;
-	mov	((_main_num_65536_3 + 0x0006) + 0),r2
-	mov	((_main_num_65536_3 + 0x0006) + 1),r3
-00102$:
-;	Lab3-main.c:24: row++;
-	inc	_main_row_65536_3
-	clr	a
-	cjne	a,_main_row_65536_3,00129$
-	inc	(_main_row_65536_3 + 1)
-00129$:
-;	Lab3-main.c:25: if (count == 0x10) {
-	cjne	r4,#0x10,00105$
-	cjne	r5,#0x00,00105$
-;	Lab3-main.c:26: count = 1;
-	mov	r4,#0x01
-;	Lab3-main.c:27: row   = 0;
-	clr	a
-	mov	r5,a
-	mov	_main_row_65536_3,a
-	mov	(_main_row_65536_3 + 1),a
-00105$:
-;	Lab3-main.c:29: LED_Display(table,num);
-	mov	_LED_Display_PARM_2,#_main_num_65536_3
-	mov	(_LED_Display_PARM_2 + 1),#0x00
-	mov	(_LED_Display_PARM_2 + 2),#0x40
-	mov	dptr,#_main_table_65536_3
-	mov	b,#0x40
-	push	ar5
-	push	ar4
-	lcall	_LED_Display
-	pop	ar4
-	pop	ar5
-;	Lab3-main.c:31: }
-	ljmp	00107$
+	subb	a,#0x04
+	mov	a,r4
+	xrl	a,#0x80
+	subb	a,#0x80
+	jnc	00109$
+;	LED_Display.c:5: P1  = table[i] + num[i];
+	mov	a,r3
+	add	a,r3
+	mov	r1,a
+	mov	a,r4
+	rlc	a
+	mov	r2,a
+	mov	a,r1
+	add	a,_LED_Display_table_65536_2
+	mov	r0,a
+	mov	a,r2
+	addc	a,(_LED_Display_table_65536_2 + 1)
+	mov	r6,a
+	mov	r7,(_LED_Display_table_65536_2 + 2)
+	mov	dpl,r0
+	mov	dph,r6
+	mov	b,r7
+	lcall	__gptrget
+	mov	r0,a
+	mov	a,r1
+	add	a,_LED_Display_PARM_2
+	mov	r1,a
+	mov	a,r2
+	addc	a,(_LED_Display_PARM_2 + 1)
+	mov	r2,a
+	mov	r7,(_LED_Display_PARM_2 + 2)
+	mov	dpl,r1
+	mov	dph,r2
+	mov	b,r7
+	lcall	__gptrget
+	add	a,r0
+	mov	_P1,a
+;	LED_Display.c:6: for(int j = 0; j < 1000; j++){}
+	mov	r6,#0x00
+	mov	r7,#0x00
+00104$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xe8
+	mov	a,r7
+	xrl	a,#0x80
+	subb	a,#0x83
+	jnc	00108$
+	inc	r6
+	cjne	r6,#0x00,00104$
+	inc	r7
+	sjmp	00104$
+00108$:
+;	LED_Display.c:4: for(short i = 0; i < 4; i++) {
+	inc	r3
+	cjne	r3,#0x00,00107$
+	inc	r4
+	sjmp	00107$
+00109$:
+;	LED_Display.c:8: }
+	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)

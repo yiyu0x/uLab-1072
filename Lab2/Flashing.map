@@ -43,20 +43,20 @@ C:   00000000  s_XABS
 C:   00000001  s_PSEG                          
 C:   00000001  s_XISEG                         
 C:   00000001  s_XSEG                          
+C:   00000002  l_OSEG                          
 C:   00000003  l_GSFINAL                       
 C:   00000003  l_GSINIT0                       
 C:   00000006  l_HOME                          
-C:   00000006  l_OSEG                          
 C:   00000006  s_GSINIT0                       
 C:   00000008  l_REG_BANK_0                    
 C:   00000008  s_REG_BANK_1                    
 C:   00000009  s_GSINIT1                       
 C:   00000009  s_GSINIT2                       
 C:   0000000A  l_GSINIT2                       
+C:   0000000C  s_OSEG                          
+C:   0000000E  s_SSEG                          
 C:   00000010  s_REG_BANK_2                    
 C:   00000013  s_GSINIT3                       
-C:   00000018  s_BIT_BANK                      
-C:   00000018  s_REG_BANK_3                    
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
@@ -66,11 +66,11 @@ CABS                                00000000    00000000 =           0. bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   0000001C  s_OSEG                          
+C:   00000018  s_BIT_BANK                      
+C:   00000018  s_REG_BANK_3                    
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
 C:   00000022  l_GSINIT3                       
-C:   00000022  s_SSEG                          
 C:   0000002A  l_GSINIT4                       
 C:   00000035  s_GSINIT4                       
 C:   0000005F  s_GSFINAL                       
@@ -78,11 +78,11 @@ C:   0000005F  s_GSINIT
 C:   0000005F  s_GSINIT5                       
 C:   00000062  s_CSEG                          
 C:   00000080  l_DSEG                          
-C:   000000DE  l_SSEG                          
+C:   000000F2  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   000001BD  l_CSEG                          
-C:   0000021F  s_CONST                         
-C:   0000021F  s_XINIT                         
+C:   00000123  l_CSEG                          
+C:   00000185  s_CONST                         
+C:   00000185  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -94,54 +94,54 @@ Area                                    Addr        Size        Decimal Bytes (A
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00000000  .__.ABS.                           _startup
-     00000080  _P0                                Keypad4x4
-     00000080  _P0_0                              Keypad4x4
-     00000081  _P0_1                              Keypad4x4
-     00000081  _SP                                Keypad4x4
-     00000082  _DPL                               Keypad4x4
-     00000082  _P0_2                              Keypad4x4
-     00000083  _DPH                               Keypad4x4
-     00000083  _P0_3                              Keypad4x4
-     00000084  _P0_4                              Keypad4x4
-     00000085  _P0_5                              Keypad4x4
-     00000086  _P0_6                              Keypad4x4
-     00000087  _P0_7                              Keypad4x4
-     00000087  _PCON                              Keypad4x4
-     00000088  _IT0                               Keypad4x4
-     00000088  _TCON                              Keypad4x4
-     00000089  _IE0                               Keypad4x4
-     00000089  _TMOD                              Keypad4x4
-     0000008A  _IT1                               Keypad4x4
-     0000008A  _TL0                               Keypad4x4
-     0000008B  _IE1                               Keypad4x4
-     0000008B  _TL1                               Keypad4x4
-     0000008C  _TH0                               Keypad4x4
-     0000008C  _TR0                               Keypad4x4
-     0000008D  _TF0                               Keypad4x4
-     0000008D  _TH1                               Keypad4x4
-     0000008E  _TR1                               Keypad4x4
-     0000008F  _TF1                               Keypad4x4
-     00000090  _P1                                Keypad4x4
-     00000090  _P1_0                              Keypad4x4
-     00000091  _P1_1                              Keypad4x4
-     00000092  _P1_2                              Keypad4x4
-     00000093  _P1_3                              Keypad4x4
-     00000094  _P1_4                              Keypad4x4
-     00000095  _P1_5                              Keypad4x4
-     00000096  _P1_6                              Keypad4x4
-     00000097  _P1_7                              Keypad4x4
-     00000098  _RI                                Keypad4x4
-     00000098  _SCON                              Keypad4x4
-     00000099  _SBUF                              Keypad4x4
-     00000099  _TI                                Keypad4x4
-     0000009A  _RB8                               Keypad4x4
-     0000009B  _TB8                               Keypad4x4
-     0000009C  _REN                               Keypad4x4
-     0000009D  _SM2                               Keypad4x4
-     0000009E  _SM1                               Keypad4x4
-     0000009F  _SM0                               Keypad4x4
-     000000A0  _P2                                Keypad4x4
-     000000A0  _P2_0                              Keypad4x4
+     00000080  _P0                                Flashing
+     00000080  _P0_0                              Flashing
+     00000081  _P0_1                              Flashing
+     00000081  _SP                                Flashing
+     00000082  _DPL                               Flashing
+     00000082  _P0_2                              Flashing
+     00000083  _DPH                               Flashing
+     00000083  _P0_3                              Flashing
+     00000084  _P0_4                              Flashing
+     00000085  _P0_5                              Flashing
+     00000086  _P0_6                              Flashing
+     00000087  _P0_7                              Flashing
+     00000087  _PCON                              Flashing
+     00000088  _IT0                               Flashing
+     00000088  _TCON                              Flashing
+     00000089  _IE0                               Flashing
+     00000089  _TMOD                              Flashing
+     0000008A  _IT1                               Flashing
+     0000008A  _TL0                               Flashing
+     0000008B  _IE1                               Flashing
+     0000008B  _TL1                               Flashing
+     0000008C  _TH0                               Flashing
+     0000008C  _TR0                               Flashing
+     0000008D  _TF0                               Flashing
+     0000008D  _TH1                               Flashing
+     0000008E  _TR1                               Flashing
+     0000008F  _TF1                               Flashing
+     00000090  _P1                                Flashing
+     00000090  _P1_0                              Flashing
+     00000091  _P1_1                              Flashing
+     00000092  _P1_2                              Flashing
+     00000093  _P1_3                              Flashing
+     00000094  _P1_4                              Flashing
+     00000095  _P1_5                              Flashing
+     00000096  _P1_6                              Flashing
+     00000097  _P1_7                              Flashing
+     00000098  _RI                                Flashing
+     00000098  _SCON                              Flashing
+     00000099  _SBUF                              Flashing
+     00000099  _TI                                Flashing
+     0000009A  _RB8                               Flashing
+     0000009B  _TB8                               Flashing
+     0000009C  _REN                               Flashing
+     0000009D  _SM2                               Flashing
+     0000009E  _SM1                               Flashing
+     0000009F  _SM0                               Flashing
+     000000A0  _P2                                Flashing
+     000000A0  _P2_0                              Flashing
      000000A0  __XPAGE                            
 ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
 Hexadecimal  [32-Bits]
@@ -152,57 +152,54 @@ Area                                    Addr        Size        Decimal Bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     000000A1  _P2_1                              Keypad4x4
-     000000A2  _P2_2                              Keypad4x4
-     000000A3  _P2_3                              Keypad4x4
-     000000A4  _P2_4                              Keypad4x4
-     000000A5  _P2_5                              Keypad4x4
-     000000A6  _P2_6                              Keypad4x4
-     000000A7  _P2_7                              Keypad4x4
-     000000A8  _EX0                               Keypad4x4
-     000000A8  _IE                                Keypad4x4
-     000000A9  _ET0                               Keypad4x4
-     000000AA  _EX1                               Keypad4x4
-     000000AB  _ET1                               Keypad4x4
-     000000AC  _ES                                Keypad4x4
-     000000AF  _EA                                Keypad4x4
-     000000B0  _P3                                Keypad4x4
-     000000B0  _P3_0                              Keypad4x4
-     000000B0  _RXD                               Keypad4x4
-     000000B1  _P3_1                              Keypad4x4
-     000000B1  _TXD                               Keypad4x4
-     000000B2  _INT0                              Keypad4x4
-     000000B2  _P3_2                              Keypad4x4
-     000000B3  _INT1                              Keypad4x4
-     000000B3  _P3_3                              Keypad4x4
-     000000B4  _P3_4                              Keypad4x4
-     000000B4  _T0                                Keypad4x4
-     000000B5  _P3_5                              Keypad4x4
-     000000B5  _T1                                Keypad4x4
-     000000B6  _P3_6                              Keypad4x4
-     000000B6  _WR                                Keypad4x4
-     000000B7  _P3_7                              Keypad4x4
-     000000B7  _RD                                Keypad4x4
-     000000B8  _IP                                Keypad4x4
-     000000B8  _PX0                               Keypad4x4
-     000000B9  _PT0                               Keypad4x4
-     000000BA  _PX1                               Keypad4x4
-     000000BB  _PT1                               Keypad4x4
-     000000BC  _PS                                Keypad4x4
-     000000D0  _P                                 Keypad4x4
-     000000D0  _PSW                               Keypad4x4
-     000000D1  _F1                                Keypad4x4
-     000000D2  _OV                                Keypad4x4
-     000000D3  _RS0                               Keypad4x4
-     000000D4  _RS1                               Keypad4x4
-     000000D5  _F0                                Keypad4x4
-     000000D6  _AC                                Keypad4x4
-     000000D7  _CY                                Keypad4x4
-     000000E0  _ACC                               Keypad4x4
-     000000F0  _B                                 Keypad4x4
-     000000F5  _B_5                               _gptrget
-     000000F6  _B_6                               _gptrget
-     000000F7  _B_7                               _gptrget
+     000000A1  _P2_1                              Flashing
+     000000A2  _P2_2                              Flashing
+     000000A3  _P2_3                              Flashing
+     000000A4  _P2_4                              Flashing
+     000000A5  _P2_5                              Flashing
+     000000A6  _P2_6                              Flashing
+     000000A7  _P2_7                              Flashing
+     000000A8  _EX0                               Flashing
+     000000A8  _IE                                Flashing
+     000000A9  _ET0                               Flashing
+     000000AA  _EX1                               Flashing
+     000000AB  _ET1                               Flashing
+     000000AC  _ES                                Flashing
+     000000AF  _EA                                Flashing
+     000000B0  _P3                                Flashing
+     000000B0  _P3_0                              Flashing
+     000000B0  _RXD                               Flashing
+     000000B1  _P3_1                              Flashing
+     000000B1  _TXD                               Flashing
+     000000B2  _INT0                              Flashing
+     000000B2  _P3_2                              Flashing
+     000000B3  _INT1                              Flashing
+     000000B3  _P3_3                              Flashing
+     000000B4  _P3_4                              Flashing
+     000000B4  _T0                                Flashing
+     000000B5  _P3_5                              Flashing
+     000000B5  _T1                                Flashing
+     000000B6  _P3_6                              Flashing
+     000000B6  _WR                                Flashing
+     000000B7  _P3_7                              Flashing
+     000000B7  _RD                                Flashing
+     000000B8  _IP                                Flashing
+     000000B8  _PX0                               Flashing
+     000000B9  _PT0                               Flashing
+     000000BA  _PX1                               Flashing
+     000000BB  _PT1                               Flashing
+     000000BC  _PS                                Flashing
+     000000D0  _P                                 Flashing
+     000000D0  _PSW                               Flashing
+     000000D1  _F1                                Flashing
+     000000D2  _OV                                Flashing
+     000000D3  _RS0                               Flashing
+     000000D4  _RS1                               Flashing
+     000000D5  _F0                                Flashing
+     000000D6  _AC                                Flashing
+     000000D7  _CY                                Flashing
+     000000E0  _ACC                               Flashing
+     000000F0  _B                                 Flashing
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 5.
 Hexadecimal  [32-Bits]
@@ -227,22 +224,22 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                0000001C    00000006 =           6. bytes (REL,OVR)
+OSEG                                0000000C    00000002 =           2. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000001C  _LED_Display_PARM_2                LED_Display
+     0000000C  __mulint_PARM_2                    _mulint
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                00000022    000000DE =         222. bytes (REL,OVR)
+SSEG                                0000000E    000000F2 =         242. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000022  __start__stack                     Lab3_main
+     0000000E  __start__stack                     Flashing
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
@@ -253,7 +250,7 @@ HOME                                00000000    00000006 =           6. bytes (R
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000003  __sdcc_program_startup             Lab3_main
+C:   00000003  __sdcc_program_startup             Flashing
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 Hexadecimal  [32-Bits]
@@ -312,39 +309,37 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    000001BD =         445. bytes (REL,CON,CODE)
+CSEG                                00000062    00000123 =         291. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000062  _main                              Lab3_main
-C:   0000012B  _LED_Display                       LED_Display
-C:   00000191  __gptrget                          _gptrget
-C:   000001AD  _keyPressed                        Keypad4x4
-C:   0000021B  __sdcc_external_startup            _startup
+C:   00000062  _delay                             Flashing
+C:   00000089  _main                              Flashing
+C:   00000164  __mulint                           _mulint
+C:   00000164  __mulint_dummy                     _mulint
+C:   00000181  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
 
 Files Linked                              [ module(s) ]
 
-Lab3-main.rel                             [  ]
+Flashing.rel                              [  ]
 
 
 Libraries Linked                          [ object file ]
 
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtclear.rel ]
-myIO.lib                                  [ LED_Display.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtxinit.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libint.lib
+                                          [ _mulint.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtxclear.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtpagesfr.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtstart.rel ]
-C:\Program Files\SDCC\bin\..\lib\small/libsdcc.lib
-                                          [ _gptrget.rel ]
-myIO.lib                                  [ Keypad4x4.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/libsdcc.lib
                                           [ _startup.rel ]
 

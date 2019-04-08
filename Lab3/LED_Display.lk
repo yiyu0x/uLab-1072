@@ -1,5 +1,5 @@
 -muwx
--i Lab3-main.ihx
+-i LED_Display.ihx
 -M
 -Y
 -b HOME = 0x0000
@@ -8,12 +8,13 @@
 -b ISEG = 0x0000
 -b BSEG = 0x0000
 -k C:\Program Files\SDCC\bin\..\lib\small
--l myIO.lib
+-l Lab3-main.rel
 -l mcs51
 -l libsdcc
 -l libint
 -l liblong
 -l libfloat
-Lab3-main.rel
+LED_Display.rel
+Keypad4x4.rel
 
 -e
