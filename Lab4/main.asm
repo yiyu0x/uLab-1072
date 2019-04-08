@@ -373,11 +373,11 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	main.c:12: int dc   = 0x70; // 十位
-	mov	r6,#0x70
+;	main.c:12: int dc   = 0x79; // 十位
+	mov	r6,#0x79
 	mov	r7,#0x00
-;	main.c:13: int cc   = 0xb0; // 個位
-	mov	r4,#0xb0
+;	main.c:13: int cc   = 0xb5; // 個位
+	mov	r4,#0xb5
 	mov	r5,#0x00
 ;	main.c:14: int t=0;
 	mov	r2,#0x00
@@ -418,10 +418,10 @@ _main:
 	cjne	r4,#0x00,00161$
 	inc	r5
 00161$:
-;	main.c:27: if(dc == 0x79 && cc == 0xb9){
+;	main.c:27: if(dc == 0x79 && cc == 0xba){
 	cjne	r6,#0x79,00102$
 	cjne	r7,#0x00,00102$
-	cjne	r4,#0xb9,00102$
+	cjne	r4,#0xba,00102$
 	cjne	r5,#0x00,00102$
 ;	main.c:28: dc = 0x70;
 	mov	r6,#0x70
@@ -442,20 +442,20 @@ _main:
 	inc	r7
 00168$:
 00107$:
-;	main.c:39: EA = 1;
+;	main.c:37: EA = 1;
 ;	assignBit
 	setb	_EA
-;	main.c:41: if(t) P0 = dc;
+;	main.c:39: if(t) P0 = dc;
 	mov	a,r2
 	orl	a,r3
 	jz	00109$
 	mov	_P0,r6
 	sjmp	00110$
 00109$:
-;	main.c:42: else  P0 = cc;
+;	main.c:40: else  P0 = cc;
 	mov	_P0,r4
 00110$:
-;	main.c:43: if (t == 0) t = 1;
+;	main.c:41: if (t == 0) t = 1;
 	mov	a,r2
 	orl	a,r3
 	jnz	00112$
@@ -463,10 +463,10 @@ _main:
 	mov	r3,a
 	sjmp	00131$
 00112$:
-;	main.c:44: else t = 0;			
+;	main.c:42: else t = 0;			
 	mov	r2,#0x00
 	mov	r3,#0x00
-;	main.c:45: for(int i = 0; i < 1000; i++){}
+;	main.c:43: for(int i = 0; i < 1000; i++){}
 00131$:
 	mov	r0,#0x00
 	mov	r1,#0x00
@@ -479,10 +479,10 @@ _main:
 	subb	a,#0x83
 	jnc	00116$
 	inc	r0
-;	main.c:49: return 0;
+;	main.c:46: return 0;
 	cjne	r0,#0x00,00119$
 	inc	r1
-;	main.c:50: }
+;	main.c:47: }
 	sjmp	00119$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

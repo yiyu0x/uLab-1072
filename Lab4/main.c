@@ -9,9 +9,9 @@ void timer_isr (void) __interrupt (1) __using (1) {
 }
 
 int main(){
-	int dc   = 0x70; // 十位
-	int cc   = 0xb0; // 個位
-	int t=0;
+	int dc = 0x70; // 十位
+	int cc = 0xb0; // 個位
+	int t  = 0;
 	P0   = 0x30;
 	TMOD = 0b00000001;
 	IE   = 0x82;
