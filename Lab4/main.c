@@ -24,11 +24,11 @@ int main(){
 			counter = 0;
 			cc++;
 			
-			if(dc == 0x79 && cc == 0xb9){
+			if(dc == 0x79 && cc == 0xba){
 				dc = 0x70;
 				cc = 0xb0;
 			}
-			
+
 			if(cc == 0xba){
 				cc = 0xb0;
 				dc++;
