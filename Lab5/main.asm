@@ -336,9 +336,9 @@ __interrupt_vect:
 	mov	((_table + 0x000a) + 1),#0x01
 	mov	((_table + 0x000c) + 0),#0xee
 	mov	((_table + 0x000c) + 1),#0x01
-;	main.c:16: char counter = 0;
+;	main.c:18: char counter = 0;
 	mov	_counter,#0x00
-;	main.c:17: char table_index=0;
+;	main.c:19: char table_index=0;
 	mov	_table_index,#0x00
 	.area GSFINAL (CODE)
 	ljmp	__sdcc_program_startup
@@ -357,7 +357,7 @@ __sdcc_program_startup:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'timer_isr'
 ;------------------------------------------------------------
-;	main.c:19: void timer_isr (void) __interrupt (1) __using (1) {
+;	main.c:21: void timer_isr (void) __interrupt (1) __using (1) {
 ;	-----------------------------------------
 ;	 function timer_isr
 ;	-----------------------------------------
@@ -375,11 +375,14 @@ _timer_isr:
 	push	dph
 	push	psw
 	mov	psw,#0x08
-;	main.c:21: TH0  = (PERIOD-table[music[music_index]]) >> 8;
+;	main.c:23: TH0  = (PERIOD-table[music[music_index]-1]) >> 8;
 	mov	a,_music_index
 	mov	dptr,#_music
 	movc	a,@a+dptr
-	add	a,acc
+	mov	r7,a
+	dec	r7
+	mov	a,r7
+	add	a,r7
 	add	a,#_table
 	mov	r1,a
 	mov	ar6,@r1
@@ -403,15 +406,15 @@ _timer_isr:
 	clr	a
 	subb	a,r5
 	mov	_TH0,r3
-;	main.c:22: TL0  = (PERIOD-table[music[music_index]]) & 0xff;
+;	main.c:24: TL0  = (PERIOD-table[music[music_index]-1]) & 0xff;
 	clr	c
 	clr	a
 	subb	a,r6
 	mov	r6,a
 	mov	_TL0,r6
-;	main.c:26: counter++;
+;	main.c:30: counter++;
 	inc	_counter
-;	main.c:27: }
+;	main.c:31: }
 	pop	psw
 	pop	dph
 	pop	dpl
@@ -421,7 +424,7 @@ _timer_isr:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'timer1'
 ;------------------------------------------------------------
-;	main.c:29: void timer1 (void) __interrupt (3) __using (2) {
+;	main.c:32: void timer1 (void) __interrupt (3) __using (2) {
 ;	-----------------------------------------
 ;	 function timer1
 ;	-----------------------------------------
@@ -436,17 +439,17 @@ _timer1:
 	ar0 = 0x10
 	push	acc
 	push	psw
-;	main.c:30: TH1  = INIT_TIME >> 8;
+;	main.c:33: TH1  = INIT_TIME >> 8;
 	mov	_TH1,#0x0b
-;	main.c:31: TL1  = INIT_TIME & 0xff;
+;	main.c:34: TL1  = INIT_TIME & 0xff;
 	mov	_TL1,#0xdc
-;	main.c:32: timer1_count++;
+;	main.c:35: timer1_count++;
 	inc	_timer1_count
 	clr	a
 	cjne	a,_timer1_count,00103$
 	inc	(_timer1_count + 1)
 00103$:
-;	main.c:33: }
+;	main.c:36: }
 	pop	psw
 	pop	acc
 	reti
@@ -461,7 +464,7 @@ _timer1:
 ;i                         Allocated to registers r6 r7 
 ;i                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
-;	main.c:35: void init(){
+;	main.c:37: void init(){
 ;	-----------------------------------------
 ;	 function init
 ;	-----------------------------------------
@@ -474,12 +477,12 @@ _init:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	main.c:36: music_index=0;
+;	main.c:38: music_index=0;
 	mov	_music_index,#0x00
-;	main.c:37: timer1_count=-1;
+;	main.c:39: timer1_count=-1;
 	mov	_timer1_count,#0xff
 	mov	(_timer1_count + 1),#0xff
-;	main.c:39: for(int i=7;i<16;i++){
+;	main.c:41: for(int i=7;i<16;i++){
 	mov	r6,#0x07
 	mov	r7,#0x00
 00104$:
@@ -490,7 +493,7 @@ _init:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jnc	00101$
-;	main.c:40: table[i]=table[i-7]*2;
+;	main.c:42: table[i]=table[i-7]*2;
 	mov	a,r6
 	add	a,r6
 	mov	r4,a
@@ -519,13 +522,13 @@ _init:
 	inc	r1
 	mov	@r1,ar5
 	dec	r1
-;	main.c:39: for(int i=7;i<16;i++){
+;	main.c:41: for(int i=7;i<16;i++){
 	inc	r6
 	cjne	r6,#0x00,00104$
 	inc	r7
 	sjmp	00104$
 00101$:
-;	main.c:42: for(int i=0;i<16;i++){
+;	main.c:44: for(int i=0;i<16;i++){
 	mov	r6,#0x00
 	mov	r7,#0x00
 00107$:
@@ -538,7 +541,7 @@ _init:
 	jc	00131$
 	ret
 00131$:
-;	main.c:43: tmp=1.0/table[i]*1000000;
+;	main.c:45: tmp=1.0/table[i]*1000000;
 	mov	a,r6
 	add	a,r6
 	mov	r4,a
@@ -589,7 +592,7 @@ _init:
 	mov	a,sp
 	add	a,#0xfc
 	mov	sp,a
-;	main.c:44: table[i]=tmp;
+;	main.c:46: table[i]=tmp;
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
@@ -604,83 +607,91 @@ _init:
 	inc	r1
 	mov	@r1,b
 	dec	r1
-;	main.c:42: for(int i=0;i<16;i++){
+;	main.c:44: for(int i=0;i<16;i++){
 	inc	r6
 	cjne	r6,#0x00,00132$
 	inc	r7
 00132$:
-;	main.c:46: }
+;	main.c:48: }
 	ljmp	00107$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
-;	main.c:47: int main(){
+;	main.c:49: int main(){
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:48: init();
+;	main.c:50: init();
 	lcall	_init
-;	main.c:49: TMOD = 0b00010001;
+;	main.c:51: TMOD = 0b00010001;
 	mov	_TMOD,#0x11
-;	main.c:50: IE   = 0x8A;
+;	main.c:52: IE   = 0x8A;
 	mov	_IE,#0x8a
-;	main.c:51: TR0  = 1;
+;	main.c:53: TR0  = 1;
 ;	assignBit
 	setb	_TR0
-;	main.c:52: TR1  = 1;
+;	main.c:54: TR1  = 1;
 ;	assignBit
 	setb	_TR1
-;	main.c:53: TH0  = PERIOD >> 8;
+;	main.c:55: TH0  = PERIOD >> 8;
 	mov	_TH0,#0x00
-;	main.c:54: TL0  = PERIOD & 0xff;
+;	main.c:56: TL0  = PERIOD & 0xff;
 	mov	_TL0,#0x00
-;	main.c:55: P2_7=0;
+;	main.c:57: P2_7=0;
 ;	assignBit
 	clr	_P2_7
-;	main.c:56: isSound=1;
+;	main.c:58: isSound=1;
 	mov	_isSound,#0x01
 	mov	(_isSound + 1),#0x00
-;	main.c:57: while (1){
-00108$:
-;	main.c:58: EA = 0;
+;	main.c:59: while (1){
+00110$:
+;	main.c:60: EA = 0;
 ;	assignBit
 	clr	_EA
-;	main.c:59: if (counter == 1) {
+;	main.c:61: if (counter == 1 ) {
 	mov	a,#0x01
-	cjne	a,_counter,00102$
-;	main.c:60: counter = 0;
+	cjne	a,_counter,00104$
+;	main.c:62: counter = 0;
 	mov	_counter,#0x00
-;	main.c:61: P2_7=!P2_7;
+;	main.c:63: if(music[music_index]!=16)
+	mov	a,_music_index
+	mov	dptr,#_music
+	movc	a,@a+dptr
+	mov	r7,a
+	cjne	r7,#0x10,00136$
+	sjmp	00104$
+00136$:
+;	main.c:64: P2_7=!P2_7;
 	cpl	_P2_7
-00102$:
-;	main.c:63: if(timer1_count == 10){
+00104$:
+;	main.c:66: if(timer1_count == 10){
 	mov	a,#0x0a
-	cjne	a,_timer1_count,00130$
+	cjne	a,_timer1_count,00137$
 	clr	a
-	cjne	a,(_timer1_count + 1),00130$
-	sjmp	00131$
-00130$:
-	sjmp	00106$
-00131$:
-;	main.c:76: music_index++;
+	cjne	a,(_timer1_count + 1),00137$
+	sjmp	00138$
+00137$:
+	sjmp	00108$
+00138$:
+;	main.c:67: music_index++;
 	inc	_music_index
-;	main.c:77: timer1_count=0;
+;	main.c:68: timer1_count=0;
 	clr	a
 	mov	_timer1_count,a
 	mov	(_timer1_count + 1),a
-;	main.c:78: if(music_index == 96)
+;	main.c:69: if(music_index == 96)
 	mov	a,#0x60
-	cjne	a,_music_index,00106$
-;	main.c:79: music_index = 0;
+	cjne	a,_music_index,00108$
+;	main.c:70: music_index = 0;
 	mov	_music_index,#0x00
-00106$:
-;	main.c:82: EA = 1;
+00108$:
+;	main.c:72: EA = 1;
 ;	assignBit
 	setb	_EA
-;	main.c:85: return 0;
-;	main.c:86: }
-	sjmp	00108$
+;	main.c:74: return 0;
+;	main.c:75: }
+	sjmp	00110$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 _music:
@@ -727,11 +738,11 @@ _music:
 	.db #0x08	; 8
 	.db #0x07	; 7
 	.db #0x06	; 6
-	.db #0x00	; 0
-	.db #0x00	; 0
+	.db #0x10	; 16
+	.db #0x10	; 16
 	.db #0x06	; 6
-	.db #0x00	; 0
-	.db #0x00	; 0
+	.db #0x10	; 16
+	.db #0x10	; 16
 	.db #0x0a	; 10
 	.db #0x0a	; 10
 	.db #0x0a	; 10
@@ -775,10 +786,10 @@ _music:
 	.db #0x0b	; 11
 	.db #0x09	; 9
 	.db #0x08	; 8
-	.db #0x00	; 0
-	.db #0x00	; 0
+	.db #0x10	; 16
+	.db #0x10	; 16
 	.db #0x08	; 8
-	.db #0x00	; 0
-	.db #0x00	; 0
+	.db #0x10	; 16
+	.db #0x10	; 16
 	.area XINIT   (CODE)
 	.area CABS    (ABS,CODE)

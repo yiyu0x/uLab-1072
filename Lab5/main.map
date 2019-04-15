@@ -80,9 +80,9 @@ C:   000000AA  s_GSFINAL
 C:   000000AD  s_CSEG                          
 C:   000000C1  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   000004AD  l_CSEG                          
-C:   0000055A  s_CONST                         
-C:   000005BA  s_XINIT                         
+C:   000004BB  l_CSEG                          
+C:   00000568  s_CONST                         
+C:   000005C8  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -331,43 +331,43 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                000000AD    000004AD =        1197. bytes (REL,CON,CODE)
+CSEG                                000000AD    000004BB =        1211. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   000000AD  _timer_isr                         main
-C:   000000EF  _timer1                            main
-C:   00000106  _init                              main
-C:   000001DB  _main                              main
-C:   00000222  ___fsmul                           _fsmul
-C:   000002C5  fsgetargs                          _fsget2args
-C:   000002F3  fs_normalize_a                     _fsnormalize
-C:   00000326  ___sint2fs                         _sint2fs
-C:   00000333  ___fs2sint                         _fs2sint
-C:   00000367  fs_round_and_return                _fsreturnval
-C:   0000037F  fs_zerocheck_return                _fsreturnval
-C:   00000388  fs_return_zero                     _fsreturnval
-C:   00000390  fs_direct_return                   _fsreturnval
-C:   0000039E  fs_return_inf                      _fsreturnval
-C:   000003AB  fs_return_nan                      _fsreturnval
-C:   000003B6  ___fsdiv                           _fsdiv
-C:   00000479  ___slong2fs                        _slong2fs
-C:   00000482  slong2fs_doit                      _slong2fs
-C:   000004A6  ___fs2slong                        _fs2slong
-C:   00000501  __sdcc_external_startup            _startup
-C:   00000505  fsgetarg                           _fsget1arg
-C:   00000517  fs_rshift_a                        _fsrshift
+C:   000000F1  _timer1                            main
+C:   00000108  _init                              main
+C:   000001DD  _main                              main
+C:   00000230  ___fsmul                           _fsmul
+C:   000002D3  fsgetargs                          _fsget2args
+C:   00000301  fs_normalize_a                     _fsnormalize
+C:   00000334  ___sint2fs                         _sint2fs
+C:   00000341  ___fs2sint                         _fs2sint
+C:   00000375  fs_round_and_return                _fsreturnval
+C:   0000038D  fs_zerocheck_return                _fsreturnval
+C:   00000396  fs_return_zero                     _fsreturnval
+C:   0000039E  fs_direct_return                   _fsreturnval
+C:   000003AC  fs_return_inf                      _fsreturnval
+C:   000003B9  fs_return_nan                      _fsreturnval
+C:   000003C4  ___fsdiv                           _fsdiv
+C:   00000487  ___slong2fs                        _slong2fs
+C:   00000490  slong2fs_doit                      _slong2fs
+C:   000004B4  ___fs2slong                        _fs2slong
+C:   0000050F  __sdcc_external_startup            _startup
+C:   00000513  fsgetarg                           _fsget1arg
+C:   00000525  fs_rshift_a                        _fsrshift
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               0000055A    00000060 =          96. bytes (REL,CON,CODE)
+CONST                               00000568    00000060 =          96. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   0000055A  _music                             main
+C:   00000568  _music                             main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 

@@ -316,14 +316,14 @@ Symbol Table
  10 __sdcc_program_startup                                         00001E GR
   8 __start__stack                                                 000000 GR
   7 _counter                                                       000025 GR
- 19 _init                                                          000059 GR
+ 19 _init                                                          00005B GR
   7 _isSound                                                       000003 GR
- 19 _main                                                          00012E GR
+ 19 _main                                                          000130 GR
  1A _music                                                         000000 GR
   7 _music_index                                                   000002 GR
   7 _table                                                         000005 GR
   7 _table_index                                                   000026 GR
- 19 _timer1                                                        000042 GR
+ 19 _timer1                                                        000044 GR
   7 _timer1_count                                                  000000 GR
  19 _timer_isr                                                     000000 GR
     a                                                           =  0000E0 L
@@ -557,7 +557,7 @@ Area Table
   16 GSINIT5                                    size      0   flags   20
   17 GSINIT                                     size     30   flags   20
   18 GSFINAL                                    size      3   flags   20
-  19 CSEG                                       size    175   flags   20
+  19 CSEG                                       size    183   flags   20
   1A CONST                                      size     60   flags   20
   1B XINIT                                      size      0   flags   20
   1C CABS                                       size      0   flags   28
