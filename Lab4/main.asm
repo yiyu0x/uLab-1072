@@ -489,7 +489,7 @@ _main:
 	cjne	a,_cc,00135$
 	inc	(_cc + 1)
 00135$:
-;	main.c:38: if(dc == 0x79 && cc == 0xba){
+;	main.c:37: if(dc == 0x79 && cc == 0xba){
 	mov	a,#0x79
 	cjne	a,_dc,00136$
 	clr	a
@@ -506,14 +506,14 @@ _main:
 00138$:
 	sjmp	00102$
 00139$:
-;	main.c:39: dc = 0x70;
+;	main.c:38: dc = 0x70;
 	mov	_dc,#0x70
 	mov	(_dc + 1),#0x00
-;	main.c:40: cc = 0xb0;
+;	main.c:39: cc = 0xb0;
 	mov	_cc,#0xb0
 	mov	(_cc + 1),#0x00
 00102$:
-;	main.c:43: if(cc == 0xba){
+;	main.c:41: if(cc == 0xba){
 	mov	a,#0xba
 	cjne	a,_cc,00140$
 	clr	a
@@ -522,23 +522,23 @@ _main:
 00140$:
 	sjmp	00107$
 00141$:
-;	main.c:44: cc = 0xb0;
+;	main.c:42: cc = 0xb0;
 	mov	_cc,#0xb0
 	mov	(_cc + 1),#0x00
-;	main.c:45: dc++;
+;	main.c:43: dc++;
 	inc	_dc
 	clr	a
 	cjne	a,_dc,00142$
 	inc	(_dc + 1)
 00142$:
 00107$:
-;	main.c:48: EA = 1;
+;	main.c:46: EA = 1;
 ;	assignBit
 	setb	_EA
-;	main.c:49: display();
+;	main.c:47: display();
 	lcall	_display
-;	main.c:51: return 0;
-;	main.c:52: }
+;	main.c:49: return 0;
+;	main.c:50: }
 	sjmp	00109$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

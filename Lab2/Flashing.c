@@ -1,3 +1,13 @@
+/*
+記得接電
+按鈕加減 顯示於7段顯示器
+P0 => 按按鈕 (PB,SW &)
+P1 => 七段顯示器
+
+push bottom 0 1 2 3
+switch 		4 5 6 7
+
+*/
 #include <8051.h>
 #include <stdbool.h>
 // p0 : 18 ~ 25
@@ -8,7 +18,7 @@ void delay(short time) {
 	}
 }
 void main() {
-	short table[] = {0x75, 0xb0};
+	short table[] = {0x75, 0xb0};	//初始值 5 0
 	bool index = 0;
 	bool flag_plus = 1;
 	bool flag_minus = 1;

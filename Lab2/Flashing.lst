@@ -311,7 +311,7 @@
                                     311 ;time                      Allocated to registers 
                                     312 ;d1                        Allocated to registers r4 r5 
                                     313 ;------------------------------------------------------------
-                                    314 ;	Flashing.c:5: void delay(short time) {
+                                    314 ;	Flashing.c:14: void delay(short time) {
                                     315 ;	-----------------------------------------
                                     316 ;	 function delay
                                     317 ;	-----------------------------------------
@@ -326,7 +326,7 @@
                            000000   326 	ar0 = 0x00
       000000 85 82*00         [24]  327 	mov	__mulint_PARM_2,dpl
       000003 85 83*01         [24]  328 	mov	(__mulint_PARM_2 + 1),dph
-                                    329 ;	Flashing.c:7: for (d1 = 0; d1 < time*100; d1 ++) {
+                                    329 ;	Flashing.c:16: for (d1 = 0; d1 < time*100; d1 ++) {
       000006 90 00 64         [24]  330 	mov	dptr,#0x0064
       000009 12r00r00         [24]  331 	lcall	__mulint
       00000C AE 82            [24]  332 	mov	r6,dpl
@@ -347,7 +347,7 @@
       000023 0D               [12]  347 	inc	r5
       000024 80 EE            [24]  348 	sjmp	00103$
       000026                        349 00105$:
-                                    350 ;	Flashing.c:9: }
+                                    350 ;	Flashing.c:18: }
       000026 22               [24]  351 	ret
                                     352 ;------------------------------------------------------------
                                     353 ;Allocation info for local variables in function 'main'
@@ -357,31 +357,31 @@
                                     357 ;flag_plus                 Allocated to registers r6 
                                     358 ;flag_minus                Allocated to registers r5 
                                     359 ;------------------------------------------------------------
-                                    360 ;	Flashing.c:10: void main() {
+                                    360 ;	Flashing.c:19: void main() {
                                     361 ;	-----------------------------------------
                                     362 ;	 function main
                                     363 ;	-----------------------------------------
       000027                        364 _main:
-                                    365 ;	Flashing.c:11: short table[] = {0x75, 0xb0};
+                                    365 ;	Flashing.c:20: short table[] = {0x75, 0xb0};
       000027 75*00 75         [24]  366 	mov	(_main_table_65536_5 + 0),#0x75
       00002A 75*01 00         [24]  367 	mov	(_main_table_65536_5 + 1),#0x00
       00002D 75*02 B0         [24]  368 	mov	((_main_table_65536_5 + 0x0002) + 0),#0xb0
       000030 75*03 00         [24]  369 	mov	((_main_table_65536_5 + 0x0002) + 1),#0x00
-                                    370 ;	Flashing.c:12: bool index = 0;
+                                    370 ;	Flashing.c:21: bool index = 0;
       000033 7F 00            [12]  371 	mov	r7,#0x00
-                                    372 ;	Flashing.c:13: bool flag_plus = 1;
+                                    372 ;	Flashing.c:22: bool flag_plus = 1;
       000035 7E 01            [12]  373 	mov	r6,#0x01
-                                    374 ;	Flashing.c:14: bool flag_minus = 1;
+                                    374 ;	Flashing.c:23: bool flag_minus = 1;
       000037 7D 01            [12]  375 	mov	r5,#0x01
-                                    376 ;	Flashing.c:15: while (1) {
+                                    376 ;	Flashing.c:24: while (1) {
       000039                        377 00124$:
-                                    378 ;	Flashing.c:17: index = !index;
+                                    378 ;	Flashing.c:26: index = !index;
       000039 EF               [12]  379 	mov	a,r7
       00003A B4 01 00         [24]  380 	cjne	a,#0x01,00172$
       00003D                        381 00172$:
       00003D E4               [12]  382 	clr	a
       00003E 33               [12]  383 	rlc	a
-                                    384 ;	Flashing.c:18: P1 = table[index];
+                                    384 ;	Flashing.c:27: P1 = table[index];
       00003F FF               [12]  385 	mov	r7,a
       000040 FC               [12]  386 	mov	r4,a
       000041 EC               [12]  387 	mov	a,r4
@@ -389,7 +389,7 @@
       000043 24r00            [12]  389 	add	a,#_main_table_65536_5
       000045 F9               [12]  390 	mov	r1,a
       000046 87 90            [24]  391 	mov	_P1,@r1
-                                    392 ;	Flashing.c:19: delay(50);
+                                    392 ;	Flashing.c:28: delay(50);
       000048 90 00 32         [24]  393 	mov	dptr,#0x0032
       00004B C0 07            [24]  394 	push	ar7
       00004D C0 06            [24]  395 	push	ar6
@@ -398,11 +398,11 @@
       000054 D0 05            [24]  398 	pop	ar5
       000056 D0 06            [24]  399 	pop	ar6
       000058 D0 07            [24]  400 	pop	ar7
-                                    401 ;	Flashing.c:21: if (P0_0 == 0 && flag_minus) {
+                                    401 ;	Flashing.c:30: if (P0_0 == 0 && flag_minus) {
       00005A 20 80 46         [24]  402 	jb	_P0_0,00109$
       00005D ED               [12]  403 	mov	a,r5
       00005E 60 43            [24]  404 	jz	00109$
-                                    405 ;	Flashing.c:22: if (table[0] == 0x70 && table[1] == 0xb0) continue;
+                                    405 ;	Flashing.c:31: if (table[0] == 0x70 && table[1] == 0xb0) continue;
       000060 74 70            [12]  406 	mov	a,#0x70
       000062 B5*00 06         [24]  407 	cjne	a,_main_table_65536_5,00175$
       000065 E4               [12]  408 	clr	a
@@ -418,9 +418,9 @@
       000076 80 C1            [24]  418 	sjmp	00124$
       000078                        419 00177$:
       000078                        420 00102$:
-                                    421 ;	Flashing.c:23: flag_minus = 0;
+                                    421 ;	Flashing.c:32: flag_minus = 0;
       000078 7D 00            [12]  422 	mov	r5,#0x00
-                                    423 ;	Flashing.c:24: table[1] -= 1;
+                                    423 ;	Flashing.c:33: table[1] -= 1;
       00007A E5*02            [12]  424 	mov	a,(_main_table_65536_5 + 0x0002)
       00007C 24 FF            [12]  425 	add	a,#0xff
       00007E FB               [12]  426 	mov	r3,a
@@ -429,13 +429,13 @@
       000083 FC               [12]  429 	mov	r4,a
       000084 8B*02            [24]  430 	mov	((_main_table_65536_5 + 0x0002) + 0),r3
       000086 8C*03            [24]  431 	mov	((_main_table_65536_5 + 0x0002) + 1),r4
-                                    432 ;	Flashing.c:25: if (table[1] == 0xaf) {
+                                    432 ;	Flashing.c:34: if (table[1] == 0xaf) {
       000088 BB AF 1D         [24]  433 	cjne	r3,#0xaf,00110$
       00008B BC 00 1A         [24]  434 	cjne	r4,#0x00,00110$
-                                    435 ;	Flashing.c:26: table[1] = 0xb9;
+                                    435 ;	Flashing.c:35: table[1] = 0xb9;
       00008E 75*02 B9         [24]  436 	mov	((_main_table_65536_5 + 0x0002) + 0),#0xb9
       000091 75*03 00         [24]  437 	mov	((_main_table_65536_5 + 0x0002) + 1),#0x00
-                                    438 ;	Flashing.c:27: table[0]--;
+                                    438 ;	Flashing.c:36: table[0]--;
       000094 AB*00            [24]  439 	mov	r3,(_main_table_65536_5 + 0)
       000096 AC*01            [24]  440 	mov	r4,(_main_table_65536_5 + 1)
       000098 1B               [12]  441 	dec	r3
@@ -446,15 +446,15 @@
       00009F 8C*01            [24]  446 	mov	(_main_table_65536_5 + 1),r4
       0000A1 80 05            [24]  447 	sjmp	00110$
       0000A3                        448 00109$:
-                                    449 ;	Flashing.c:30: else if (P0_0 == 1) flag_minus = 1;
+                                    449 ;	Flashing.c:39: else if (P0_0 == 1) flag_minus = 1;
       0000A3 30 80 02         [24]  450 	jnb	_P0_0,00110$
       0000A6 7D 01            [12]  451 	mov	r5,#0x01
       0000A8                        452 00110$:
-                                    453 ;	Flashing.c:32: if (P0_1 == 0 && flag_plus) {
+                                    453 ;	Flashing.c:41: if (P0_1 == 0 && flag_plus) {
       0000A8 20 81 4C         [24]  454 	jb	_P0_1,00120$
       0000AB EE               [12]  455 	mov	a,r6
       0000AC 60 49            [24]  456 	jz	00120$
-                                    457 ;	Flashing.c:33: if (table[0] == 0x79 && table[1] == 0xb9) continue;
+                                    457 ;	Flashing.c:42: if (table[0] == 0x79 && table[1] == 0xb9) continue;
       0000AE 74 79            [12]  458 	mov	a,#0x79
       0000B0 B5*00 06         [24]  459 	cjne	a,_main_table_65536_5,00184$
       0000B3 E4               [12]  460 	clr	a
@@ -470,9 +470,9 @@
       0000C4 02r00r39         [24]  470 	ljmp	00124$
       0000C7                        471 00186$:
       0000C7                        472 00113$:
-                                    473 ;	Flashing.c:34: flag_plus = 0;
+                                    473 ;	Flashing.c:43: flag_plus = 0;
       0000C7 7E 00            [12]  474 	mov	r6,#0x00
-                                    475 ;	Flashing.c:35: table[1] += 1;
+                                    475 ;	Flashing.c:44: table[1] += 1;
       0000C9 74 01            [12]  476 	mov	a,#0x01
       0000CB 25*02            [12]  477 	add	a,(_main_table_65536_5 + 0x0002)
       0000CD FB               [12]  478 	mov	r3,a
@@ -481,17 +481,17 @@
       0000D1 FC               [12]  481 	mov	r4,a
       0000D2 8B*02            [24]  482 	mov	((_main_table_65536_5 + 0x0002) + 0),r3
       0000D4 8C*03            [24]  483 	mov	((_main_table_65536_5 + 0x0002) + 1),r4
-                                    484 ;	Flashing.c:36: if (table[1] == 0xba) {
+                                    484 ;	Flashing.c:45: if (table[1] == 0xba) {
       0000D6 BB BA 05         [24]  485 	cjne	r3,#0xba,00187$
       0000D9 BC 00 02         [24]  486 	cjne	r4,#0x00,00187$
       0000DC 80 03            [24]  487 	sjmp	00188$
       0000DE                        488 00187$:
       0000DE 02r00r39         [24]  489 	ljmp	00124$
       0000E1                        490 00188$:
-                                    491 ;	Flashing.c:37: table[1] = 0xb0;
+                                    491 ;	Flashing.c:46: table[1] = 0xb0;
       0000E1 75*02 B0         [24]  492 	mov	((_main_table_65536_5 + 0x0002) + 0),#0xb0
       0000E4 75*03 00         [24]  493 	mov	((_main_table_65536_5 + 0x0002) + 1),#0x00
-                                    494 ;	Flashing.c:38: table[0]++;
+                                    494 ;	Flashing.c:47: table[0]++;
       0000E7 AB*00            [24]  495 	mov	r3,(_main_table_65536_5 + 0)
       0000E9 AC*01            [24]  496 	mov	r4,(_main_table_65536_5 + 1)
       0000EB 0B               [12]  497 	inc	r3
@@ -502,12 +502,12 @@
       0000F2 8C*01            [24]  502 	mov	(_main_table_65536_5 + 1),r4
       0000F4 02r00r39         [24]  503 	ljmp	00124$
       0000F7                        504 00120$:
-                                    505 ;	Flashing.c:41: else if (P0_1 == 1) flag_plus = 1;
+                                    505 ;	Flashing.c:50: else if (P0_1 == 1) flag_plus = 1;
       0000F7 20 81 03         [24]  506 	jb	_P0_1,00190$
       0000FA 02r00r39         [24]  507 	ljmp	00124$
       0000FD                        508 00190$:
       0000FD 7E 01            [12]  509 	mov	r6,#0x01
-                                    510 ;	Flashing.c:43: }
+                                    510 ;	Flashing.c:52: }
       0000FF 02r00r39         [24]  511 	ljmp	00124$
                                     512 	.area CSEG    (CODE)
                                     513 	.area CONST   (CODE)

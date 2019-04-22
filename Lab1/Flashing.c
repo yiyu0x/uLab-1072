@@ -1,5 +1,14 @@
+//LED 跑馬燈
 #include <8051.h>
-// p0 : 18 ~ 25
+/*
+0 是 亮
+1 是 暗
+
+	P1 = D2 ~ D9
+	P2 = D10 ~ D17
+	P0 = D18 ~ D25
+
+*/
 void timer() {
 	unsigned d1, d2;
 	for (d1 = 0; d1 < 1024; d1 ++) {
@@ -12,6 +21,7 @@ void main()
 	unsigned led;
 	led = 16; // 12 O'clock
 	int CASE = 0;
+
 	while (1) {
 		if (CASE == 0) {
 			led >>= 1;
@@ -41,7 +51,6 @@ void main()
 				continue; // turn all off
 			}
 		}
-		
 		timer();
 	}
 }
