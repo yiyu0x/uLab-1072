@@ -1,3 +1,8 @@
+/*
+	8*8LED 用P2
+
+*/
+
 #include <8051.h>
 
 const int t[8]={
