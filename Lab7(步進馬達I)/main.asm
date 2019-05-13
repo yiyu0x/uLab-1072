@@ -8,8 +8,13 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
-	.globl _timer0
+	.globl _LED_Display_PARM_2
+	.globl _SPIN
 	.globl _main
+	.globl _LED_Display
+	.globl _keyPressed
+	.globl _timer_isr
+	.globl _delay
 	.globl _CY
 	.globl _AC
 	.globl _F0
@@ -106,15 +111,11 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
-	.globl _direct
+	.globl _speed
 	.globl _step
-	.globl _sw
-	.globl _times
+	.globl _direct
+	.globl _max
 	.globl _count
-	.globl _AAA
-	.globl _Ans
-	.globl _view
-	.globl _GetKey
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -232,22 +233,40 @@ _CY	=	0x00d7
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
-_Ans::
-	.ds 6
-_AAA::
-	.ds 2
 _count::
 	.ds 2
-_times::
+_max::
 	.ds 2
-_sw::
-	.ds 2
+_direct::
+	.ds 1
 _step::
 	.ds 1
+_speed::
+	.ds 2
+_main_table_65537_51:
+	.ds 8
+_main_num_65537_51:
+	.ds 8
+_main_row_65537_51:
+	.ds 2
+_main_cnt_65538_52:
+	.ds 2
+_main_previous_65538_52:
+	.ds 2
+_main_previous2_65538_52:
+	.ds 2
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
 	.area	OSEG    (OVR,DATA)
+	.area	OSEG    (OVR,DATA)
+_keyPressed_row_65536_38:
+	.ds 2
+	.area	OSEG    (OVR,DATA)
+_LED_Display_PARM_2:
+	.ds 3
+_LED_Display_table_65536_44:
+	.ds 3
 ;--------------------------------------------------------
 ; Stack segment in internal ram 
 ;--------------------------------------------------------
@@ -268,8 +287,6 @@ __start__stack:
 ; bit data
 ;--------------------------------------------------------
 	.area BSEG    (BIT)
-_direct::
-	.ds 1
 ;--------------------------------------------------------
 ; paged external ram data
 ;--------------------------------------------------------
@@ -304,7 +321,7 @@ __interrupt_vect:
 	ljmp	__sdcc_gsinit_startup
 	reti
 	.ds	7
-	ljmp	_timer0
+	ljmp	_timer_isr
 ;--------------------------------------------------------
 ; global & static initialisations
 ;--------------------------------------------------------
@@ -318,32 +335,19 @@ __interrupt_vect:
 	.globl __mcs51_genXINIT
 	.globl __mcs51_genXRAMCLEAR
 	.globl __mcs51_genRAMCLEAR
-;	main.c:3: unsigned Ans[3] = {0, 0, 0};
-	clr	a
-	mov	(_Ans + 0),a
-	mov	(_Ans + 1),a
-	mov	((_Ans + 0x0002) + 0),a
-	mov	((_Ans + 0x0002) + 1),a
-	mov	((_Ans + 0x0004) + 0),a
-	mov	((_Ans + 0x0004) + 1),a
-;	main.c:4: int AAA=60536;
-	mov	_AAA,#0x78
-	mov	(_AAA + 1),#0xec
-;	main.c:5: int count = 800;
-	mov	_count,#0x20
-	mov	(_count + 1),#0x03
-;	main.c:6: unsigned times = 0;
-	mov	_times,a
-	mov	(_times + 1),a
-;	main.c:7: unsigned sw = 1;
-	mov	_sw,#0x01
-;	1-genFromRTrack replaced	mov	(_sw + 1),#0x00
-	mov	(_sw + 1),a
+;	main.c:5: int count=50; // 一圈200步
+	mov	_count,#0x32
+	mov	(_count + 1),#0x00
+;	main.c:6: int max=50;
+	mov	_max,#0x32
+	mov	(_max + 1),#0x00
+;	main.c:7: char direct=0; 
+	mov	_direct,#0x00
 ;	main.c:8: unsigned char step=0x01; 
 	mov	_step,#0x01
-;	main.c:9: __bit direct = 0;
-;	assignBit
-	clr	_direct
+;	main.c:9: unsigned int speed=(65536-30000);
+	mov	_speed,#0xd0
+	mov	(_speed + 1),#0x8a
 	.area GSFINAL (CODE)
 	ljmp	__sdcc_program_startup
 ;--------------------------------------------------------
@@ -359,15 +363,17 @@ __sdcc_program_startup:
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
+;Allocation info for local variables in function 'delay'
 ;------------------------------------------------------------
-;P                         Allocated to registers r6 r7 
+;time                      Allocated to registers r6 r7 
+;i                         Allocated to registers r4 r5 
+;j                         Allocated to registers r2 r3 
 ;------------------------------------------------------------
-;	main.c:14: void main()
+;	main.c:10: void delay(unsigned int time)
 ;	-----------------------------------------
-;	 function main
+;	 function delay
 ;	-----------------------------------------
-_main:
+_delay:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -376,176 +382,49 @@ _main:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	main.c:16: IE = 0x82;
-	mov	_IE,#0x82
-;	main.c:17: TMOD = 0x11;
-	mov	_TMOD,#0x11
-;	main.c:19: TH0 = AAA >> 8;
-	mov	_TH0,(_AAA + 1)
-;	main.c:20: TL0 = AAA & 0xff;
-	mov	_TL0,_AAA
-;	main.c:21: TR0 = 0;
-;	assignBit
-	clr	_TR0
-;	main.c:24: while (1)
-00112$:
-;	main.c:26: int P = GetKey();
-	lcall	_GetKey
 	mov	r6,dpl
 	mov	r7,dph
-;	main.c:27: if (P != -1)
-	cjne	r6,#0xff,00136$
-	cjne	r7,#0xff,00136$
-	ljmp	00110$
-00136$:
-;	main.c:28: if (P < 10)
-	clr	c
-	mov	a,r6
-	subb	a,#0x0a
-	mov	a,r7
-	xrl	a,#0x80
-	subb	a,#0x80
-	jnc	00107$
-;	main.c:30: Ans[0] = Ans[1];
-	mov	r4,((_Ans + 0x0002) + 0)
-	mov	r5,((_Ans + 0x0002) + 1)
-	mov	(_Ans + 0),r4
-	mov	(_Ans + 1),r5
-;	main.c:31: Ans[1] = Ans[2];
-	mov	r4,((_Ans + 0x0004) + 0)
-	mov	r5,((_Ans + 0x0004) + 1)
-	mov	((_Ans + 0x0002) + 0),r4
-	mov	((_Ans + 0x0002) + 1),r5
-;	main.c:32: Ans[2] = P;
-	mov	((_Ans + 0x0004) + 0),r6
-	mov	((_Ans + 0x0004) + 1),r7
-	ljmp	00110$
+;	main.c:13: for(i=0;i<time;i++)    
+	mov	r4,#0x00
+	mov	r5,#0x00
 00107$:
-;	main.c:34: else if (P == 10)
-	cjne	r6,#0x0a,00104$
-	cjne	r7,#0x00,00104$
-;	main.c:37: TR0 = 1;
-;	assignBit
-	setb	_TR0
-;	main.c:38: direct = 0;
-;	assignBit
-	clr	_direct
-;	main.c:39: count = (Ans[0] * 100 + Ans[1] * 10 + Ans[2]) * 5 / 9;
-	mov	__mulint_PARM_2,(_Ans + 0)
-	mov	(__mulint_PARM_2 + 1),(_Ans + 1)
-	mov	dptr,#0x0064
-	lcall	__mulint
-	mov	r4,dpl
-	mov	r5,dph
-	mov	__mulint_PARM_2,((_Ans + 0x0002) + 0)
-	mov	(__mulint_PARM_2 + 1),((_Ans + 0x0002) + 1)
-	mov	dptr,#0x000a
-	push	ar5
-	push	ar4
-	lcall	__mulint
-	mov	r2,dpl
-	mov	r3,dph
-	pop	ar4
-	pop	ar5
-	mov	a,r2
-	add	a,r4
-	mov	r4,a
-	mov	a,r3
-	addc	a,r5
-	mov	r5,a
-	mov	a,(_Ans + 0x0004)
-	add	a,r4
-	mov	__mulint_PARM_2,a
-	mov	a,((_Ans + 0x0004) + 1)
-	addc	a,r5
-	mov	(__mulint_PARM_2 + 1),a
-	mov	dptr,#0x0005
-	lcall	__mulint
-	mov	__divuint_PARM_2,#0x09
-	mov	(__divuint_PARM_2 + 1),#0x00
-	lcall	__divuint
-	mov	_count,dpl
-	mov	(_count + 1),dph
-;	main.c:42: Ans[0] = 0;
-	clr	a
-	mov	(_Ans + 0),a
-	mov	(_Ans + 1),a
-;	main.c:43: Ans[1] = 0;
-	mov	((_Ans + 0x0002) + 0),a
-	mov	((_Ans + 0x0002) + 1),a
-;	main.c:44: Ans[2] = 0;
-	mov	((_Ans + 0x0004) + 0),a
-	mov	((_Ans + 0x0004) + 1),a
-	sjmp	00110$
-00104$:
-;	main.c:46: else if (P == 11)
-	cjne	r6,#0x0b,00110$
-	cjne	r7,#0x00,00110$
-;	main.c:49: TR0 = 1;
-;	assignBit
-	setb	_TR0
-;	main.c:50: direct = 1;
-;	assignBit
-	setb	_direct
-;	main.c:51: count = (Ans[0] * 100 + Ans[1] * 10 + Ans[2]) * 5 / 9;
-	mov	__mulint_PARM_2,(_Ans + 0)
-	mov	(__mulint_PARM_2 + 1),(_Ans + 1)
-	mov	dptr,#0x0064
-	lcall	__mulint
-	mov	r6,dpl
-	mov	r7,dph
-	mov	__mulint_PARM_2,((_Ans + 0x0002) + 0)
-	mov	(__mulint_PARM_2 + 1),((_Ans + 0x0002) + 1)
-	mov	dptr,#0x000a
-	push	ar7
-	push	ar6
-	lcall	__mulint
-	mov	r4,dpl
-	mov	r5,dph
-	pop	ar6
-	pop	ar7
+	clr	c
 	mov	a,r4
-	add	a,r6
-	mov	r6,a
+	subb	a,r6
 	mov	a,r5
-	addc	a,r7
-	mov	r7,a
-	mov	a,(_Ans + 0x0004)
-	add	a,r6
-	mov	__mulint_PARM_2,a
-	mov	a,((_Ans + 0x0004) + 1)
-	addc	a,r7
-	mov	(__mulint_PARM_2 + 1),a
-	mov	dptr,#0x0005
-	lcall	__mulint
-	mov	__divuint_PARM_2,#0x09
-	mov	(__divuint_PARM_2 + 1),#0x00
-	lcall	__divuint
-	mov	_count,dpl
-	mov	(_count + 1),dph
-;	main.c:55: Ans[0] = 0;
-	clr	a
-	mov	(_Ans + 0),a
-	mov	(_Ans + 1),a
-;	main.c:56: Ans[1] = 0;
-	mov	((_Ans + 0x0002) + 0),a
-	mov	((_Ans + 0x0002) + 1),a
-;	main.c:57: Ans[2] = 0;
-	mov	((_Ans + 0x0004) + 0),a
-	mov	((_Ans + 0x0004) + 1),a
-00110$:
-;	main.c:60: view();
-	lcall	_view
-;	main.c:62: }
-	ljmp	00112$
+	subb	a,r7
+	jnc	00109$
+;	main.c:14: for(j=0;j<1275;j++);
+	mov	r2,#0xfb
+	mov	r3,#0x04
+00105$:
+	mov	a,r2
+	add	a,#0xff
+	mov	r0,a
+	mov	a,r3
+	addc	a,#0xff
+	mov	r1,a
+	mov	ar2,r0
+	mov	ar3,r1
+	mov	a,r0
+	orl	a,r1
+	jnz	00105$
+;	main.c:13: for(i=0;i<time;i++)    
+	inc	r4
+	cjne	r4,#0x00,00107$
+	inc	r5
+	sjmp	00107$
+00109$:
+;	main.c:15: }
+	ret
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'timer0'
+;Allocation info for local variables in function 'timer_isr'
 ;------------------------------------------------------------
-;	main.c:64: void timer0 (void) __interrupt (1) __using (1)
+;	main.c:16: void timer_isr (void) __interrupt (1) __using (1) {	//timer 0 interrupt 訊號		using register bank 1
 ;	-----------------------------------------
-;	 function timer0
+;	 function timer_isr
 ;	-----------------------------------------
-_timer0:
+_timer_isr:
 	ar7 = 0x0f
 	ar6 = 0x0e
 	ar5 = 0x0d
@@ -558,47 +437,52 @@ _timer0:
 	push	b
 	push	psw
 	mov	psw,#0x08
-;	main.c:67: TH0 = AAA >> 8;
-	mov	_TH0,(_AAA + 1)
-;	main.c:68: TL0 = AAA & 0xff;
-	mov	_TL0,_AAA
-;	main.c:70: if(direct==1)
-	jnb	_direct,00106$
-;	main.c:72: step>>=1; 
+;	main.c:17: TH0=speed/256; 
+	mov	r6,(_speed + 1)
+	mov	_TH0,r6
+;	main.c:18: TL0=speed%16; 
+	mov	a,#0x0f
+	anl	a,_speed
+	mov	r6,a
+	mov	r7,#0x00
+	mov	_TL0,r6
+;	main.c:20: if(direct==0) { 
+	mov	a,_direct
+	jnz	00106$
+;	main.c:21: step>>=1; 
 	mov	a,_step
 	clr	c
 	rrc	a
-;	main.c:73: if(step==0x00)
+;	main.c:22: if(step==0x00) step=0x08;
 	mov	_step,a
 	jnz	00102$
-;	main.c:74: step=0x08; 
 	mov	_step,#0x08
 00102$:
-;	main.c:76: P0&=0xf0; 
+;	main.c:23: P0&=0xf0; 
 	anl	_P0,#0xf0
-;	main.c:77: P0|=step; 
+;	main.c:24: P0|=step; 
 	mov	a,_step
 	orl	_P0,a
 	sjmp	00107$
 00106$:
-;	main.c:81: step<<=1; 
+;	main.c:27: step<<=1; 
 	mov	a,_step
 	mov	r7,a
 	add	a,acc
 	mov	_step,a
-;	main.c:82: if(step==0x10) 
+;	main.c:28: if(step==0x10) 
 	mov	a,#0x10
 	cjne	a,_step,00104$
-;	main.c:83: step=0x01; 
+;	main.c:29: step=0x01;
 	mov	_step,#0x01
 00104$:
-;	main.c:85: P0&=0xf0; 
+;	main.c:30: P0&=0xf0; 
 	anl	_P0,#0xf0
-;	main.c:86: P0|=step;
+;	main.c:31: P0|=step; 
 	mov	a,_step
 	orl	_P0,a
 00107$:
-;	main.c:89: if (--count<=0)
+;	main.c:33: if(--count<=0){
 	dec	_count
 	mov	a,#0xff
 	cjne	a,_count,00132$
@@ -612,11 +496,11 @@ _timer0:
 	xrl	b,#0x80
 	subb	a,b
 	jc	00110$
-;	main.c:90: TR0 = 0;
+;	main.c:34: TR0=0;
 ;	assignBit
 	clr	_TR0
 00110$:
-;	main.c:91: }
+;	main.c:36: }
 	pop	psw
 	pop	b
 	pop	acc
@@ -624,15 +508,18 @@ _timer0:
 ;	eliminated unneeded push/pop dpl
 ;	eliminated unneeded push/pop dph
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'view'
+;Allocation info for local variables in function 'keyPressed'
 ;------------------------------------------------------------
-;i                         Allocated to registers r6 r7 
+;row                       Allocated with name '_keyPressed_row_65536_38'
+;c                         Allocated to registers r4 r5 
+;col                       Allocated to registers r2 r3 
+;magic                     Allocated to registers r7 r6 
 ;------------------------------------------------------------
-;	main.c:93: void view()
+;	main.c:38: short keyPressed(short row) {
 ;	-----------------------------------------
-;	 function view
+;	 function keyPressed
 ;	-----------------------------------------
-_view:
+_keyPressed:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -641,229 +528,467 @@ _view:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	main.c:97: for (i=0; i<55; i++);
-	mov	r6,#0x37
-	mov	r7,#0x00
-00108$:
-	dec	r6
-	cjne	r6,#0xff,00148$
-	dec	r7
-00148$:
-	mov	a,r6
-	orl	a,r7
-	jnz	00108$
-;	main.c:98: P1 = Ans[0] + 0x70;
-	mov	r7,_Ans
-	mov	a,#0x70
-	add	a,r7
-	mov	_P1,a
-;	main.c:99: for (i=0; i<55; i++);
-	mov	r6,#0x37
-	mov	r7,#0x00
-00111$:
-	dec	r6
-	cjne	r6,#0xff,00150$
-	dec	r7
-00150$:
-	mov	a,r6
-	orl	a,r7
-	jnz	00111$
-;	main.c:100: P1 = Ans[1] + 0xb0;
-	mov	r7,(_Ans + 0x0002)
-	mov	a,#0xb0
-	add	a,r7
-	mov	_P1,a
-;	main.c:101: for (i=0; i<55; i++);
-	mov	r6,#0x37
-	mov	r7,#0x00
-00114$:
-	dec	r6
-	cjne	r6,#0xff,00152$
-	dec	r7
-00152$:
-	mov	a,r6
-	orl	a,r7
-	jnz	00114$
-;	main.c:102: P1 = Ans[2] + 0xd0;
-	mov	r7,(_Ans + 0x0004)
-	mov	a,#0xd0
-	add	a,r7
-	mov	_P1,a
-;	main.c:104: times++;
-	inc	_times
-	clr	a
-	cjne	a,_times,00154$
-	inc	(_times + 1)
-00154$:
-;	main.c:105: if (times > 792)
-	clr	c
-	mov	a,#0x18
-	subb	a,_times
-	mov	a,#0x03
-	subb	a,(_times + 1)
-	jnc	00115$
-;	main.c:106: sw = 1;
-	mov	_sw,#0x01
-	mov	(_sw + 1),#0x00
-00115$:
-;	main.c:107: }
-	ret
-;------------------------------------------------------------
-;Allocation info for local variables in function 'GetKey'
-;------------------------------------------------------------
-;p                         Allocated to registers r6 r7 
-;q                         Allocated to registers r2 r3 
-;------------------------------------------------------------
-;	main.c:108: int GetKey()
-;	-----------------------------------------
-;	 function GetKey
-;	-----------------------------------------
-_GetKey:
-;	main.c:111: for (p=0; p<4; p++)
-	mov	r6,#0x00
-	mov	r7,#0x00
-	mov	r4,#0x00
+	mov	_keyPressed_row_65536_38,dpl
+	mov	(_keyPressed_row_65536_38 + 1),dph
+;	main.c:39: if((P2 & 0b11110000) != 0b11110000){	//if 按下按鈕
+	mov	r4,_P2
+	anl	ar4,#0xf0
 	mov	r5,#0x00
-00111$:
-;	main.c:113: P2 = ((~(1<<p))<<4) | 0xf;
-	mov	ar3,r4
-	mov	b,r3
-	inc	b
-	mov	a,#0x01
-	sjmp	00142$
-00140$:
-	add	a,acc
-00142$:
-	djnz	b,00140$
-	cpl	a
-	swap	a
-	anl	a,#0xf0
-	mov	r3,a
-	rlc	a
-	subb	a,acc
-	orl	ar3,#0x0f
-	mov	_P2,r3
-;	main.c:114: if ( ((P2 & 0xf) != 0xf) && (sw == 1) )
-	mov	r2,_P2
-	anl	ar2,#0x0f
-	mov	r3,#0x00
-	cjne	r2,#0x0f,00143$
-	cjne	r3,#0x00,00143$
-	ljmp	00112$
-00143$:
-	mov	a,#0x01
-	cjne	a,_sw,00144$
-	dec	a
-	cjne	a,(_sw + 1),00144$
-	sjmp	00145$
-00144$:
-	ljmp	00112$
-00145$:
-;	main.c:116: for (q=0; q<4; q++)
+	cjne	r4,#0xf0,00127$
+	cjne	r5,#0x00,00127$
+	sjmp	00105$
+00127$:
+;	main.c:40: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
+	mov	r4,#0x01
+	mov	r5,#0x00
 	mov	r2,#0x00
 	mov	r3,#0x00
-00109$:
-;	main.c:117: if (P2 % 2 == 1)
-	mov	r0,_P2
+	mov	r0,#0x00
 	mov	r1,#0x00
-	mov	__modsint_PARM_2,#0x02
-;	1-genFromRTrack replaced	mov	(__modsint_PARM_2 + 1),#0x00
-	mov	(__modsint_PARM_2 + 1),r1
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar3
-	push	ar2
-	lcall	__modsint
-	mov	r0,dpl
-	mov	r1,dph
-	pop	ar2
-	pop	ar3
-	pop	ar6
-	pop	ar7
-	cjne	r0,#0x01,00104$
-	cjne	r1,#0x00,00104$
-;	main.c:118: P2 /= 2;
-	mov	r0,_P2
-	mov	r1,#0x00
-	mov	__divsint_PARM_2,#0x02
-;	1-genFromRTrack replaced	mov	(__divsint_PARM_2 + 1),#0x00
-	mov	(__divsint_PARM_2 + 1),r1
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar7
-	push	ar6
-	push	ar3
-	push	ar2
-	lcall	__divsint
-	mov	r0,dpl
-	mov	r1,dph
-	pop	ar2
-	pop	ar3
-	pop	ar6
-	pop	ar7
-	mov	_P2,r0
-;	main.c:116: for (q=0; q<4; q++)
-	inc	r2
-	cjne	r2,#0x00,00148$
-	inc	r3
-00148$:
+00107$:
 	clr	c
-	mov	a,r2
+	mov	a,r0
 	subb	a,#0x04
+	mov	a,r1
+	xrl	a,#0x80
+	subb	a,#0x80
+	jnc	00105$
+;	main.c:42: `			short magic = ((P2 >> 4) ^ 0b11111111) & 0b00001111;
+	mov	a,_P2
+	swap	a
+	anl	a,#0x0f
+	mov	r7,a
+	xrl	ar7,#0xff
+	anl	ar7,#0x0f
+	mov	r6,#0x00
+;	main.c:43: if (magic == c) {
+	mov	a,r7
+	cjne	a,ar4,00108$
+	mov	a,r6
+	cjne	a,ar5,00108$
+;	main.c:44: return col * 4 + row;
+	mov	a,r2
+	add	a,r2
+	mov	r6,a
 	mov	a,r3
-	subb	a,#0x00
-	jc	00109$
-00104$:
-;	main.c:121: sw = 0;
-	clr	a
-	mov	_sw,a
-	mov	(_sw + 1),a
-;	main.c:122: times = 0;
-	mov	_times,a
-	mov	(_times + 1),a
-;	main.c:123: return 4*p+q;	//1e?U?e?Jao-E(10?i|i)
+	rlc	a
+	mov	r7,a
 	mov	a,r6
 	add	a,r6
-	mov	r0,a
+	mov	r6,a
 	mov	a,r7
 	rlc	a
-	mov	r1,a
-	mov	a,r0
-	add	a,r0
-	mov	r0,a
-	mov	a,r1
-	rlc	a
-	mov	r1,a
-	mov	a,r2
-	add	a,r0
+	mov	r7,a
+	mov	a,_keyPressed_row_65536_38
+	add	a,r6
 	mov	dpl,a
-	mov	a,r3
-	addc	a,r1
+	mov	a,(_keyPressed_row_65536_38 + 1)
+	addc	a,r7
 	mov	dph,a
 	ret
-00112$:
-;	main.c:111: for (p=0; p<4; p++)
-	inc	r4
-	cjne	r4,#0x00,00150$
-	inc	r5
-00150$:
-	mov	ar6,r4
-	mov	ar7,r5
-	clr	c
+00108$:
+;	main.c:40: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
 	mov	a,r4
-	subb	a,#0x04
+	add	a,r4
+	mov	r4,a
 	mov	a,r5
-	subb	a,#0x00
-	jnc	00151$
-	ljmp	00111$
-00151$:
-;	main.c:126: return -1;
+	rlc	a
+	mov	r5,a
+	inc	r0
+	cjne	r0,#0x00,00131$
+	inc	r1
+00131$:
+	mov	ar2,r0
+	mov	ar3,r1
+	sjmp	00107$
+00105$:
+;	main.c:48: return -1;	//沒按 return -1
 	mov	dptr,#0xffff
-;	main.c:127: }
+;	main.c:49: }
 	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'LED_Display'
+;------------------------------------------------------------
+;num                       Allocated with name '_LED_Display_PARM_2'
+;table                     Allocated with name '_LED_Display_table_65536_44'
+;i                         Allocated to registers r3 r4 
+;j                         Allocated to registers r6 r7 
+;------------------------------------------------------------
+;	main.c:50: void LED_Display(short table[], short num[]) {
+;	-----------------------------------------
+;	 function LED_Display
+;	-----------------------------------------
+_LED_Display:
+	mov	_LED_Display_table_65536_44,dpl
+	mov	(_LED_Display_table_65536_44 + 1),dph
+	mov	(_LED_Display_table_65536_44 + 2),b
+;	main.c:51: for(short i = 0; i < 4; i++) {
+	mov	r3,#0x00
+	mov	r4,#0x00
+00107$:
+	clr	c
+	mov	a,r3
+	subb	a,#0x04
+	mov	a,r4
+	xrl	a,#0x80
+	subb	a,#0x80
+	jnc	00109$
+;	main.c:52: P1  = table[i] + num[i];
+	mov	a,r3
+	add	a,r3
+	mov	r1,a
+	mov	a,r4
+	rlc	a
+	mov	r2,a
+	mov	a,r1
+	add	a,_LED_Display_table_65536_44
+	mov	r0,a
+	mov	a,r2
+	addc	a,(_LED_Display_table_65536_44 + 1)
+	mov	r6,a
+	mov	r7,(_LED_Display_table_65536_44 + 2)
+	mov	dpl,r0
+	mov	dph,r6
+	mov	b,r7
+	lcall	__gptrget
+	mov	r0,a
+	mov	a,r1
+	add	a,_LED_Display_PARM_2
+	mov	r1,a
+	mov	a,r2
+	addc	a,(_LED_Display_PARM_2 + 1)
+	mov	r2,a
+	mov	r7,(_LED_Display_PARM_2 + 2)
+	mov	dpl,r1
+	mov	dph,r2
+	mov	b,r7
+	lcall	__gptrget
+	add	a,r0
+	mov	_P1,a
+;	main.c:53: for(int j = 0; j < 1000; j++){}
+	mov	r6,#0x00
+	mov	r7,#0x00
+00104$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xe8
+	mov	a,r7
+	xrl	a,#0x80
+	subb	a,#0x83
+	jnc	00108$
+	inc	r6
+	cjne	r6,#0x00,00104$
+	inc	r7
+	sjmp	00104$
+00108$:
+;	main.c:51: for(short i = 0; i < 4; i++) {
+	inc	r3
+	cjne	r3,#0x00,00107$
+	inc	r4
+	sjmp	00107$
+00109$:
+;	main.c:55: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'main'
+;------------------------------------------------------------
+;table                     Allocated with name '_main_table_65537_51'
+;num                       Allocated with name '_main_num_65537_51'
+;row                       Allocated with name '_main_row_65537_51'
+;cnt                       Allocated with name '_main_cnt_65538_52'
+;previous                  Allocated with name '_main_previous_65538_52'
+;previous2                 Allocated with name '_main_previous2_65538_52'
+;key                       Allocated to registers r2 r3 
+;------------------------------------------------------------
+;	main.c:57: int main(){
+;	-----------------------------------------
+;	 function main
+;	-----------------------------------------
+_main:
+;	main.c:58: IE=0x82;
+	mov	_IE,#0x82
+;	main.c:59: TMOD=0x01;
+	mov	_TMOD,#0x01
+;	main.c:60: TH0=speed/256;
+	mov	r6,(_speed + 1)
+	mov	_TH0,r6
+;	main.c:61: TL0=speed%16;
+	mov	a,#0x0f
+	anl	a,_speed
+	mov	r6,a
+	mov	r7,#0x00
+	mov	_TL0,r6
+;	main.c:63: short table[4] = {0x70, 0xb0, 0xd0, 0xe0};
+	mov	(_main_table_65537_51 + 0),#0x70
+;	1-genFromRTrack replaced	mov	(_main_table_65537_51 + 1),#0x00
+	mov	(_main_table_65537_51 + 1),r7
+	mov	((_main_table_65537_51 + 0x0002) + 0),#0xb0
+;	1-genFromRTrack replaced	mov	((_main_table_65537_51 + 0x0002) + 1),#0x00
+	mov	((_main_table_65537_51 + 0x0002) + 1),r7
+	mov	((_main_table_65537_51 + 0x0004) + 0),#0xd0
+;	1-genFromRTrack replaced	mov	((_main_table_65537_51 + 0x0004) + 1),#0x00
+	mov	((_main_table_65537_51 + 0x0004) + 1),r7
+	mov	((_main_table_65537_51 + 0x0006) + 0),#0xe0
+;	1-genFromRTrack replaced	mov	((_main_table_65537_51 + 0x0006) + 1),#0x00
+	mov	((_main_table_65537_51 + 0x0006) + 1),r7
+;	main.c:64: int num[4] = {0,0,0,0};
+	clr	a
+	mov	(_main_num_65537_51 + 0),a
+	mov	(_main_num_65537_51 + 1),a
+	mov	((_main_num_65537_51 + 0x0002) + 0),a
+	mov	((_main_num_65537_51 + 0x0002) + 1),a
+	mov	((_main_num_65537_51 + 0x0004) + 0),a
+	mov	((_main_num_65537_51 + 0x0004) + 1),a
+	mov	((_main_num_65537_51 + 0x0006) + 0),a
+	mov	((_main_num_65537_51 + 0x0006) + 1),a
+;	main.c:65: short row = 0;
+	mov	_main_row_65537_51,a
+	mov	(_main_row_65537_51 + 1),a
+;	main.c:66: P2=0b11111110;
+	mov	_P2,#0xfe
+;	main.c:67: short cnt = 1;
+	mov	_main_cnt_65538_52,#0x01
+;	1-genFromRTrack replaced	mov	(_main_cnt_65538_52 + 1),#0x00
+	mov	(_main_cnt_65538_52 + 1),a
+;	main.c:69: short previous = -1;
+	mov	_main_previous_65538_52,#0xff
+	mov	(_main_previous_65538_52 + 1),#0xff
+;	main.c:70: short previous2=-1;
+	mov	_main_previous2_65538_52,#0xff
+	mov	(_main_previous2_65538_52 + 1),#0xff
+;	main.c:71: while (1) {
+00115$:
+;	main.c:72: P2    =cnt^0b11111111;
+	mov	a,#0xff
+	xrl	a,_main_cnt_65538_52
+	mov	r2,a
+	mov	_P2,r2
+;	main.c:73: cnt *=2; //shift
+	mov	a,_main_cnt_65538_52
+	add	a,_main_cnt_65538_52
+	mov	_main_cnt_65538_52,a
+	mov	a,(_main_cnt_65538_52 + 1)
+	rlc	a
+	mov	(_main_cnt_65538_52 + 1),a
+;	main.c:74: short key = keyPressed(row);
+	mov	dpl,_main_row_65537_51
+	mov	dph,(_main_row_65537_51 + 1)
+	lcall	_keyPressed
+	mov	r2,dpl
+	mov	r3,dph
+;	main.c:75: if (key != -1 && key != previous && key!=10 && key!=11) {	//有按且不等於上一按 => 處理debounce
+	cjne	r2,#0xff,00155$
+	cjne	r3,#0xff,00155$
+	sjmp	00102$
+00155$:
+	mov	a,r2
+	cjne	a,_main_previous_65538_52,00156$
+	mov	a,r3
+	cjne	a,(_main_previous_65538_52 + 1),00156$
+	sjmp	00102$
+00156$:
+	cjne	r2,#0x0a,00157$
+	cjne	r3,#0x00,00157$
+	sjmp	00102$
+00157$:
+	cjne	r2,#0x0b,00158$
+	cjne	r3,#0x00,00158$
+	sjmp	00102$
+00158$:
+;	main.c:76: previous = key;
+	mov	_main_previous_65538_52,r2
+	mov	(_main_previous_65538_52 + 1),r3
+;	main.c:77: previous2=key;
+	mov	_main_previous2_65538_52,r2
+	mov	(_main_previous2_65538_52 + 1),r3
+;	main.c:78: num[0] =num[1];
+	mov	r6,((_main_num_65537_51 + 0x0002) + 0)
+	mov	r7,((_main_num_65537_51 + 0x0002) + 1)
+	mov	(_main_num_65537_51 + 0),r6
+	mov	(_main_num_65537_51 + 1),r7
+;	main.c:79: num[1] =num[2];
+	mov	r6,((_main_num_65537_51 + 0x0004) + 0)
+	mov	r7,((_main_num_65537_51 + 0x0004) + 1)
+	mov	((_main_num_65537_51 + 0x0002) + 0),r6
+	mov	((_main_num_65537_51 + 0x0002) + 1),r7
+;	main.c:80: num[2] =num[3];			
+	mov	r6,((_main_num_65537_51 + 0x0006) + 0)
+	mov	r7,((_main_num_65537_51 + 0x0006) + 1)
+	mov	((_main_num_65537_51 + 0x0004) + 0),r6
+	mov	((_main_num_65537_51 + 0x0004) + 1),r7
+;	main.c:81: num[3] = key;	//往前推
+	mov	((_main_num_65537_51 + 0x0006) + 0),r2
+	mov	((_main_num_65537_51 + 0x0006) + 1),r3
+00102$:
+;	main.c:84: if((key==10 || key==11)&& previous2!=key){	//debounce!
+	cjne	r2,#0x0a,00159$
+	cjne	r3,#0x00,00159$
+	sjmp	00111$
+00159$:
+	cjne	r2,#0x0b,00160$
+	cjne	r3,#0x00,00160$
+	sjmp	00161$
+00160$:
+	ljmp	00109$
+00161$:
+00111$:
+	mov	a,r2
+	cjne	a,_main_previous2_65538_52,00162$
+	mov	a,r3
+	cjne	a,(_main_previous2_65538_52 + 1),00162$
+	ljmp	00109$
+00162$:
+;	main.c:85: previous2= key;
+	mov	_main_previous2_65538_52,r2
+	mov	(_main_previous2_65538_52 + 1),r3
+;	main.c:86: count=(num[1]*100+num[2]*10+num[3])/360.0*200.0;
+	mov	__mulint_PARM_2,((_main_num_65537_51 + 0x0002) + 0)
+	mov	(__mulint_PARM_2 + 1),((_main_num_65537_51 + 0x0002) + 1)
+	mov	dptr,#0x0064
+	push	ar3
+	push	ar2
+	lcall	__mulint
+	mov	r6,dpl
+	mov	r7,dph
+	pop	ar2
+	pop	ar3
+	mov	__mulint_PARM_2,((_main_num_65537_51 + 0x0004) + 0)
+	mov	(__mulint_PARM_2 + 1),((_main_num_65537_51 + 0x0004) + 1)
+	mov	dptr,#0x000a
+	push	ar7
+	push	ar6
+	push	ar3
+	push	ar2
+	lcall	__mulint
+	mov	r4,dpl
+	mov	r5,dph
+	pop	ar2
+	pop	ar3
+	pop	ar6
+	pop	ar7
+	mov	a,r4
+	add	a,r6
+	mov	r6,a
+	mov	a,r5
+	addc	a,r7
+	mov	r7,a
+	mov	a,(_main_num_65537_51 + 0x0006)
+	add	a,r6
+	mov	dpl,a
+	mov	a,((_main_num_65537_51 + 0x0006) + 1)
+	addc	a,r7
+	mov	dph,a
+	push	ar3
+	push	ar2
+	lcall	___sint2fs
+	mov	r4,dpl
+	mov	r5,dph
+	mov	r6,b
+	mov	r7,a
+	clr	a
+	push	acc
+	push	acc
+	mov	a,#0xb4
+	push	acc
+	mov	a,#0x43
+	push	acc
+	mov	dpl,r4
+	mov	dph,r5
+	mov	b,r6
+	mov	a,r7
+	lcall	___fsdiv
+	mov	r4,dpl
+	mov	r5,dph
+	mov	r6,b
+	mov	r7,a
+	mov	a,sp
+	add	a,#0xfc
+	mov	sp,a
+	push	ar4
+	push	ar5
+	push	ar6
+	push	ar7
+	mov	dptr,#0x0000
+	mov	b,#0x48
+	mov	a,#0x43
+	lcall	___fsmul
+	mov	r4,dpl
+	mov	r5,dph
+	mov	r6,b
+	mov	r7,a
+	mov	a,sp
+	add	a,#0xfc
+	mov	sp,a
+	mov	dpl,r4
+	mov	dph,r5
+	mov	b,r6
+	mov	a,r7
+	lcall	___fs2sint
+	mov	_count,dpl
+	mov	(_count + 1),dph
+	pop	ar2
+	pop	ar3
+;	main.c:87: num[0]=0,num[1]=0,num[2]=0,num[3]=0;
+	clr	a
+	mov	(_main_num_65537_51 + 0),a
+	mov	(_main_num_65537_51 + 1),a
+	mov	((_main_num_65537_51 + 0x0002) + 0),a
+	mov	((_main_num_65537_51 + 0x0002) + 1),a
+	mov	((_main_num_65537_51 + 0x0004) + 0),a
+	mov	((_main_num_65537_51 + 0x0004) + 1),a
+	mov	((_main_num_65537_51 + 0x0006) + 0),a
+	mov	((_main_num_65537_51 + 0x0006) + 1),a
+;	main.c:88: direct=0;
+;	1-genFromRTrack replaced	mov	_direct,#0x00
+	mov	_direct,a
+;	main.c:89: if(key==11)
+	cjne	r2,#0x0b,00107$
+	cjne	r3,#0x00,00107$
+;	main.c:90: direct=1;
+	mov	_direct,#0x01
+00107$:
+;	main.c:91: TR0=1;
+;	assignBit
+	setb	_TR0
+00109$:
+;	main.c:93: row++;
+	inc	_main_row_65537_51
+	clr	a
+	cjne	a,_main_row_65537_51,00165$
+	inc	(_main_row_65537_51 + 1)
+00165$:
+;	main.c:94: if (cnt == 0x10) {	//用cnt從上往下掃 
+	mov	a,#0x10
+	cjne	a,_main_cnt_65538_52,00166$
+	clr	a
+	cjne	a,(_main_cnt_65538_52 + 1),00166$
+	sjmp	00167$
+00166$:
+	sjmp	00113$
+00167$:
+;	main.c:95: cnt = 1;
+	mov	_main_cnt_65538_52,#0x01
+;	main.c:96: row = 0;
+	clr	a
+	mov	(_main_cnt_65538_52 + 1),a
+	mov	_main_row_65537_51,a
+	mov	(_main_row_65537_51 + 1),a
+00113$:
+;	main.c:98: LED_Display(table,num);
+	mov	_LED_Display_PARM_2,#_main_num_65537_51
+	mov	(_LED_Display_PARM_2 + 1),#0x00
+	mov	(_LED_Display_PARM_2 + 2),#0x40
+	mov	dptr,#_main_table_65537_51
+	mov	b,#0x40
+	lcall	_LED_Display
+;	main.c:100: }
+	ljmp	00115$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
+_SPIN:
+	.byte #0x03,#0x00	;  3
+	.byte #0x06,#0x00	;  6
+	.byte #0x0c,#0x00	;  12
+	.byte #0x09,#0x00	;  9
 	.area XINIT   (CODE)
 	.area CABS    (ABS,CODE)
