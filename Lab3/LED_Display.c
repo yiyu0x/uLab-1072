@@ -3,6 +3,6 @@
 void LED_Display(short table[], short num[]) {
 	for(short i = 0; i < 4; i++) {
 		P1  = table[i] + num[i];
-		for(int j = 0; j < 1000; j++){}
+		for(int j = 0; j < 10000; j++){}
 	}
 }
