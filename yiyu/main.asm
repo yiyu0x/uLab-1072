@@ -469,7 +469,7 @@ _display:
 	jnz	00168$
 	ljmp	00108$
 00168$:
-;	main.c:19: if (flash_flag > 7800) {
+;	main.c:19: if (flash_flag > 7800) { // 頻率
 	clr	c
 	mov	a,#0x78
 	subb	a,_display_PARM_5
@@ -777,18 +777,18 @@ _main:
 ;	main.c:72: bool isSetting = false;
 	mov	r3,#0x00
 ;	main.c:74: while (1) {
-00118$:
+00120$:
 ;	main.c:75: flash_flag++;
 	inc	_main_flash_flag_65537_21
 	clr	a
-	cjne	a,_main_flash_flag_65537_21,00162$
+	cjne	a,_main_flash_flag_65537_21,00168$
 	inc	(_main_flash_flag_65537_21 + 1)
-	cjne	a,(_main_flash_flag_65537_21 + 1),00162$
+	cjne	a,(_main_flash_flag_65537_21 + 1),00168$
 	inc	(_main_flash_flag_65537_21 + 2)
-	cjne	a,(_main_flash_flag_65537_21 + 2),00162$
+	cjne	a,(_main_flash_flag_65537_21 + 2),00168$
 	inc	(_main_flash_flag_65537_21 + 3)
-00162$:
-;	main.c:76: if (flash_flag >= 8000) 
+00168$:
+;	main.c:76: if (flash_flag >= 8000)  // 頻率
 	clr	c
 	mov	a,_main_flash_flag_65537_21
 	subb	a,#0x40
@@ -829,30 +829,36 @@ _main:
 	pop	ar3
 ;	main.c:81: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
 	mov	a,r6
-	cjne	a,_main_previous_65536_20,00164$
+	cjne	a,_main_previous_65536_20,00170$
 	mov	a,r7
-	cjne	a,(_main_previous_65536_20 + 1),00164$
-	sjmp	00113$
-00164$:
-	cjne	r6,#0xff,00165$
-	cjne	r7,#0xff,00165$
-	sjmp	00113$
-00165$:
+	cjne	a,(_main_previous_65536_20 + 1),00170$
+	sjmp	00115$
+00170$:
+	cjne	r6,#0xff,00171$
+	cjne	r7,#0xff,00171$
+	sjmp	00115$
+00171$:
 ;	main.c:82: previous = key;
 	mov	_main_previous_65536_20,r6
 	mov	(_main_previous_65536_20 + 1),r7
-;	main.c:87: if (key == 10) {
+;	main.c:87: if (key == 10) { // key == A, 設定模式
 	cjne	r6,#0x0a,00104$
 	cjne	r7,#0x00,00104$
 ;	main.c:88: isSetting = true;
 	mov	r3,#0x01
 00104$:
-;	main.c:91: if (isSetting) {
+;	main.c:90: if (key == 11) {
+	cjne	r6,#0x0b,00106$
+	cjne	r7,#0x00,00106$
+;	main.c:91: isSetting = false;
+	mov	r3,#0x00
+00106$:
+;	main.c:93: if (isSetting) {
 	mov	a,r3
-	jz	00113$
-;	main.c:93: if (key >= 0 && key <= 9)
+	jz	00115$
+;	main.c:95: if (key >= 0 && key <= 9)
 	mov	a,r7
-	jb	acc.7,00106$
+	jb	acc.7,00108$
 	clr	c
 	mov	a,#0x09
 	subb	a,r6
@@ -860,15 +866,15 @@ _main:
 	mov	b,r7
 	xrl	b,#0x80
 	subb	a,b
-	jc	00106$
-;	main.c:94: num[index++] = key;
+	jc	00108$
+;	main.c:96: num[index++] = key;
 	mov	r4,_main_index_65537_21
 	mov	r5,(_main_index_65537_21 + 1)
 	inc	_main_index_65537_21
 	clr	a
-	cjne	a,_main_index_65537_21,00171$
+	cjne	a,_main_index_65537_21,00179$
 	inc	(_main_index_65537_21 + 1)
-00171$:
+00179$:
 	mov	a,r4
 	add	a,r4
 	mov	r4,a
@@ -881,46 +887,46 @@ _main:
 	mov	@r0,ar6
 	inc	r0
 	mov	@r0,ar7
-00106$:
-;	main.c:95: if (index == 4) index = 0;
+00108$:
+;	main.c:97: if (index == 4) index = 0;
 	mov	a,#0x04
-	cjne	a,_main_index_65537_21,00172$
+	cjne	a,_main_index_65537_21,00180$
 	clr	a
-	cjne	a,(_main_index_65537_21 + 1),00172$
-	sjmp	00173$
-00172$:
-	sjmp	00113$
-00173$:
+	cjne	a,(_main_index_65537_21 + 1),00180$
+	sjmp	00181$
+00180$:
+	sjmp	00115$
+00181$:
 	clr	a
 	mov	_main_index_65537_21,a
 	mov	(_main_index_65537_21 + 1),a
-00113$:
-;	main.c:100: row++;
+00115$:
+;	main.c:102: row++;
 	inc	_main_row_65536_20
 	clr	a
-	cjne	a,_main_row_65536_20,00174$
+	cjne	a,_main_row_65536_20,00182$
 	inc	(_main_row_65536_20 + 1)
-00174$:
-;	main.c:101: if (count == 0x10) {	//用count從上往下掃 
+00182$:
+;	main.c:103: if (count == 0x10) {	//用count從上往下掃 
 	mov	a,#0x10
-	cjne	a,_main_count_65536_20,00175$
+	cjne	a,_main_count_65536_20,00183$
 	clr	a
-	cjne	a,(_main_count_65536_20 + 1),00175$
-	sjmp	00176$
-00175$:
-	sjmp	00116$
-00176$:
-;	main.c:102: count = 1;
+	cjne	a,(_main_count_65536_20 + 1),00183$
+	sjmp	00184$
+00183$:
+	sjmp	00118$
+00184$:
+;	main.c:104: count = 1;
 	mov	_main_count_65536_20,#0x01
-;	main.c:103: row   = 0;
+;	main.c:105: row   = 0;
 	clr	a
 	mov	(_main_count_65536_20 + 1),a
 	mov	_main_row_65536_20,a
 	mov	(_main_row_65536_20 + 1),a
-;	main.c:104: P1 = 0b11111111;
+;	main.c:106: P1 = 0b11111111;
 	mov	_P1,#0xff
-00116$:
-;	main.c:106: display(table, alpha, num, isSetting, flash_flag);
+00118$:
+;	main.c:108: display(table, alpha, num, isSetting, flash_flag);
 	mov	_display_PARM_2,#_main_alpha_65536_20
 	mov	(_display_PARM_2 + 1),#0x00
 	mov	(_display_PARM_2 + 2),#0x40
@@ -937,8 +943,8 @@ _main:
 	push	ar3
 	lcall	_display
 	pop	ar3
-;	main.c:109: }
-	ljmp	00118$
+;	main.c:111: }
+	ljmp	00120$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)

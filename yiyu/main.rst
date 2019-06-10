@@ -469,7 +469,7 @@
       0000DC 70 03            [24]  469 	jnz	00168$
       0000DE 02 01 88         [24]  470 	ljmp	00108$
       0000E1                        471 00168$:
-                                    472 ;	main.c:19: if (flash_flag > 7800) {
+                                    472 ;	main.c:19: if (flash_flag > 7800) { // 頻率
       0000E1 C3               [12]  473 	clr	c
       0000E2 74 78            [12]  474 	mov	a,#0x78
       0000E4 95 41            [12]  475 	subb	a,_display_PARM_5
@@ -516,7 +516,7 @@
       000120 8B 82            [24]  516 	mov	dpl,r3
       000122 8E 83            [24]  517 	mov	dph,r6
       000124 8F F0            [24]  518 	mov	b,r7
-      000126 12 03 98         [24]  519 	lcall	__gptrget
+      000126 12 03 A0         [24]  519 	lcall	__gptrget
       000129 F5 90            [12]  520 	mov	_P1,a
                                     521 ;	main.c:22: P2 = alpha[num[i]];
       00012B E8               [12]  522 	mov	a,r0
@@ -529,10 +529,10 @@
       000135 88 82            [24]  529 	mov	dpl,r0
       000137 8C 83            [24]  530 	mov	dph,r4
       000139 8F F0            [24]  531 	mov	b,r7
-      00013B 12 03 98         [24]  532 	lcall	__gptrget
+      00013B 12 03 A0         [24]  532 	lcall	__gptrget
       00013E F8               [12]  533 	mov	r0,a
       00013F A3               [24]  534 	inc	dptr
-      000140 12 03 98         [24]  535 	lcall	__gptrget
+      000140 12 03 A0         [24]  535 	lcall	__gptrget
       000143 FC               [12]  536 	mov	r4,a
       000144 E8               [12]  537 	mov	a,r0
       000145 28               [12]  538 	add	a,r0
@@ -550,7 +550,7 @@
       000154 88 82            [24]  550 	mov	dpl,r0
       000156 8C 83            [24]  551 	mov	dph,r4
       000158 8F F0            [24]  552 	mov	b,r7
-      00015A 12 03 98         [24]  553 	lcall	__gptrget
+      00015A 12 03 A0         [24]  553 	lcall	__gptrget
       00015D F5 A0            [12]  554 	mov	_P2,a
                                     555 ;	main.c:23: for(int j = 0; j < 500; j++){}
       00015F 7E 00            [12]  556 	mov	r6,#0x00
@@ -611,7 +611,7 @@
       0001AD 88 82            [24]  611 	mov	dpl,r0
       0001AF 89 83            [24]  612 	mov	dph,r1
       0001B1 8F F0            [24]  613 	mov	b,r7
-      0001B3 12 03 98         [24]  614 	lcall	__gptrget
+      0001B3 12 03 A0         [24]  614 	lcall	__gptrget
       0001B6 F5 90            [12]  615 	mov	_P1,a
                                     616 ;	main.c:29: P2 = alpha[num[i]];
       0001B8 EA               [12]  617 	mov	a,r2
@@ -624,10 +624,10 @@
       0001C2 8A 82            [24]  624 	mov	dpl,r2
       0001C4 8B 83            [24]  625 	mov	dph,r3
       0001C6 8F F0            [24]  626 	mov	b,r7
-      0001C8 12 03 98         [24]  627 	lcall	__gptrget
+      0001C8 12 03 A0         [24]  627 	lcall	__gptrget
       0001CB FA               [12]  628 	mov	r2,a
       0001CC A3               [24]  629 	inc	dptr
-      0001CD 12 03 98         [24]  630 	lcall	__gptrget
+      0001CD 12 03 A0         [24]  630 	lcall	__gptrget
       0001D0 FB               [12]  631 	mov	r3,a
       0001D1 EA               [12]  632 	mov	a,r2
       0001D2 2A               [12]  633 	add	a,r2
@@ -645,7 +645,7 @@
       0001E1 8A 82            [24]  645 	mov	dpl,r2
       0001E3 8B 83            [24]  646 	mov	dph,r3
       0001E5 8F F0            [24]  647 	mov	b,r7
-      0001E7 12 03 98         [24]  648 	lcall	__gptrget
+      0001E7 12 03 A0         [24]  648 	lcall	__gptrget
       0001EA F5 A0            [12]  649 	mov	_P2,a
                                     650 ;	main.c:30: for(int j = 0; j < 1000; j++){}
       0001EC 7E 00            [12]  651 	mov	r6,#0x00
@@ -777,18 +777,18 @@
                                     777 ;	main.c:72: bool isSetting = false;
       000290 7B 00            [12]  778 	mov	r3,#0x00
                                     779 ;	main.c:74: while (1) {
-      000292                        780 00118$:
+      000292                        780 00120$:
                                     781 ;	main.c:75: flash_flag++;
       000292 05 36            [12]  782 	inc	_main_flash_flag_65537_21
       000294 E4               [12]  783 	clr	a
-      000295 B5 36 0C         [24]  784 	cjne	a,_main_flash_flag_65537_21,00162$
+      000295 B5 36 0C         [24]  784 	cjne	a,_main_flash_flag_65537_21,00168$
       000298 05 37            [12]  785 	inc	(_main_flash_flag_65537_21 + 1)
-      00029A B5 37 07         [24]  786 	cjne	a,(_main_flash_flag_65537_21 + 1),00162$
+      00029A B5 37 07         [24]  786 	cjne	a,(_main_flash_flag_65537_21 + 1),00168$
       00029D 05 38            [12]  787 	inc	(_main_flash_flag_65537_21 + 2)
-      00029F B5 38 02         [24]  788 	cjne	a,(_main_flash_flag_65537_21 + 2),00162$
+      00029F B5 38 02         [24]  788 	cjne	a,(_main_flash_flag_65537_21 + 2),00168$
       0002A2 05 39            [12]  789 	inc	(_main_flash_flag_65537_21 + 3)
-      0002A4                        790 00162$:
-                                    791 ;	main.c:76: if (flash_flag >= 8000) 
+      0002A4                        790 00168$:
+                                    791 ;	main.c:76: if (flash_flag >= 8000)  // 頻率
       0002A4 C3               [12]  792 	clr	c
       0002A5 E5 36            [12]  793 	mov	a,_main_flash_flag_65537_21
       0002A7 94 40            [12]  794 	subb	a,#0x40
@@ -829,117 +829,123 @@
       0002E3 D0 03            [24]  829 	pop	ar3
                                     830 ;	main.c:81: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
       0002E5 EE               [12]  831 	mov	a,r6
-      0002E6 B5 08 06         [24]  832 	cjne	a,_main_previous_65536_20,00164$
+      0002E6 B5 08 06         [24]  832 	cjne	a,_main_previous_65536_20,00170$
       0002E9 EF               [12]  833 	mov	a,r7
-      0002EA B5 09 02         [24]  834 	cjne	a,(_main_previous_65536_20 + 1),00164$
-      0002ED 80 57            [24]  835 	sjmp	00113$
-      0002EF                        836 00164$:
-      0002EF BE FF 05         [24]  837 	cjne	r6,#0xff,00165$
-      0002F2 BF FF 02         [24]  838 	cjne	r7,#0xff,00165$
-      0002F5 80 4F            [24]  839 	sjmp	00113$
-      0002F7                        840 00165$:
+      0002EA B5 09 02         [24]  834 	cjne	a,(_main_previous_65536_20 + 1),00170$
+      0002ED 80 5F            [24]  835 	sjmp	00115$
+      0002EF                        836 00170$:
+      0002EF BE FF 05         [24]  837 	cjne	r6,#0xff,00171$
+      0002F2 BF FF 02         [24]  838 	cjne	r7,#0xff,00171$
+      0002F5 80 57            [24]  839 	sjmp	00115$
+      0002F7                        840 00171$:
                                     841 ;	main.c:82: previous = key;
       0002F7 8E 08            [24]  842 	mov	_main_previous_65536_20,r6
       0002F9 8F 09            [24]  843 	mov	(_main_previous_65536_20 + 1),r7
-                                    844 ;	main.c:87: if (key == 10) {
+                                    844 ;	main.c:87: if (key == 10) { // key == A, 設定模式
       0002FB BE 0A 05         [24]  845 	cjne	r6,#0x0a,00104$
       0002FE BF 00 02         [24]  846 	cjne	r7,#0x00,00104$
                                     847 ;	main.c:88: isSetting = true;
       000301 7B 01            [12]  848 	mov	r3,#0x01
       000303                        849 00104$:
-                                    850 ;	main.c:91: if (isSetting) {
-      000303 EB               [12]  851 	mov	a,r3
-      000304 60 40            [24]  852 	jz	00113$
-                                    853 ;	main.c:93: if (key >= 0 && key <= 9)
-      000306 EF               [12]  854 	mov	a,r7
-      000307 20 E7 2A         [24]  855 	jb	acc.7,00106$
-      00030A C3               [12]  856 	clr	c
-      00030B 74 09            [12]  857 	mov	a,#0x09
-      00030D 9E               [12]  858 	subb	a,r6
-      00030E 74 80            [12]  859 	mov	a,#(0x00 ^ 0x80)
-      000310 8F F0            [24]  860 	mov	b,r7
-      000312 63 F0 80         [24]  861 	xrl	b,#0x80
-      000315 95 F0            [12]  862 	subb	a,b
-      000317 40 1B            [24]  863 	jc	00106$
-                                    864 ;	main.c:94: num[index++] = key;
-      000319 AC 34            [24]  865 	mov	r4,_main_index_65537_21
-      00031B AD 35            [24]  866 	mov	r5,(_main_index_65537_21 + 1)
-      00031D 05 34            [12]  867 	inc	_main_index_65537_21
-      00031F E4               [12]  868 	clr	a
-      000320 B5 34 02         [24]  869 	cjne	a,_main_index_65537_21,00171$
-      000323 05 35            [12]  870 	inc	(_main_index_65537_21 + 1)
-      000325                        871 00171$:
-      000325 EC               [12]  872 	mov	a,r4
-      000326 2C               [12]  873 	add	a,r4
-      000327 FC               [12]  874 	mov	r4,a
-      000328 ED               [12]  875 	mov	a,r5
-      000329 33               [12]  876 	rlc	a
-      00032A FD               [12]  877 	mov	r5,a
-      00032B EC               [12]  878 	mov	a,r4
-      00032C 24 0E            [12]  879 	add	a,#_main_num_65536_20
-      00032E F8               [12]  880 	mov	r0,a
-      00032F A6 06            [24]  881 	mov	@r0,ar6
-      000331 08               [12]  882 	inc	r0
-      000332 A6 07            [24]  883 	mov	@r0,ar7
-      000334                        884 00106$:
-                                    885 ;	main.c:95: if (index == 4) index = 0;
-      000334 74 04            [12]  886 	mov	a,#0x04
-      000336 B5 34 06         [24]  887 	cjne	a,_main_index_65537_21,00172$
-      000339 E4               [12]  888 	clr	a
-      00033A B5 35 02         [24]  889 	cjne	a,(_main_index_65537_21 + 1),00172$
-      00033D 80 02            [24]  890 	sjmp	00173$
-      00033F                        891 00172$:
-      00033F 80 05            [24]  892 	sjmp	00113$
-      000341                        893 00173$:
+                                    850 ;	main.c:90: if (key == 11) {
+      000303 BE 0B 05         [24]  851 	cjne	r6,#0x0b,00106$
+      000306 BF 00 02         [24]  852 	cjne	r7,#0x00,00106$
+                                    853 ;	main.c:91: isSetting = false;
+      000309 7B 00            [12]  854 	mov	r3,#0x00
+      00030B                        855 00106$:
+                                    856 ;	main.c:93: if (isSetting) {
+      00030B EB               [12]  857 	mov	a,r3
+      00030C 60 40            [24]  858 	jz	00115$
+                                    859 ;	main.c:95: if (key >= 0 && key <= 9)
+      00030E EF               [12]  860 	mov	a,r7
+      00030F 20 E7 2A         [24]  861 	jb	acc.7,00108$
+      000312 C3               [12]  862 	clr	c
+      000313 74 09            [12]  863 	mov	a,#0x09
+      000315 9E               [12]  864 	subb	a,r6
+      000316 74 80            [12]  865 	mov	a,#(0x00 ^ 0x80)
+      000318 8F F0            [24]  866 	mov	b,r7
+      00031A 63 F0 80         [24]  867 	xrl	b,#0x80
+      00031D 95 F0            [12]  868 	subb	a,b
+      00031F 40 1B            [24]  869 	jc	00108$
+                                    870 ;	main.c:96: num[index++] = key;
+      000321 AC 34            [24]  871 	mov	r4,_main_index_65537_21
+      000323 AD 35            [24]  872 	mov	r5,(_main_index_65537_21 + 1)
+      000325 05 34            [12]  873 	inc	_main_index_65537_21
+      000327 E4               [12]  874 	clr	a
+      000328 B5 34 02         [24]  875 	cjne	a,_main_index_65537_21,00179$
+      00032B 05 35            [12]  876 	inc	(_main_index_65537_21 + 1)
+      00032D                        877 00179$:
+      00032D EC               [12]  878 	mov	a,r4
+      00032E 2C               [12]  879 	add	a,r4
+      00032F FC               [12]  880 	mov	r4,a
+      000330 ED               [12]  881 	mov	a,r5
+      000331 33               [12]  882 	rlc	a
+      000332 FD               [12]  883 	mov	r5,a
+      000333 EC               [12]  884 	mov	a,r4
+      000334 24 0E            [12]  885 	add	a,#_main_num_65536_20
+      000336 F8               [12]  886 	mov	r0,a
+      000337 A6 06            [24]  887 	mov	@r0,ar6
+      000339 08               [12]  888 	inc	r0
+      00033A A6 07            [24]  889 	mov	@r0,ar7
+      00033C                        890 00108$:
+                                    891 ;	main.c:97: if (index == 4) index = 0;
+      00033C 74 04            [12]  892 	mov	a,#0x04
+      00033E B5 34 06         [24]  893 	cjne	a,_main_index_65537_21,00180$
       000341 E4               [12]  894 	clr	a
-      000342 F5 34            [12]  895 	mov	_main_index_65537_21,a
-      000344 F5 35            [12]  896 	mov	(_main_index_65537_21 + 1),a
-      000346                        897 00113$:
-                                    898 ;	main.c:100: row++;
-      000346 05 0A            [12]  899 	inc	_main_row_65536_20
-      000348 E4               [12]  900 	clr	a
-      000349 B5 0A 02         [24]  901 	cjne	a,_main_row_65536_20,00174$
-      00034C 05 0B            [12]  902 	inc	(_main_row_65536_20 + 1)
-      00034E                        903 00174$:
-                                    904 ;	main.c:101: if (count == 0x10) {	//用count從上往下掃 
-      00034E 74 10            [12]  905 	mov	a,#0x10
-      000350 B5 0C 06         [24]  906 	cjne	a,_main_count_65536_20,00175$
-      000353 E4               [12]  907 	clr	a
-      000354 B5 0D 02         [24]  908 	cjne	a,(_main_count_65536_20 + 1),00175$
-      000357 80 02            [24]  909 	sjmp	00176$
-      000359                        910 00175$:
-      000359 80 0D            [24]  911 	sjmp	00116$
-      00035B                        912 00176$:
-                                    913 ;	main.c:102: count = 1;
-      00035B 75 0C 01         [24]  914 	mov	_main_count_65536_20,#0x01
-                                    915 ;	main.c:103: row   = 0;
-      00035E E4               [12]  916 	clr	a
-      00035F F5 0D            [12]  917 	mov	(_main_count_65536_20 + 1),a
-      000361 F5 0A            [12]  918 	mov	_main_row_65536_20,a
-      000363 F5 0B            [12]  919 	mov	(_main_row_65536_20 + 1),a
-                                    920 ;	main.c:104: P1 = 0b11111111;
-      000365 75 90 FF         [24]  921 	mov	_P1,#0xff
-      000368                        922 00116$:
-                                    923 ;	main.c:106: display(table, alpha, num, isSetting, flash_flag);
-      000368 75 3A 16         [24]  924 	mov	_display_PARM_2,#_main_alpha_65536_20
-      00036B 75 3B 00         [24]  925 	mov	(_display_PARM_2 + 1),#0x00
-      00036E 75 3C 40         [24]  926 	mov	(_display_PARM_2 + 2),#0x40
-      000371 75 3D 0E         [24]  927 	mov	_display_PARM_3,#_main_num_65536_20
-      000374 75 3E 00         [24]  928 	mov	(_display_PARM_3 + 1),#0x00
-      000377 75 3F 40         [24]  929 	mov	(_display_PARM_3 + 2),#0x40
-      00037A 8B 40            [24]  930 	mov	_display_PARM_4,r3
-      00037C 85 36 41         [24]  931 	mov	_display_PARM_5,_main_flash_flag_65537_21
-      00037F 85 37 42         [24]  932 	mov	(_display_PARM_5 + 1),(_main_flash_flag_65537_21 + 1)
-      000382 85 38 43         [24]  933 	mov	(_display_PARM_5 + 2),(_main_flash_flag_65537_21 + 2)
-      000385 85 39 44         [24]  934 	mov	(_display_PARM_5 + 3),(_main_flash_flag_65537_21 + 3)
-      000388 90 00 2C         [24]  935 	mov	dptr,#_main_table_65536_20
-      00038B 75 F0 40         [24]  936 	mov	b,#0x40
-      00038E C0 03            [24]  937 	push	ar3
-      000390 12 00 D1         [24]  938 	lcall	_display
-      000393 D0 03            [24]  939 	pop	ar3
-                                    940 ;	main.c:109: }
-      000395 02 02 92         [24]  941 	ljmp	00118$
-                                    942 	.area CSEG    (CODE)
-                                    943 	.area CONST   (CODE)
-                                    944 	.area XINIT   (CODE)
-                                    945 	.area CABS    (ABS,CODE)
+      000342 B5 35 02         [24]  895 	cjne	a,(_main_index_65537_21 + 1),00180$
+      000345 80 02            [24]  896 	sjmp	00181$
+      000347                        897 00180$:
+      000347 80 05            [24]  898 	sjmp	00115$
+      000349                        899 00181$:
+      000349 E4               [12]  900 	clr	a
+      00034A F5 34            [12]  901 	mov	_main_index_65537_21,a
+      00034C F5 35            [12]  902 	mov	(_main_index_65537_21 + 1),a
+      00034E                        903 00115$:
+                                    904 ;	main.c:102: row++;
+      00034E 05 0A            [12]  905 	inc	_main_row_65536_20
+      000350 E4               [12]  906 	clr	a
+      000351 B5 0A 02         [24]  907 	cjne	a,_main_row_65536_20,00182$
+      000354 05 0B            [12]  908 	inc	(_main_row_65536_20 + 1)
+      000356                        909 00182$:
+                                    910 ;	main.c:103: if (count == 0x10) {	//用count從上往下掃 
+      000356 74 10            [12]  911 	mov	a,#0x10
+      000358 B5 0C 06         [24]  912 	cjne	a,_main_count_65536_20,00183$
+      00035B E4               [12]  913 	clr	a
+      00035C B5 0D 02         [24]  914 	cjne	a,(_main_count_65536_20 + 1),00183$
+      00035F 80 02            [24]  915 	sjmp	00184$
+      000361                        916 00183$:
+      000361 80 0D            [24]  917 	sjmp	00118$
+      000363                        918 00184$:
+                                    919 ;	main.c:104: count = 1;
+      000363 75 0C 01         [24]  920 	mov	_main_count_65536_20,#0x01
+                                    921 ;	main.c:105: row   = 0;
+      000366 E4               [12]  922 	clr	a
+      000367 F5 0D            [12]  923 	mov	(_main_count_65536_20 + 1),a
+      000369 F5 0A            [12]  924 	mov	_main_row_65536_20,a
+      00036B F5 0B            [12]  925 	mov	(_main_row_65536_20 + 1),a
+                                    926 ;	main.c:106: P1 = 0b11111111;
+      00036D 75 90 FF         [24]  927 	mov	_P1,#0xff
+      000370                        928 00118$:
+                                    929 ;	main.c:108: display(table, alpha, num, isSetting, flash_flag);
+      000370 75 3A 16         [24]  930 	mov	_display_PARM_2,#_main_alpha_65536_20
+      000373 75 3B 00         [24]  931 	mov	(_display_PARM_2 + 1),#0x00
+      000376 75 3C 40         [24]  932 	mov	(_display_PARM_2 + 2),#0x40
+      000379 75 3D 0E         [24]  933 	mov	_display_PARM_3,#_main_num_65536_20
+      00037C 75 3E 00         [24]  934 	mov	(_display_PARM_3 + 1),#0x00
+      00037F 75 3F 40         [24]  935 	mov	(_display_PARM_3 + 2),#0x40
+      000382 8B 40            [24]  936 	mov	_display_PARM_4,r3
+      000384 85 36 41         [24]  937 	mov	_display_PARM_5,_main_flash_flag_65537_21
+      000387 85 37 42         [24]  938 	mov	(_display_PARM_5 + 1),(_main_flash_flag_65537_21 + 1)
+      00038A 85 38 43         [24]  939 	mov	(_display_PARM_5 + 2),(_main_flash_flag_65537_21 + 2)
+      00038D 85 39 44         [24]  940 	mov	(_display_PARM_5 + 3),(_main_flash_flag_65537_21 + 3)
+      000390 90 00 2C         [24]  941 	mov	dptr,#_main_table_65536_20
+      000393 75 F0 40         [24]  942 	mov	b,#0x40
+      000396 C0 03            [24]  943 	push	ar3
+      000398 12 00 D1         [24]  944 	lcall	_display
+      00039B D0 03            [24]  945 	pop	ar3
+                                    946 ;	main.c:111: }
+      00039D 02 02 92         [24]  947 	ljmp	00120$
+                                    948 	.area CSEG    (CODE)
+                                    949 	.area CONST   (CODE)
+                                    950 	.area XINIT   (CODE)
+                                    951 	.area CABS    (ABS,CODE)

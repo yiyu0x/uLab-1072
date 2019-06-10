@@ -39,7 +39,11 @@ int main() {
 	// p2 -> 顯示字母
 
 	// A -> 設定現在時間(時:分)
-	// B -> 完成設定
+	// B -> 完成現在時間設定
+
+	// C -> 設定鬧鐘時間
+	// D -> 完成鬧鐘時間設定
+
 
 	// P2_0 ~ P2_7
 	// P2 = 0b00100101;
@@ -84,10 +88,12 @@ int main() {
 //			num[1] =num[2];
 //			num[2] =num[3];			
 //			num[3] = key;	//往前推
-			if (key == 10) {
+			if (key == 10) { // key == A, 設定模式
 				isSetting = true;
 			}
-
+			if (key == 11) {
+				isSetting = false;
+			}
 			if (isSetting) {
 				// flash_LED();
 				if (key >= 0 && key <= 9)
