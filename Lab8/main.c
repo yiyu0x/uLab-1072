@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #define PERIOD 15536
 const short SPIN[] = {0x03, 0x06, 0x0C, 0x09};
-int count=2000; // 一圈200步
-int max=50;
+int count=4000; // 一圈200步
+//int max=50;
 char direct=0; 
 unsigned char step=0x01;
 unsigned int speed=(65536-65536);
