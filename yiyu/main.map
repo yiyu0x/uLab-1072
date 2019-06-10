@@ -52,8 +52,8 @@ C:   00000008  s_REG_BANK_1
 C:   00000009  s_GSINIT1                       
 C:   00000009  s_GSINIT2                       
 C:   0000000A  l_GSINIT2                       
-C:   0000000B  l_OSEG                          
 C:   00000010  s_REG_BANK_2                    
+C:   00000012  l_OSEG                          
 C:   00000013  s_GSINIT3                       
 C:   00000018  s_BIT_BANK                      
 C:   00000018  s_REG_BANK_3                    
@@ -70,19 +70,19 @@ C:   00000020  s_BSEG_BYTES
 C:   00000020  s__CODE                         
 C:   00000022  l_GSINIT3                       
 C:   0000002A  l_GSINIT4                       
-C:   00000032  s_OSEG                          
 C:   00000035  s_GSINIT4                       
-C:   0000003D  s_SSEG                          
+C:   0000003A  s_OSEG                          
+C:   0000004C  s_SSEG                          
 C:   0000005F  s_GSFINAL                       
 C:   0000005F  s_GSINIT                        
 C:   0000005F  s_GSINIT5                       
 C:   00000062  s_CSEG                          
 C:   00000080  l_DSEG                          
-C:   000000C3  l_SSEG                          
+C:   000000B4  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   00000226  l_CSEG                          
-C:   00000288  s_CONST                         
-C:   00000288  s_XINIT                         
+C:   00000356  l_CSEG                          
+C:   000003B8  s_CONST                         
+C:   000003B8  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -227,23 +227,25 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                00000032    0000000B =          11. bytes (REL,OVR)
+OSEG                                0000003A    00000012 =          18. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000032  _display_PARM_2                    main
-     00000035  _display_PARM_3                    main
+     0000003A  _display_PARM_2                    main
+     0000003D  _display_PARM_3                    main
+     00000040  _display_PARM_4                    main
+     00000041  _display_PARM_5                    main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                0000003D    000000C3 =         195. bytes (REL,OVR)
+SSEG                                0000004C    000000B4 =         180. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000003D  __start__stack                     main
+     0000004C  __start__stack                     main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
@@ -313,15 +315,15 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    00000226 =         550. bytes (REL,CON,CODE)
+CSEG                                00000062    00000356 =         854. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000062  _keyPressed                        main
 C:   000000D1  _display                           main
-C:   00000168  _main                              main
-C:   00000268  __gptrget                          _gptrget
-C:   00000284  __sdcc_external_startup            _startup
+C:   00000216  _main                              main
+C:   00000398  __gptrget                          _gptrget
+C:   000003B4  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
 

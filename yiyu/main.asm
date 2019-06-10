@@ -8,6 +8,8 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
+	.globl _display_PARM_5
+	.globl _display_PARM_4
 	.globl _display_PARM_3
 	.globl _display_PARM_2
 	.globl _main
@@ -224,16 +226,22 @@ _CY	=	0x00d7
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
-_main_previous_65536_13:
+_main_previous_65536_20:
 	.ds 2
-_main_row_65536_13:
+_main_row_65536_20:
 	.ds 2
-_main_num_65536_13:
+_main_count_65536_20:
+	.ds 2
+_main_num_65536_20:
 	.ds 8
-_main_alpha_65536_13:
+_main_alpha_65536_20:
 	.ds 22
-_main_table_65536_13:
+_main_table_65536_20:
 	.ds 8
+_main_index_65537_21:
+	.ds 2
+_main_flash_flag_65537_21:
+	.ds 4
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
@@ -245,9 +253,15 @@ _display_PARM_2:
 	.ds 3
 _display_PARM_3:
 	.ds 3
+_display_PARM_4:
+	.ds 1
+_display_PARM_5:
+	.ds 4
 _display_table_65536_7:
 	.ds 3
-_display_t_131072_9:
+_display_t_262144_11:
+	.ds 2
+_display_t_196608_16:
 	.ds 2
 ;--------------------------------------------------------
 ; Stack segment in internal ram 
@@ -336,7 +350,7 @@ __sdcc_program_startup:
 ;col                       Allocated to registers r2 r3 
 ;magic                     Allocated to registers r7 r6 
 ;------------------------------------------------------------
-;	main.c:3: short keyPressed(short row) {
+;	main.c:4: short keyPressed(short row) {
 ;	-----------------------------------------
 ;	 function keyPressed
 ;	-----------------------------------------
@@ -351,7 +365,7 @@ _keyPressed:
 	ar0 = 0x00
 	mov	_keyPressed_row_65536_1,dpl
 	mov	(_keyPressed_row_65536_1 + 1),dph
-;	main.c:4: if((P0 & 0b11110000) != 0b11110000){	//if 按下按鈕
+;	main.c:5: if((P0 & 0b11110000) != 0b11110000){	//if 按下按鈕
 	mov	r4,_P0
 	anl	ar4,#0xf0
 	mov	r5,#0x00
@@ -359,7 +373,7 @@ _keyPressed:
 	cjne	r5,#0x00,00127$
 	sjmp	00105$
 00127$:
-;	main.c:5: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
+;	main.c:6: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
 	mov	r4,#0x01
 	mov	r5,#0x00
 	mov	r2,#0x00
@@ -374,7 +388,7 @@ _keyPressed:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jnc	00105$
-;	main.c:7: `			short magic = ((P0 >> 4) ^ 0b11111111) & 0b00001111;
+;	main.c:8: `			short magic = ((P0 >> 4) ^ 0b11111111) & 0b00001111;
 	mov	a,_P0
 	swap	a
 	anl	a,#0x0f
@@ -382,12 +396,12 @@ _keyPressed:
 	xrl	ar7,#0xff
 	anl	ar7,#0x0f
 	mov	r6,#0x00
-;	main.c:8: if (magic == c) {
+;	main.c:9: if (magic == c) {
 	mov	a,r7
 	cjne	a,ar4,00108$
 	mov	a,r6
 	cjne	a,ar5,00108$
-;	main.c:9: return row * 4 + col;
+;	main.c:10: return row * 4 + col;
 	mov	a,_keyPressed_row_65536_1
 	add	a,_keyPressed_row_65536_1
 	mov	r6,a
@@ -408,7 +422,7 @@ _keyPressed:
 	mov	dph,a
 	ret
 00108$:
-;	main.c:5: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
+;	main.c:6: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
 	mov	a,r4
 	add	a,r4
 	mov	r4,a
@@ -423,21 +437,26 @@ _keyPressed:
 	mov	ar3,r1
 	sjmp	00107$
 00105$:
-;	main.c:13: return -1;	//沒按 return -1
+;	main.c:14: return -1;	//沒按 return -1
 	mov	dptr,#0xffff
-;	main.c:14: }
+;	main.c:15: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'display'
 ;------------------------------------------------------------
 ;alpha                     Allocated with name '_display_PARM_2'
 ;num                       Allocated with name '_display_PARM_3'
+;isSetting                 Allocated with name '_display_PARM_4'
+;flash_flag                Allocated with name '_display_PARM_5'
 ;table                     Allocated with name '_display_table_65536_7'
 ;i                         Allocated to registers r1 r2 
-;t                         Allocated with name '_display_t_131072_9'
+;t                         Allocated with name '_display_t_262144_11'
+;j                         Allocated to registers r6 r7 
+;i                         Allocated to registers r4 r5 
+;t                         Allocated with name '_display_t_196608_16'
 ;j                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
-;	main.c:16: short display(short table[], short alpha[], short num[]) {
+;	main.c:17: void display(short table[], short alpha[], short num[], bool isSetting, long flash_flag) {
 ;	-----------------------------------------
 ;	 function display
 ;	-----------------------------------------
@@ -445,20 +464,42 @@ _display:
 	mov	_display_table_65536_7,dpl
 	mov	(_display_table_65536_7 + 1),dph
 	mov	(_display_table_65536_7 + 2),b
-;	main.c:17: for(short i = 0,t=1; i < 4; i++,t*=2) {
-	mov	_display_t_131072_9,#0x01
-	mov	(_display_t_131072_9 + 1),#0x00
+;	main.c:18: if (isSetting) {
+	mov	a,_display_PARM_4
+	jnz	00168$
+	ljmp	00108$
+00168$:
+;	main.c:19: if (flash_flag > 7800) {
+	clr	c
+	mov	a,#0x78
+	subb	a,_display_PARM_5
+	mov	a,#0x1e
+	subb	a,(_display_PARM_5 + 1)
+	clr	a
+	subb	a,(_display_PARM_5 + 2)
+	mov	a,#(0x00 ^ 0x80)
+	mov	b,(_display_PARM_5 + 3)
+	xrl	b,#0x80
+	subb	a,b
+	jc	00169$
+	ret
+00169$:
+;	main.c:20: for(short i = 0,t=1; i < 4; i++,t*=2) {
+	mov	_display_t_262144_11,#0x01
+	mov	(_display_t_262144_11 + 1),#0x00
 	mov	r1,#0x00
 	mov	r2,#0x00
-00107$:
+00114$:
 	clr	c
 	mov	a,r1
 	subb	a,#0x04
 	mov	a,r2
 	xrl	a,#0x80
 	subb	a,#0x80
-	jnc	00109$
-;	main.c:18: P1 = table[i];
+	jc	00170$
+	ret
+00170$:
+;	main.c:21: P1 = table[i];
 	mov	a,r1
 	add	a,r1
 	mov	r0,a
@@ -477,7 +518,7 @@ _display:
 	mov	b,r7
 	lcall	__gptrget
 	mov	_P1,a
-;	main.c:19: P2 = alpha[num[i]];
+;	main.c:22: P2 = alpha[num[i]];
 	mov	a,r0
 	add	a,_display_PARM_3
 	mov	r0,a
@@ -511,215 +552,393 @@ _display:
 	mov	b,r7
 	lcall	__gptrget
 	mov	_P2,a
-;	main.c:20: for(int j = 0; j < 1000; j++){}
+;	main.c:23: for(int j = 0; j < 500; j++){}
 	mov	r6,#0x00
 	mov	r7,#0x00
-00104$:
+00111$:
 	clr	c
 	mov	a,r6
-	subb	a,#0xe8
+	subb	a,#0xf4
 	mov	a,r7
 	xrl	a,#0x80
-	subb	a,#0x83
-	jnc	00108$
+	subb	a,#0x81
+	jnc	00115$
 	inc	r6
-	cjne	r6,#0x00,00104$
+	cjne	r6,#0x00,00111$
 	inc	r7
-	sjmp	00104$
-00108$:
-;	main.c:17: for(short i = 0,t=1; i < 4; i++,t*=2) {
+	sjmp	00111$
+00115$:
+;	main.c:20: for(short i = 0,t=1; i < 4; i++,t*=2) {
 	inc	r1
-	cjne	r1,#0x00,00132$
+	cjne	r1,#0x00,00173$
 	inc	r2
-00132$:
-	mov	a,_display_t_131072_9
-	add	a,_display_t_131072_9
-	mov	_display_t_131072_9,a
-	mov	a,(_display_t_131072_9 + 1)
+00173$:
+	mov	a,_display_t_262144_11
+	add	a,_display_t_262144_11
+	mov	_display_t_262144_11,a
+	mov	a,(_display_t_262144_11 + 1)
 	rlc	a
-	mov	(_display_t_131072_9 + 1),a
-	ljmp	00107$
-00109$:
-;	main.c:22: }
-	ret
-;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
-;------------------------------------------------------------
-;previous                  Allocated with name '_main_previous_65536_13'
-;row                       Allocated with name '_main_row_65536_13'
-;count                     Allocated to registers r2 r3 
-;num                       Allocated with name '_main_num_65536_13'
-;alpha                     Allocated with name '_main_alpha_65536_13'
-;table                     Allocated with name '_main_table_65536_13'
-;key                       Allocated to registers r6 r7 
-;------------------------------------------------------------
-;	main.c:24: int main() {
-;	-----------------------------------------
-;	 function main
-;	-----------------------------------------
-_main:
-;	main.c:31: short previous = -1;
-	mov	_main_previous_65536_13,#0xff
-	mov	(_main_previous_65536_13 + 1),#0xff
-;	main.c:32: short row = 0;
-	clr	a
-	mov	_main_row_65536_13,a
-	mov	(_main_row_65536_13 + 1),a
-;	main.c:33: short count = 1;
-	mov	r2,#0x01
-	mov	r3,#0x00
-;	main.c:34: short num[4] = {0};
-	mov	(_main_num_65536_13 + 0),a
-	mov	(_main_num_65536_13 + 1),a
-	mov	((_main_num_65536_13 + 0x0002) + 0),a
-	mov	((_main_num_65536_13 + 0x0002) + 1),a
-	mov	((_main_num_65536_13 + 0x0004) + 0),a
-	mov	((_main_num_65536_13 + 0x0004) + 1),a
-	mov	((_main_num_65536_13 + 0x0006) + 0),a
-	mov	((_main_num_65536_13 + 0x0006) + 1),a
-;	main.c:35: const short alpha[11] = {
-	mov	(_main_alpha_65536_13 + 0),#0x03
-;	1-genFromRTrack replaced	mov	(_main_alpha_65536_13 + 1),#0x00
-	mov	(_main_alpha_65536_13 + 1),a
-	mov	((_main_alpha_65536_13 + 0x0002) + 0),#0x9f
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0002) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x0002) + 1),a
-	mov	((_main_alpha_65536_13 + 0x0004) + 0),#0x25
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0004) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x0004) + 1),a
-	mov	((_main_alpha_65536_13 + 0x0006) + 0),#0x0d
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0006) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x0006) + 1),a
-	mov	((_main_alpha_65536_13 + 0x0008) + 0),#0x99
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0008) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x0008) + 1),a
-	mov	((_main_alpha_65536_13 + 0x000a) + 0),#0x49
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x000a) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x000a) + 1),a
-	mov	((_main_alpha_65536_13 + 0x000c) + 0),#0x41
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x000c) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x000c) + 1),a
-	mov	((_main_alpha_65536_13 + 0x000e) + 0),#0x1f
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x000e) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x000e) + 1),a
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0010) + 0),#0x01
-	mov	((_main_alpha_65536_13 + 0x0010) + 0),r2
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0010) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x0010) + 1),a
-	mov	((_main_alpha_65536_13 + 0x0012) + 0),#0x09
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0012) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x0012) + 1),a
-	mov	((_main_alpha_65536_13 + 0x0014) + 0),#0xff
-;	1-genFromRTrack replaced	mov	((_main_alpha_65536_13 + 0x0014) + 1),#0x00
-	mov	((_main_alpha_65536_13 + 0x0014) + 1),a
-;	main.c:48: const short table[4] = {
-	mov	(_main_table_65536_13 + 0),#0xfe
-;	1-genFromRTrack replaced	mov	(_main_table_65536_13 + 1),#0x00
-	mov	(_main_table_65536_13 + 1),a
-	mov	((_main_table_65536_13 + 0x0002) + 0),#0xfd
-;	1-genFromRTrack replaced	mov	((_main_table_65536_13 + 0x0002) + 1),#0x00
-	mov	((_main_table_65536_13 + 0x0002) + 1),a
-	mov	((_main_table_65536_13 + 0x0004) + 0),#0xfb
-;	1-genFromRTrack replaced	mov	((_main_table_65536_13 + 0x0004) + 1),#0x00
-	mov	((_main_table_65536_13 + 0x0004) + 1),a
-	mov	((_main_table_65536_13 + 0x0006) + 0),#0xf7
-;	1-genFromRTrack replaced	mov	((_main_table_65536_13 + 0x0006) + 1),#0x00
-	mov	((_main_table_65536_13 + 0x0006) + 1),a
-;	main.c:54: P0 = 0b00001111;
-	mov	_P0,#0x0f
-;	main.c:55: while (1) {
-00107$:
-;	main.c:56: P0     =count^0b11111111;
-	mov	a,#0xff
-	xrl	a,r2
-	mov	r6,a
-	mov	ar7,r3
-	mov	_P0,r6
-;	main.c:57: count *=2; //shift
+	mov	(_display_t_262144_11 + 1),a
+	ljmp	00114$
+00108$:
+;	main.c:27: for(short i = 0,t=1; i < 4; i++,t*=2) {
+	mov	_display_t_196608_16,#0x01
+	mov	(_display_t_196608_16 + 1),#0x00
+	mov	r4,#0x00
+	mov	r5,#0x00
+00120$:
+	clr	c
+	mov	a,r4
+	subb	a,#0x04
+	mov	a,r5
+	xrl	a,#0x80
+	subb	a,#0x80
+	jnc	00122$
+;	main.c:28: P1 = table[i];
+	mov	a,r4
+	add	a,r4
+	mov	r2,a
+	mov	a,r5
+	rlc	a
+	mov	r3,a
+	mov	a,r2
+	add	a,_display_table_65536_7
+	mov	r0,a
+	mov	a,r3
+	addc	a,(_display_table_65536_7 + 1)
+	mov	r1,a
+	mov	r7,(_display_table_65536_7 + 2)
+	mov	dpl,r0
+	mov	dph,r1
+	mov	b,r7
+	lcall	__gptrget
+	mov	_P1,a
+;	main.c:29: P2 = alpha[num[i]];
+	mov	a,r2
+	add	a,_display_PARM_3
+	mov	r2,a
+	mov	a,r3
+	addc	a,(_display_PARM_3 + 1)
+	mov	r3,a
+	mov	r7,(_display_PARM_3 + 2)
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r7
+	lcall	__gptrget
+	mov	r2,a
+	inc	dptr
+	lcall	__gptrget
+	mov	r3,a
 	mov	a,r2
 	add	a,r2
 	mov	r2,a
 	mov	a,r3
 	rlc	a
 	mov	r3,a
-;	main.c:58: short key = keyPressed(row);
-	mov	dpl,_main_row_65536_13
-	mov	dph,(_main_row_65536_13 + 1)
+	mov	a,r2
+	add	a,_display_PARM_2
+	mov	r2,a
+	mov	a,r3
+	addc	a,(_display_PARM_2 + 1)
+	mov	r3,a
+	mov	r7,(_display_PARM_2 + 2)
+	mov	dpl,r2
+	mov	dph,r3
+	mov	b,r7
+	lcall	__gptrget
+	mov	_P2,a
+;	main.c:30: for(int j = 0; j < 1000; j++){}
+	mov	r6,#0x00
+	mov	r7,#0x00
+00117$:
+	clr	c
+	mov	a,r6
+	subb	a,#0xe8
+	mov	a,r7
+	xrl	a,#0x80
+	subb	a,#0x83
+	jnc	00121$
+	inc	r6
+	cjne	r6,#0x00,00117$
+	inc	r7
+	sjmp	00117$
+00121$:
+;	main.c:27: for(short i = 0,t=1; i < 4; i++,t*=2) {
+	inc	r4
+	cjne	r4,#0x00,00177$
+	inc	r5
+00177$:
+	mov	a,_display_t_196608_16
+	add	a,_display_t_196608_16
+	mov	_display_t_196608_16,a
+	mov	a,(_display_t_196608_16 + 1)
+	rlc	a
+	mov	(_display_t_196608_16 + 1),a
+	ljmp	00120$
+00122$:
+;	main.c:33: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'main'
+;------------------------------------------------------------
+;previous                  Allocated with name '_main_previous_65536_20'
+;row                       Allocated with name '_main_row_65536_20'
+;count                     Allocated with name '_main_count_65536_20'
+;num                       Allocated with name '_main_num_65536_20'
+;alpha                     Allocated with name '_main_alpha_65536_20'
+;table                     Allocated with name '_main_table_65536_20'
+;index                     Allocated with name '_main_index_65537_21'
+;flash_flag                Allocated with name '_main_flash_flag_65537_21'
+;isSetting                 Allocated to registers r3 
+;key                       Allocated to registers r6 r7 
+;------------------------------------------------------------
+;	main.c:36: int main() {
+;	-----------------------------------------
+;	 function main
+;	-----------------------------------------
+_main:
+;	main.c:46: short previous = -1;
+	mov	_main_previous_65536_20,#0xff
+	mov	(_main_previous_65536_20 + 1),#0xff
+;	main.c:47: short row = 0;
+	clr	a
+	mov	_main_row_65536_20,a
+	mov	(_main_row_65536_20 + 1),a
+;	main.c:48: short count = 1;
+	mov	_main_count_65536_20,#0x01
+;	1-genFromRTrack replaced	mov	(_main_count_65536_20 + 1),#0x00
+	mov	(_main_count_65536_20 + 1),a
+;	main.c:49: short num[4] = {0};
+	mov	(_main_num_65536_20 + 0),a
+	mov	(_main_num_65536_20 + 1),a
+	mov	((_main_num_65536_20 + 0x0002) + 0),a
+	mov	((_main_num_65536_20 + 0x0002) + 1),a
+	mov	((_main_num_65536_20 + 0x0004) + 0),a
+	mov	((_main_num_65536_20 + 0x0004) + 1),a
+	mov	((_main_num_65536_20 + 0x0006) + 0),a
+	mov	((_main_num_65536_20 + 0x0006) + 1),a
+;	main.c:50: const short alpha[11] = {
+	mov	(_main_alpha_65536_20 + 0),#0x03
+;	1-genFromRTrack replaced	mov	(_main_alpha_65536_20 + 1),#0x00
+	mov	(_main_alpha_65536_20 + 1),a
+	mov	((_main_alpha_65536_20 + 0x0002) + 0),#0x9f
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x0002) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x0002) + 1),a
+	mov	((_main_alpha_65536_20 + 0x0004) + 0),#0x25
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x0004) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x0004) + 1),a
+	mov	((_main_alpha_65536_20 + 0x0006) + 0),#0x0d
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x0006) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x0006) + 1),a
+	mov	((_main_alpha_65536_20 + 0x0008) + 0),#0x99
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x0008) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x0008) + 1),a
+	mov	((_main_alpha_65536_20 + 0x000a) + 0),#0x49
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x000a) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x000a) + 1),a
+	mov	((_main_alpha_65536_20 + 0x000c) + 0),#0x41
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x000c) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x000c) + 1),a
+	mov	((_main_alpha_65536_20 + 0x000e) + 0),#0x1f
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x000e) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x000e) + 1),a
+	mov	((_main_alpha_65536_20 + 0x0010) + 0),#0x01
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x0010) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x0010) + 1),a
+	mov	((_main_alpha_65536_20 + 0x0012) + 0),#0x09
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x0012) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x0012) + 1),a
+	mov	((_main_alpha_65536_20 + 0x0014) + 0),#0xff
+;	1-genFromRTrack replaced	mov	((_main_alpha_65536_20 + 0x0014) + 1),#0x00
+	mov	((_main_alpha_65536_20 + 0x0014) + 1),a
+;	main.c:63: const short table[4] = {
+	mov	(_main_table_65536_20 + 0),#0xfe
+;	1-genFromRTrack replaced	mov	(_main_table_65536_20 + 1),#0x00
+	mov	(_main_table_65536_20 + 1),a
+	mov	((_main_table_65536_20 + 0x0002) + 0),#0xfd
+;	1-genFromRTrack replaced	mov	((_main_table_65536_20 + 0x0002) + 1),#0x00
+	mov	((_main_table_65536_20 + 0x0002) + 1),a
+	mov	((_main_table_65536_20 + 0x0004) + 0),#0xfb
+;	1-genFromRTrack replaced	mov	((_main_table_65536_20 + 0x0004) + 1),#0x00
+	mov	((_main_table_65536_20 + 0x0004) + 1),a
+	mov	((_main_table_65536_20 + 0x0006) + 0),#0xf7
+;	1-genFromRTrack replaced	mov	((_main_table_65536_20 + 0x0006) + 1),#0x00
+	mov	((_main_table_65536_20 + 0x0006) + 1),a
+;	main.c:69: P0 = 0b00001111;
+	mov	_P0,#0x0f
+;	main.c:70: short index = 0;
+	mov	_main_index_65537_21,a
+	mov	(_main_index_65537_21 + 1),a
+;	main.c:71: long flash_flag = 0;
+	mov	_main_flash_flag_65537_21,a
+	mov	(_main_flash_flag_65537_21 + 1),a
+	mov	(_main_flash_flag_65537_21 + 2),a
+	mov	(_main_flash_flag_65537_21 + 3),a
+;	main.c:72: bool isSetting = false;
+	mov	r3,#0x00
+;	main.c:74: while (1) {
+00118$:
+;	main.c:75: flash_flag++;
+	inc	_main_flash_flag_65537_21
+	clr	a
+	cjne	a,_main_flash_flag_65537_21,00162$
+	inc	(_main_flash_flag_65537_21 + 1)
+	cjne	a,(_main_flash_flag_65537_21 + 1),00162$
+	inc	(_main_flash_flag_65537_21 + 2)
+	cjne	a,(_main_flash_flag_65537_21 + 2),00162$
+	inc	(_main_flash_flag_65537_21 + 3)
+00162$:
+;	main.c:76: if (flash_flag >= 8000) 
+	clr	c
+	mov	a,_main_flash_flag_65537_21
+	subb	a,#0x40
+	mov	a,(_main_flash_flag_65537_21 + 1)
+	subb	a,#0x1f
+	mov	a,(_main_flash_flag_65537_21 + 2)
+	subb	a,#0x00
+	mov	a,(_main_flash_flag_65537_21 + 3)
+	xrl	a,#0x80
+	subb	a,#0x80
+	jc	00102$
+;	main.c:77: flash_flag = 0;
+	clr	a
+	mov	_main_flash_flag_65537_21,a
+	mov	(_main_flash_flag_65537_21 + 1),a
+	mov	(_main_flash_flag_65537_21 + 2),a
+	mov	(_main_flash_flag_65537_21 + 3),a
+00102$:
+;	main.c:78: P0     =count^0b11111111;
+	mov	a,#0xff
+	xrl	a,_main_count_65536_20
+	mov	r2,a
+	mov	_P0,r2
+;	main.c:79: count *=2; //shift
+	mov	a,_main_count_65536_20
+	add	a,_main_count_65536_20
+	mov	_main_count_65536_20,a
+	mov	a,(_main_count_65536_20 + 1)
+	rlc	a
+	mov	(_main_count_65536_20 + 1),a
+;	main.c:80: short key = keyPressed(row);
+	mov	dpl,_main_row_65536_20
+	mov	dph,(_main_row_65536_20 + 1)
 	push	ar3
-	push	ar2
 	lcall	_keyPressed
 	mov	r6,dpl
 	mov	r7,dph
-	pop	ar2
 	pop	ar3
-;	main.c:59: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
+;	main.c:81: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
 	mov	a,r6
-	cjne	a,_main_previous_65536_13,00127$
+	cjne	a,_main_previous_65536_20,00164$
 	mov	a,r7
-	cjne	a,(_main_previous_65536_13 + 1),00127$
-	sjmp	00102$
-00127$:
-	cjne	r6,#0xff,00128$
-	cjne	r7,#0xff,00128$
-	sjmp	00102$
-00128$:
-;	main.c:60: previous = key;
-	mov	_main_previous_65536_13,r6
-	mov	(_main_previous_65536_13 + 1),r7
-;	main.c:61: num[0] =num[1];
-	mov	r4,((_main_num_65536_13 + 0x0002) + 0)
-	mov	r5,((_main_num_65536_13 + 0x0002) + 1)
-	mov	(_main_num_65536_13 + 0),r4
-	mov	(_main_num_65536_13 + 1),r5
-;	main.c:62: num[1] =num[2];
-	mov	r4,((_main_num_65536_13 + 0x0004) + 0)
-	mov	r5,((_main_num_65536_13 + 0x0004) + 1)
-	mov	((_main_num_65536_13 + 0x0002) + 0),r4
-	mov	((_main_num_65536_13 + 0x0002) + 1),r5
-;	main.c:63: num[2] =num[3];			
-	mov	r4,((_main_num_65536_13 + 0x0006) + 0)
-	mov	r5,((_main_num_65536_13 + 0x0006) + 1)
-	mov	((_main_num_65536_13 + 0x0004) + 0),r4
-	mov	((_main_num_65536_13 + 0x0004) + 1),r5
-;	main.c:64: num[3] = key;	//往前推
-	mov	((_main_num_65536_13 + 0x0006) + 0),r6
-	mov	((_main_num_65536_13 + 0x0006) + 1),r7
-00102$:
-;	main.c:67: row++;
-	inc	_main_row_65536_13
+	cjne	a,(_main_previous_65536_20 + 1),00164$
+	sjmp	00113$
+00164$:
+	cjne	r6,#0xff,00165$
+	cjne	r7,#0xff,00165$
+	sjmp	00113$
+00165$:
+;	main.c:82: previous = key;
+	mov	_main_previous_65536_20,r6
+	mov	(_main_previous_65536_20 + 1),r7
+;	main.c:87: if (key == 10) {
+	cjne	r6,#0x0a,00104$
+	cjne	r7,#0x00,00104$
+;	main.c:88: isSetting = true;
+	mov	r3,#0x01
+00104$:
+;	main.c:91: if (isSetting) {
+	mov	a,r3
+	jz	00113$
+;	main.c:93: if (key >= 0 && key <= 9)
+	mov	a,r7
+	jb	acc.7,00106$
+	clr	c
+	mov	a,#0x09
+	subb	a,r6
+	mov	a,#(0x00 ^ 0x80)
+	mov	b,r7
+	xrl	b,#0x80
+	subb	a,b
+	jc	00106$
+;	main.c:94: num[index++] = key;
+	mov	r4,_main_index_65537_21
+	mov	r5,(_main_index_65537_21 + 1)
+	inc	_main_index_65537_21
 	clr	a
-	cjne	a,_main_row_65536_13,00129$
-	inc	(_main_row_65536_13 + 1)
-00129$:
-;	main.c:68: if (count == 0x10) {	//用count從上往下掃 
-	cjne	r2,#0x10,00105$
-	cjne	r3,#0x00,00105$
-;	main.c:69: count = 1;
-	mov	r2,#0x01
-;	main.c:70: row   = 0;
+	cjne	a,_main_index_65537_21,00171$
+	inc	(_main_index_65537_21 + 1)
+00171$:
+	mov	a,r4
+	add	a,r4
+	mov	r4,a
+	mov	a,r5
+	rlc	a
+	mov	r5,a
+	mov	a,r4
+	add	a,#_main_num_65536_20
+	mov	r0,a
+	mov	@r0,ar6
+	inc	r0
+	mov	@r0,ar7
+00106$:
+;	main.c:95: if (index == 4) index = 0;
+	mov	a,#0x04
+	cjne	a,_main_index_65537_21,00172$
 	clr	a
-	mov	r3,a
-	mov	_main_row_65536_13,a
-	mov	(_main_row_65536_13 + 1),a
-;	main.c:71: P1 = 0b11111111;
+	cjne	a,(_main_index_65537_21 + 1),00172$
+	sjmp	00173$
+00172$:
+	sjmp	00113$
+00173$:
+	clr	a
+	mov	_main_index_65537_21,a
+	mov	(_main_index_65537_21 + 1),a
+00113$:
+;	main.c:100: row++;
+	inc	_main_row_65536_20
+	clr	a
+	cjne	a,_main_row_65536_20,00174$
+	inc	(_main_row_65536_20 + 1)
+00174$:
+;	main.c:101: if (count == 0x10) {	//用count從上往下掃 
+	mov	a,#0x10
+	cjne	a,_main_count_65536_20,00175$
+	clr	a
+	cjne	a,(_main_count_65536_20 + 1),00175$
+	sjmp	00176$
+00175$:
+	sjmp	00116$
+00176$:
+;	main.c:102: count = 1;
+	mov	_main_count_65536_20,#0x01
+;	main.c:103: row   = 0;
+	clr	a
+	mov	(_main_count_65536_20 + 1),a
+	mov	_main_row_65536_20,a
+	mov	(_main_row_65536_20 + 1),a
+;	main.c:104: P1 = 0b11111111;
 	mov	_P1,#0xff
-00105$:
-;	main.c:73: display(table, alpha, num);
-	mov	_display_PARM_2,#_main_alpha_65536_13
+00116$:
+;	main.c:106: display(table, alpha, num, isSetting, flash_flag);
+	mov	_display_PARM_2,#_main_alpha_65536_20
 	mov	(_display_PARM_2 + 1),#0x00
 	mov	(_display_PARM_2 + 2),#0x40
-	mov	_display_PARM_3,#_main_num_65536_13
+	mov	_display_PARM_3,#_main_num_65536_20
 	mov	(_display_PARM_3 + 1),#0x00
 	mov	(_display_PARM_3 + 2),#0x40
-	mov	dptr,#_main_table_65536_13
+	mov	_display_PARM_4,r3
+	mov	_display_PARM_5,_main_flash_flag_65537_21
+	mov	(_display_PARM_5 + 1),(_main_flash_flag_65537_21 + 1)
+	mov	(_display_PARM_5 + 2),(_main_flash_flag_65537_21 + 2)
+	mov	(_display_PARM_5 + 3),(_main_flash_flag_65537_21 + 3)
+	mov	dptr,#_main_table_65536_20
 	mov	b,#0x40
 	push	ar3
-	push	ar2
 	lcall	_display
-	pop	ar2
 	pop	ar3
-;	main.c:76: }
-	ljmp	00107$
+;	main.c:109: }
+	ljmp	00118$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)
