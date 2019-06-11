@@ -3,8 +3,7 @@
 #define PERIOD 65536
 // #define INIT_TIME 3036	//65536-62500
 short counter = 0;
-
-
+bool play_sound = false;
 void run_clock(short num[]) {
 	if (counter >= 20) {
 		num[3]++;
@@ -30,13 +29,13 @@ void timer_isr (void) __interrupt (1) __using (1) {	//控制聲音頻率
 	// 0.05 秒被叫一次
 	// 0.05 * 20 = 1 -> counter == 20 -> 一秒
 	counter++;
-//	P1 = 0b11111111;
+	// P1 = 0b11111111;
+	// P1_5 = !P1_5;
 }
 
 void timer1 (void) __interrupt (3) __using (2) {	//換下一個音
 	TH1  = 15536 >> 8;
 	TL1  = 15536 & 0xff;
-	P1_4 != P1_4;
 }
 
 
@@ -71,13 +70,21 @@ void display(short table[], short alpha[], short num[], bool isSetting, long fla
 	}
 }
 
-void check_sound_trigger() {
-	P1_4 = 1;
+void check_sound_trigger(short num[], short num_bi[]) {
+	for (int i = 0; i < 4; i++) {
+		if (num[i] != num_bi[i]) 
+			return;
+	}
+	play_sound = true;	
+	//
+
 }
 
+void play() {
+	P1_5 = !P1_5;
+}
 
 int main() {
-
 	// P0 -> keyboard
 	// P1 -> 顯示器四選一
 	// p2 -> 顯示字母
@@ -87,7 +94,8 @@ int main() {
 	// B -> 完成現在時間設定
 	// C -> 設定鬧鐘時間
 	// D -> 完成鬧鐘時間設定
-
+	// E -> 關閉鬧鐘
+	P1_5=0;
 	// 初始化 timer
 	EA = 1;
 	TMOD = 0b00010001;
@@ -99,7 +107,7 @@ int main() {
 	short row = 0;
 	short count = 1;
 	short num[4] = {0};
-	short num_bi[4] = {0};
+	short num_bi[4] = {-1};
 	const short alpha[11] = {
 		0b00000011,
 		0b10011111,
@@ -143,6 +151,7 @@ int main() {
 			if (key == 11) isSetting = false;
 			if (key == 12) setting_bi_time = true;
 			if (key == 13) setting_bi_time = false;
+			if (key == 14) play_sound = false;
 
 
 			if (isSetting) {
@@ -162,14 +171,12 @@ int main() {
 		if (!isSetting && !setting_bi_time) {
 			run_clock(num);
 		}
-		// P1 = 0b11111111;
 		row++;
 		if (count == 0x10) {	//用count從上往下掃 
 			count = 1;
 			row   = 0;
-			P1 = 0b11111111;
 		}
-
+		P1 = 0b11111111; // 讓頻率一致 閃爍時4個位置同步
 		if (setting_bi_time || isSetting)
 			if (isSetting)
 				display(table, alpha, num, 1, flash_flag);
@@ -177,7 +184,8 @@ int main() {
 				display(table, alpha, num_bi, 1, flash_flag);
 		else
 			display(table, alpha, num, 0, flash_flag);
-		check_sound_trigger();
+		check_sound_trigger(num, num_bi);
+		if (play_sound) play();
 	}
 
 }

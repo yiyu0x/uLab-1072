@@ -42,7 +42,7 @@ C:   00000001  s_XISEG
 C:   00000001  s_XSEG                          
 C:   00000003  l_GSFINAL                       
 C:   00000003  l_GSINIT0                       
-C:   00000005  l_GSINIT                        
+C:   00000007  l_GSINIT                        
 C:   00000008  l_REG_BANK_0                    
 C:   00000008  l_REG_BANK_1                    
 C:   00000008  l_REG_BANK_2                    
@@ -71,18 +71,18 @@ C:   00000024  s_GSINIT2
 C:   0000002A  l_GSINIT4                       
 C:   0000002E  s_GSINIT3                       
 C:   00000050  s_GSINIT4                       
-C:   00000054  s_OSEG                          
-C:   00000066  s_SSEG                          
+C:   00000055  s_OSEG                          
+C:   00000067  s_SSEG                          
 C:   0000007A  s_GSINIT                        
 C:   0000007A  s_GSINIT5                       
-C:   0000007F  s_GSFINAL                       
 C:   00000080  l_DSEG                          
-C:   00000082  s_CSEG                          
-C:   0000009A  l_SSEG                          
+C:   00000081  s_GSFINAL                       
+C:   00000084  s_CSEG                          
+C:   00000099  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   000005CE  l_CSEG                          
-C:   00000650  s_CONST                         
-C:   00000650  s_XINIT                         
+C:   00000657  l_CSEG                          
+C:   000006DB  s_CONST                         
+C:   000006DB  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -241,32 +241,33 @@ DSEG                                00000000    00000080 =         128. bytes (R
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00000018  _counter                           main
+     0000001A  _play_sound                        main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                00000054    00000012 =          18. bytes (REL,OVR)
+OSEG                                00000055    00000012 =          18. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000054  __gptrput_PARM_2                   _gptrput
-     00000054  _display_PARM_2                    main
-     00000057  _display_PARM_3                    main
-     0000005A  _display_PARM_4                    main
-     0000005B  _display_PARM_5                    main
-
+     00000055  __gptrput_PARM_2                   _gptrput
+     00000055  _check_sound_trigger_PARM_2        main
+     00000055  _display_PARM_2                    main
+     00000058  _display_PARM_3                    main
+     0000005B  _display_PARM_4                    main
+     0000005C  _display_PARM_5                    main
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                00000066    0000009A =         154. bytes (REL,OVR)
+SSEG                                00000067    00000099 =         153. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000066  __start__stack                     main
+     00000067  __start__stack                     main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
 Hexadecimal  [32-Bits]
@@ -327,7 +328,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT                              0000007A    00000005 =           5. bytes (REL,CON,CODE)
+GSINIT                              0000007A    00000007 =           7. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -336,7 +337,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             0000007F    00000003 =           3. bytes (REL,CON,CODE)
+GSFINAL                             00000081    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -345,20 +346,21 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000082    000005CE =        1486. bytes (REL,CON,CODE)
+CSEG                                00000084    00000657 =        1623. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000082  _run_clock                         main
-C:   0000019F  _timer_isr                         main
-C:   000001B6  _timer1                            main
-C:   000001C5  _keyPressed                        main
-C:   00000234  _display                           main
-C:   00000379  _check_sound_trigger               main
-C:   0000037C  _main                              main
-C:   00000615  __gptrput                          _gptrput
-C:   00000630  __gptrget                          _gptrget
-C:   0000064C  __sdcc_external_startup            _startup
+C:   00000084  _run_clock                         main
+C:   000001A1  _timer_isr                         main
+C:   000001B8  _timer1                            main
+C:   000001BF  _keyPressed                        main
+C:   0000022E  _display                           main
+C:   00000373  _check_sound_trigger               main
+C:   000003D6  _play                              main
+C:   000003D9  _main                              main
+C:   000006A0  __gptrput                          _gptrput
+C:   000006BB  __gptrget                          _gptrget
+C:   000006D7  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 

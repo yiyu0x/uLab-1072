@@ -8,11 +8,13 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
+	.globl _check_sound_trigger_PARM_2
 	.globl _display_PARM_5
 	.globl _display_PARM_4
 	.globl _display_PARM_3
 	.globl _display_PARM_2
 	.globl _main
+	.globl _play
 	.globl _check_sound_trigger
 	.globl _display
 	.globl _keyPressed
@@ -115,6 +117,7 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
+	.globl _play_sound
 	.globl _counter
 ;--------------------------------------------------------
 ; special function registers
@@ -237,23 +240,25 @@ _CY	=	0x00d7
 	.area DSEG    (DATA)
 _counter::
 	.ds 2
-_main_previous_65537_32:
+_play_sound::
+	.ds 1
+_main_previous_65537_36:
 	.ds 2
-_main_row_65537_32:
+_main_row_65537_36:
 	.ds 2
-_main_count_65537_32:
+_main_count_65537_36:
 	.ds 2
-_main_num_65537_32:
+_main_num_65537_36:
 	.ds 8
-_main_num_bi_65537_32:
+_main_num_bi_65537_36:
 	.ds 8
-_main_alpha_65537_32:
+_main_alpha_65537_36:
 	.ds 22
-_main_table_65537_32:
+_main_table_65537_36:
 	.ds 8
-_main_index_65538_33:
+_main_index_65538_37:
 	.ds 2
-_main_flash_flag_65538_33:
+_main_flash_flag_65538_37:
 	.ds 4
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
@@ -279,6 +284,11 @@ _display_t_262144_21:
 	.ds 2
 _display_t_196608_26:
 	.ds 2
+	.area	OSEG    (OVR,DATA)
+_check_sound_trigger_PARM_2:
+	.ds 3
+_check_sound_trigger_num_65536_30:
+	.ds 3
 ;--------------------------------------------------------
 ; Stack segment in internal ram 
 ;--------------------------------------------------------
@@ -355,6 +365,9 @@ __interrupt_vect:
 	clr	a
 	mov	_counter,a
 	mov	(_counter + 1),a
+;	main.c:6: bool play_sound = false;
+;	1-genFromRTrack replaced	mov	_play_sound,#0x00
+	mov	_play_sound,a
 	.area GSFINAL (CODE)
 	ljmp	__sdcc_program_startup
 ;--------------------------------------------------------
@@ -375,7 +388,7 @@ __sdcc_program_startup:
 ;num                       Allocated to registers r5 r6 r7 
 ;sloc0                     Allocated with name '_run_clock_sloc0_1_0'
 ;------------------------------------------------------------
-;	main.c:8: void run_clock(short num[]) {
+;	main.c:7: void run_clock(short num[]) {
 ;	-----------------------------------------
 ;	 function run_clock
 ;	-----------------------------------------
@@ -391,7 +404,7 @@ _run_clock:
 	mov	r5,dpl
 	mov	r6,dph
 	mov	r7,b
-;	main.c:9: if (counter >= 20) {
+;	main.c:8: if (counter >= 20) {
 	clr	c
 	mov	a,_counter
 	subb	a,#0x14
@@ -401,7 +414,7 @@ _run_clock:
 	jnc	00127$
 	ret
 00127$:
-;	main.c:10: num[3]++;
+;	main.c:9: num[3]++;
 	mov	a,#0x06
 	add	a,r5
 	mov	r2,a
@@ -429,11 +442,11 @@ _run_clock:
 	inc	dptr
 	mov	a,r1
 	lcall	__gptrput
-;	main.c:11: counter = 0;
+;	main.c:10: counter = 0;
 	clr	a
 	mov	_counter,a
 	mov	(_counter + 1),a
-;	main.c:12: if (num[3] == 10) {
+;	main.c:11: if (num[3] == 10) {
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
@@ -448,7 +461,7 @@ _run_clock:
 00129$:
 	ret
 00130$:
-;	main.c:13: num[3] = 0;
+;	main.c:12: num[3] = 0;
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
@@ -456,7 +469,7 @@ _run_clock:
 	lcall	__gptrput
 	inc	dptr
 	lcall	__gptrput
-;	main.c:14: num[2]++;
+;	main.c:13: num[2]++;
 	mov	a,#0x04
 	add	a,r5
 	mov	r2,a
@@ -484,14 +497,14 @@ _run_clock:
 	inc	dptr
 	mov	a,r1
 	lcall	__gptrput
-;	main.c:15: if (num[2] == 6) {
+;	main.c:14: if (num[2] == 6) {
 	cjne	r0,#0x06,00132$
 	cjne	r1,#0x00,00132$
 	sjmp	00133$
 00132$:
 	ret
 00133$:
-;	main.c:16: num[1]++;
+;	main.c:15: num[1]++;
 	mov	a,#0x02
 	add	a,r5
 	mov	_run_clock_sloc0_1_0,a
@@ -519,7 +532,7 @@ _run_clock:
 	inc	dptr
 	mov	a,r1
 	lcall	__gptrput
-;	main.c:17: num[2] = 0;
+;	main.c:16: num[2] = 0;
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
@@ -527,10 +540,10 @@ _run_clock:
 	lcall	__gptrput
 	inc	dptr
 	lcall	__gptrput
-;	main.c:18: if (num[1] == 10) {
+;	main.c:17: if (num[1] == 10) {
 	cjne	r0,#0x0a,00109$
 	cjne	r1,#0x00,00109$
-;	main.c:19: num[1] = 0;
+;	main.c:18: num[1] = 0;
 	mov	dpl,_run_clock_sloc0_1_0
 	mov	dph,(_run_clock_sloc0_1_0 + 1)
 	mov	b,(_run_clock_sloc0_1_0 + 2)
@@ -538,7 +551,7 @@ _run_clock:
 	lcall	__gptrput
 	inc	dptr
 	lcall	__gptrput
-;	main.c:20: num[0]++;
+;	main.c:19: num[0]++;
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
@@ -558,14 +571,14 @@ _run_clock:
 	lcall	__gptrput
 	inc	dptr
 	mov	a,r4
-;	main.c:25: }
+;	main.c:24: }
 	ljmp	__gptrput
 00109$:
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'timer_isr'
 ;------------------------------------------------------------
-;	main.c:27: void timer_isr (void) __interrupt (1) __using (1) {	//控制聲音頻率
+;	main.c:26: void timer_isr (void) __interrupt (1) __using (1) {	//控制聲音頻率
 ;	-----------------------------------------
 ;	 function timer_isr
 ;	-----------------------------------------
@@ -580,11 +593,11 @@ _timer_isr:
 	ar0 = 0x08
 	push	acc
 	push	psw
-;	main.c:28: TH0  = 15536 >> 8;
+;	main.c:27: TH0  = 15536 >> 8;
 	mov	_TH0,#0x3c
-;	main.c:29: TL0  = 15536 & 0xff;
+;	main.c:28: TL0  = 15536 & 0xff;
 	mov	_TL0,#0xb0
-;	main.c:32: counter++;
+;	main.c:31: counter++;
 	inc	_counter
 	clr	a
 	cjne	a,_counter,00103$
@@ -614,18 +627,14 @@ _timer1:
 	ar2 = 0x12
 	ar1 = 0x11
 	ar0 = 0x10
-	push	psw
 ;	main.c:37: TH1  = 15536 >> 8;
 	mov	_TH1,#0x3c
 ;	main.c:38: TL1  = 15536 & 0xff;
 	mov	_TL1,#0xb0
-;	main.c:39: P1_4 != P1_4;
-	mov	c,_P1_4
-	mov	c,_P1_4
-;	main.c:40: }
-	pop	psw
+;	main.c:39: }
 	reti
 ;	eliminated unneeded mov psw,# (no regs used in bank)
+;	eliminated unneeded push/pop psw
 ;	eliminated unneeded push/pop dpl
 ;	eliminated unneeded push/pop dph
 ;	eliminated unneeded push/pop b
@@ -638,7 +647,7 @@ _timer1:
 ;col                       Allocated to registers r2 r3 
 ;magic                     Allocated to registers r7 r6 
 ;------------------------------------------------------------
-;	main.c:43: short keyPressed(short row) {
+;	main.c:42: short keyPressed(short row) {
 ;	-----------------------------------------
 ;	 function keyPressed
 ;	-----------------------------------------
@@ -653,7 +662,7 @@ _keyPressed:
 	ar0 = 0x00
 	mov	_keyPressed_row_65536_11,dpl
 	mov	(_keyPressed_row_65536_11 + 1),dph
-;	main.c:44: if((P0 & 0b11110000) != 0b11110000){	//if 按下按鈕
+;	main.c:43: if((P0 & 0b11110000) != 0b11110000){	//if 按下按鈕
 	mov	r4,_P0
 	anl	ar4,#0xf0
 	mov	r5,#0x00
@@ -661,7 +670,7 @@ _keyPressed:
 	cjne	r5,#0x00,00127$
 	sjmp	00105$
 00127$:
-;	main.c:45: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
+;	main.c:44: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
 	mov	r4,#0x01
 	mov	r5,#0x00
 	mov	r2,#0x00
@@ -676,7 +685,7 @@ _keyPressed:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jnc	00105$
-;	main.c:47: `			short magic = ((P0 >> 4) ^ 0b11111111) & 0b00001111;
+;	main.c:46: `			short magic = ((P0 >> 4) ^ 0b11111111) & 0b00001111;
 	mov	a,_P0
 	swap	a
 	anl	a,#0x0f
@@ -684,12 +693,12 @@ _keyPressed:
 	xrl	ar7,#0xff
 	anl	ar7,#0x0f
 	mov	r6,#0x00
-;	main.c:48: if (magic == c) {
+;	main.c:47: if (magic == c) {
 	mov	a,r7
 	cjne	a,ar4,00108$
 	mov	a,r6
 	cjne	a,ar5,00108$
-;	main.c:49: return row * 4 + col;
+;	main.c:48: return row * 4 + col;
 	mov	a,_keyPressed_row_65536_11
 	add	a,_keyPressed_row_65536_11
 	mov	r6,a
@@ -710,7 +719,7 @@ _keyPressed:
 	mov	dph,a
 	ret
 00108$:
-;	main.c:45: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
+;	main.c:44: for (short c = 1, col = 0; col < 4; c *= 2, col++) {
 	mov	a,r4
 	add	a,r4
 	mov	r4,a
@@ -725,9 +734,9 @@ _keyPressed:
 	mov	ar3,r1
 	sjmp	00107$
 00105$:
-;	main.c:53: return -1;	//沒按 return -1
+;	main.c:52: return -1;	//沒按 return -1
 	mov	dptr,#0xffff
-;	main.c:54: }
+;	main.c:53: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'display'
@@ -744,7 +753,7 @@ _keyPressed:
 ;t                         Allocated with name '_display_t_196608_26'
 ;j                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
-;	main.c:56: void display(short table[], short alpha[], short num[], bool isSetting, long flash_flag) {
+;	main.c:55: void display(short table[], short alpha[], short num[], bool isSetting, long flash_flag) {
 ;	-----------------------------------------
 ;	 function display
 ;	-----------------------------------------
@@ -752,12 +761,12 @@ _display:
 	mov	_display_table_65536_17,dpl
 	mov	(_display_table_65536_17 + 1),dph
 	mov	(_display_table_65536_17 + 2),b
-;	main.c:57: if (isSetting) { // flashing
+;	main.c:56: if (isSetting) { // flashing
 	mov	a,_display_PARM_4
 	jnz	00168$
 	ljmp	00108$
 00168$:
-;	main.c:58: if (flash_flag > 7800) { // 頻率
+;	main.c:57: if (flash_flag > 7800) { // 頻率
 	clr	c
 	mov	a,#0x78
 	subb	a,_display_PARM_5
@@ -772,7 +781,7 @@ _display:
 	jc	00169$
 	ret
 00169$:
-;	main.c:59: for(short i = 0,t=1; i < 4; i++,t*=2) {
+;	main.c:58: for(short i = 0,t=1; i < 4; i++,t*=2) {
 	mov	_display_t_262144_21,#0x01
 	mov	(_display_t_262144_21 + 1),#0x00
 	mov	r1,#0x00
@@ -787,7 +796,7 @@ _display:
 	jc	00170$
 	ret
 00170$:
-;	main.c:60: P1 = table[i];
+;	main.c:59: P1 = table[i];
 	mov	a,r1
 	add	a,r1
 	mov	r0,a
@@ -806,7 +815,7 @@ _display:
 	mov	b,r7
 	lcall	__gptrget
 	mov	_P1,a
-;	main.c:61: P2 = alpha[num[i]];
+;	main.c:60: P2 = alpha[num[i]];
 	mov	a,r0
 	add	a,_display_PARM_3
 	mov	r0,a
@@ -840,7 +849,7 @@ _display:
 	mov	b,r7
 	lcall	__gptrget
 	mov	_P2,a
-;	main.c:62: for(int j = 0; j < 500; j++){}
+;	main.c:61: for(int j = 0; j < 500; j++){}
 	mov	r6,#0x00
 	mov	r7,#0x00
 00111$:
@@ -856,7 +865,7 @@ _display:
 	inc	r7
 	sjmp	00111$
 00115$:
-;	main.c:59: for(short i = 0,t=1; i < 4; i++,t*=2) {
+;	main.c:58: for(short i = 0,t=1; i < 4; i++,t*=2) {
 	inc	r1
 	cjne	r1,#0x00,00173$
 	inc	r2
@@ -869,7 +878,7 @@ _display:
 	mov	(_display_t_262144_21 + 1),a
 	ljmp	00114$
 00108$:
-;	main.c:66: for(short i = 0,t=1; i < 4; i++,t*=2) {
+;	main.c:65: for(short i = 0,t=1; i < 4; i++,t*=2) {
 	mov	_display_t_196608_26,#0x01
 	mov	(_display_t_196608_26 + 1),#0x00
 	mov	r4,#0x00
@@ -882,7 +891,7 @@ _display:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jnc	00122$
-;	main.c:67: P1 = table[i];
+;	main.c:66: P1 = table[i];
 	mov	a,r4
 	add	a,r4
 	mov	r2,a
@@ -901,7 +910,7 @@ _display:
 	mov	b,r7
 	lcall	__gptrget
 	mov	_P1,a
-;	main.c:68: P2 = alpha[num[i]];
+;	main.c:67: P2 = alpha[num[i]];
 	mov	a,r2
 	add	a,_display_PARM_3
 	mov	r2,a
@@ -935,7 +944,7 @@ _display:
 	mov	b,r7
 	lcall	__gptrget
 	mov	_P2,a
-;	main.c:69: for(int j = 0; j < 1000; j++){}
+;	main.c:68: for(int j = 0; j < 1000; j++){}
 	mov	r6,#0x00
 	mov	r7,#0x00
 00117$:
@@ -951,7 +960,7 @@ _display:
 	inc	r7
 	sjmp	00117$
 00121$:
-;	main.c:66: for(short i = 0,t=1; i < 4; i++,t*=2) {
+;	main.c:65: for(short i = 0,t=1; i < 4; i++,t*=2) {
 	inc	r4
 	cjne	r4,#0x00,00177$
 	inc	r5
@@ -964,192 +973,273 @@ _display:
 	mov	(_display_t_196608_26 + 1),a
 	ljmp	00120$
 00122$:
-;	main.c:72: }
+;	main.c:71: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'check_sound_trigger'
 ;------------------------------------------------------------
-;	main.c:74: void check_sound_trigger() {
+;num_bi                    Allocated with name '_check_sound_trigger_PARM_2'
+;num                       Allocated with name '_check_sound_trigger_num_65536_30'
+;i                         Allocated to registers r3 r4 
+;------------------------------------------------------------
+;	main.c:73: void check_sound_trigger(short num[], short num_bi[]) {
 ;	-----------------------------------------
 ;	 function check_sound_trigger
 ;	-----------------------------------------
 _check_sound_trigger:
-;	main.c:75: P1_4 = 1;
-;	assignBit
-	setb	_P1_4
-;	main.c:76: }
+	mov	_check_sound_trigger_num_65536_30,dpl
+	mov	(_check_sound_trigger_num_65536_30 + 1),dph
+	mov	(_check_sound_trigger_num_65536_30 + 2),b
+;	main.c:74: for (int i = 0; i < 4; i++) {
+	mov	r3,#0x00
+	mov	r4,#0x00
+00105$:
+	clr	c
+	mov	a,r3
+	subb	a,#0x04
+	mov	a,r4
+	xrl	a,#0x80
+	subb	a,#0x80
+	jnc	00103$
+;	main.c:75: if (num[i] != num_bi[i]) 
+	mov	a,r3
+	add	a,r3
+	mov	r1,a
+	mov	a,r4
+	rlc	a
+	mov	r2,a
+	mov	a,r1
+	add	a,_check_sound_trigger_num_65536_30
+	mov	r0,a
+	mov	a,r2
+	addc	a,(_check_sound_trigger_num_65536_30 + 1)
+	mov	r6,a
+	mov	r7,(_check_sound_trigger_num_65536_30 + 2)
+	mov	dpl,r0
+	mov	dph,r6
+	mov	b,r7
+	lcall	__gptrget
+	mov	r0,a
+	inc	dptr
+	lcall	__gptrget
+	mov	r6,a
+	mov	a,r1
+	add	a,_check_sound_trigger_PARM_2
+	mov	r1,a
+	mov	a,r2
+	addc	a,(_check_sound_trigger_PARM_2 + 1)
+	mov	r2,a
+	mov	r7,(_check_sound_trigger_PARM_2 + 2)
+	mov	dpl,r1
+	mov	dph,r2
+	mov	b,r7
+	lcall	__gptrget
+	mov	r1,a
+	inc	dptr
+	lcall	__gptrget
+	mov	r2,a
+	mov	a,r0
+;	main.c:76: return;
+	cjne	a,ar1,00107$
+	mov	a,r6
+	cjne	a,ar2,00107$
+;	main.c:74: for (int i = 0; i < 4; i++) {
+	inc	r3
+	cjne	r3,#0x00,00105$
+	inc	r4
+	sjmp	00105$
+00103$:
+;	main.c:78: play_sound = true;	
+	mov	_play_sound,#0x01
+00107$:
+;	main.c:81: }
+	ret
+;------------------------------------------------------------
+;Allocation info for local variables in function 'play'
+;------------------------------------------------------------
+;	main.c:83: void play() {
+;	-----------------------------------------
+;	 function play
+;	-----------------------------------------
+_play:
+;	main.c:84: P1_5 = !P1_5;
+	cpl	_P1_5
+;	main.c:85: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
-;previous                  Allocated with name '_main_previous_65537_32'
-;row                       Allocated with name '_main_row_65537_32'
-;count                     Allocated with name '_main_count_65537_32'
-;num                       Allocated with name '_main_num_65537_32'
-;num_bi                    Allocated with name '_main_num_bi_65537_32'
-;alpha                     Allocated with name '_main_alpha_65537_32'
-;table                     Allocated with name '_main_table_65537_32'
-;index                     Allocated with name '_main_index_65538_33'
-;flash_flag                Allocated with name '_main_flash_flag_65538_33'
+;previous                  Allocated with name '_main_previous_65537_36'
+;row                       Allocated with name '_main_row_65537_36'
+;count                     Allocated with name '_main_count_65537_36'
+;num                       Allocated with name '_main_num_65537_36'
+;num_bi                    Allocated with name '_main_num_bi_65537_36'
+;alpha                     Allocated with name '_main_alpha_65537_36'
+;table                     Allocated with name '_main_table_65537_36'
+;index                     Allocated with name '_main_index_65538_37'
+;flash_flag                Allocated with name '_main_flash_flag_65538_37'
 ;isSetting                 Allocated to registers r5 
 ;afterSetting              Allocated to registers 
 ;setting_bi_time           Allocated to registers r4 
 ;key                       Allocated to registers r2 r3 
 ;------------------------------------------------------------
-;	main.c:79: int main() {
+;	main.c:87: int main() {
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:91: EA = 1;
+;	main.c:98: P1_5=0;
+;	assignBit
+	clr	_P1_5
+;	main.c:100: EA = 1;
 ;	assignBit
 	setb	_EA
-;	main.c:92: TMOD = 0b00010001;
+;	main.c:101: TMOD = 0b00010001;
 	mov	_TMOD,#0x11
-;	main.c:93: IE   = 0x8A;
+;	main.c:102: IE   = 0x8A;
 	mov	_IE,#0x8a
-;	main.c:94: TR0  = 1;	//timer 0 control bit
+;	main.c:103: TR0  = 1;	//timer 0 control bit
 ;	assignBit
 	setb	_TR0
-;	main.c:95: TR1  = 1;	//timer 1 control bit
+;	main.c:104: TR1  = 1;	//timer 1 control bit
 ;	assignBit
 	setb	_TR1
-;	main.c:97: short previous = -1;
-	mov	_main_previous_65537_32,#0xff
-	mov	(_main_previous_65537_32 + 1),#0xff
-;	main.c:98: short row = 0;
+;	main.c:106: short previous = -1;
+	mov	_main_previous_65537_36,#0xff
+	mov	(_main_previous_65537_36 + 1),#0xff
+;	main.c:107: short row = 0;
 	clr	a
-	mov	_main_row_65537_32,a
-	mov	(_main_row_65537_32 + 1),a
-;	main.c:99: short count = 1;
-	mov	_main_count_65537_32,#0x01
-;	1-genFromRTrack replaced	mov	(_main_count_65537_32 + 1),#0x00
-	mov	(_main_count_65537_32 + 1),a
-;	main.c:100: short num[4] = {0};
-	mov	(_main_num_65537_32 + 0),a
-	mov	(_main_num_65537_32 + 1),a
-	mov	((_main_num_65537_32 + 0x0002) + 0),a
-	mov	((_main_num_65537_32 + 0x0002) + 1),a
-	mov	((_main_num_65537_32 + 0x0004) + 0),a
-	mov	((_main_num_65537_32 + 0x0004) + 1),a
-	mov	((_main_num_65537_32 + 0x0006) + 0),a
-	mov	((_main_num_65537_32 + 0x0006) + 1),a
-;	main.c:101: short num_bi[4] = {0};
-	mov	(_main_num_bi_65537_32 + 0),a
-	mov	(_main_num_bi_65537_32 + 1),a
-	mov	((_main_num_bi_65537_32 + 0x0002) + 0),a
-	mov	((_main_num_bi_65537_32 + 0x0002) + 1),a
-	mov	((_main_num_bi_65537_32 + 0x0004) + 0),a
-	mov	((_main_num_bi_65537_32 + 0x0004) + 1),a
-	mov	((_main_num_bi_65537_32 + 0x0006) + 0),a
-	mov	((_main_num_bi_65537_32 + 0x0006) + 1),a
-;	main.c:102: const short alpha[11] = {
-	mov	(_main_alpha_65537_32 + 0),#0x03
-;	1-genFromRTrack replaced	mov	(_main_alpha_65537_32 + 1),#0x00
-	mov	(_main_alpha_65537_32 + 1),a
-	mov	((_main_alpha_65537_32 + 0x0002) + 0),#0x9f
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x0002) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x0002) + 1),a
-	mov	((_main_alpha_65537_32 + 0x0004) + 0),#0x25
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x0004) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x0004) + 1),a
-	mov	((_main_alpha_65537_32 + 0x0006) + 0),#0x0d
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x0006) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x0006) + 1),a
-	mov	((_main_alpha_65537_32 + 0x0008) + 0),#0x99
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x0008) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x0008) + 1),a
-	mov	((_main_alpha_65537_32 + 0x000a) + 0),#0x49
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x000a) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x000a) + 1),a
-	mov	((_main_alpha_65537_32 + 0x000c) + 0),#0x41
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x000c) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x000c) + 1),a
-	mov	((_main_alpha_65537_32 + 0x000e) + 0),#0x1f
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x000e) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x000e) + 1),a
-	mov	((_main_alpha_65537_32 + 0x0010) + 0),#0x01
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x0010) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x0010) + 1),a
-	mov	((_main_alpha_65537_32 + 0x0012) + 0),#0x09
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x0012) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x0012) + 1),a
-	mov	((_main_alpha_65537_32 + 0x0014) + 0),#0xff
-;	1-genFromRTrack replaced	mov	((_main_alpha_65537_32 + 0x0014) + 1),#0x00
-	mov	((_main_alpha_65537_32 + 0x0014) + 1),a
-;	main.c:115: const short table[4] = {
-	mov	(_main_table_65537_32 + 0),#0xfe
-;	1-genFromRTrack replaced	mov	(_main_table_65537_32 + 1),#0x00
-	mov	(_main_table_65537_32 + 1),a
-	mov	((_main_table_65537_32 + 0x0002) + 0),#0xfd
-;	1-genFromRTrack replaced	mov	((_main_table_65537_32 + 0x0002) + 1),#0x00
-	mov	((_main_table_65537_32 + 0x0002) + 1),a
-	mov	((_main_table_65537_32 + 0x0004) + 0),#0xfb
-;	1-genFromRTrack replaced	mov	((_main_table_65537_32 + 0x0004) + 1),#0x00
-	mov	((_main_table_65537_32 + 0x0004) + 1),a
-	mov	((_main_table_65537_32 + 0x0006) + 0),#0xf7
-;	1-genFromRTrack replaced	mov	((_main_table_65537_32 + 0x0006) + 1),#0x00
-	mov	((_main_table_65537_32 + 0x0006) + 1),a
-;	main.c:121: P0 = 0b00001111;
+	mov	_main_row_65537_36,a
+	mov	(_main_row_65537_36 + 1),a
+;	main.c:108: short count = 1;
+	mov	_main_count_65537_36,#0x01
+;	1-genFromRTrack replaced	mov	(_main_count_65537_36 + 1),#0x00
+	mov	(_main_count_65537_36 + 1),a
+;	main.c:109: short num[4] = {0};
+	mov	(_main_num_65537_36 + 0),a
+	mov	(_main_num_65537_36 + 1),a
+	mov	((_main_num_65537_36 + 0x0002) + 0),a
+	mov	((_main_num_65537_36 + 0x0002) + 1),a
+	mov	((_main_num_65537_36 + 0x0004) + 0),a
+	mov	((_main_num_65537_36 + 0x0004) + 1),a
+	mov	((_main_num_65537_36 + 0x0006) + 0),a
+	mov	((_main_num_65537_36 + 0x0006) + 1),a
+;	main.c:110: short num_bi[4] = {-1};
+	mov	(_main_num_bi_65537_36 + 0),#0xff
+	mov	(_main_num_bi_65537_36 + 1),#0xff
+	mov	((_main_num_bi_65537_36 + 0x0002) + 0),a
+	mov	((_main_num_bi_65537_36 + 0x0002) + 1),a
+	mov	((_main_num_bi_65537_36 + 0x0004) + 0),a
+	mov	((_main_num_bi_65537_36 + 0x0004) + 1),a
+	mov	((_main_num_bi_65537_36 + 0x0006) + 0),a
+	mov	((_main_num_bi_65537_36 + 0x0006) + 1),a
+;	main.c:111: const short alpha[11] = {
+	mov	(_main_alpha_65537_36 + 0),#0x03
+;	1-genFromRTrack replaced	mov	(_main_alpha_65537_36 + 1),#0x00
+	mov	(_main_alpha_65537_36 + 1),a
+	mov	((_main_alpha_65537_36 + 0x0002) + 0),#0x9f
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x0002) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x0002) + 1),a
+	mov	((_main_alpha_65537_36 + 0x0004) + 0),#0x25
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x0004) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x0004) + 1),a
+	mov	((_main_alpha_65537_36 + 0x0006) + 0),#0x0d
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x0006) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x0006) + 1),a
+	mov	((_main_alpha_65537_36 + 0x0008) + 0),#0x99
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x0008) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x0008) + 1),a
+	mov	((_main_alpha_65537_36 + 0x000a) + 0),#0x49
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x000a) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x000a) + 1),a
+	mov	((_main_alpha_65537_36 + 0x000c) + 0),#0x41
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x000c) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x000c) + 1),a
+	mov	((_main_alpha_65537_36 + 0x000e) + 0),#0x1f
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x000e) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x000e) + 1),a
+	mov	((_main_alpha_65537_36 + 0x0010) + 0),#0x01
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x0010) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x0010) + 1),a
+	mov	((_main_alpha_65537_36 + 0x0012) + 0),#0x09
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x0012) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x0012) + 1),a
+	mov	((_main_alpha_65537_36 + 0x0014) + 0),#0xff
+;	1-genFromRTrack replaced	mov	((_main_alpha_65537_36 + 0x0014) + 1),#0x00
+	mov	((_main_alpha_65537_36 + 0x0014) + 1),a
+;	main.c:124: const short table[4] = {
+	mov	(_main_table_65537_36 + 0),#0xfe
+;	1-genFromRTrack replaced	mov	(_main_table_65537_36 + 1),#0x00
+	mov	(_main_table_65537_36 + 1),a
+	mov	((_main_table_65537_36 + 0x0002) + 0),#0xfd
+;	1-genFromRTrack replaced	mov	((_main_table_65537_36 + 0x0002) + 1),#0x00
+	mov	((_main_table_65537_36 + 0x0002) + 1),a
+	mov	((_main_table_65537_36 + 0x0004) + 0),#0xfb
+;	1-genFromRTrack replaced	mov	((_main_table_65537_36 + 0x0004) + 1),#0x00
+	mov	((_main_table_65537_36 + 0x0004) + 1),a
+	mov	((_main_table_65537_36 + 0x0006) + 0),#0xf7
+;	1-genFromRTrack replaced	mov	((_main_table_65537_36 + 0x0006) + 1),#0x00
+	mov	((_main_table_65537_36 + 0x0006) + 1),a
+;	main.c:130: P0 = 0b00001111;
 	mov	_P0,#0x0f
-;	main.c:122: short index = 0;
-	mov	_main_index_65538_33,a
-	mov	(_main_index_65538_33 + 1),a
-;	main.c:123: long flash_flag = 0;
-	mov	_main_flash_flag_65538_33,a
-	mov	(_main_flash_flag_65538_33 + 1),a
-	mov	(_main_flash_flag_65538_33 + 2),a
-	mov	(_main_flash_flag_65538_33 + 3),a
-;	main.c:124: bool isSetting = false;
+;	main.c:131: short index = 0;
+	mov	_main_index_65538_37,a
+	mov	(_main_index_65538_37 + 1),a
+;	main.c:132: long flash_flag = 0;
+	mov	_main_flash_flag_65538_37,a
+	mov	(_main_flash_flag_65538_37 + 1),a
+	mov	(_main_flash_flag_65538_37 + 2),a
+	mov	(_main_flash_flag_65538_37 + 3),a
+;	main.c:133: bool isSetting = false;
 	mov	r5,#0x00
-;	main.c:126: bool setting_bi_time = false;
+;	main.c:135: bool setting_bi_time = false;
 	mov	r4,#0x00
-;	main.c:127: while (1) {
-00141$:
-;	main.c:128: flash_flag++;
-	inc	_main_flash_flag_65538_33
+;	main.c:136: while (1) {
+00145$:
+;	main.c:137: flash_flag++;
+	inc	_main_flash_flag_65538_37
 	clr	a
-	cjne	a,_main_flash_flag_65538_33,00229$
-	inc	(_main_flash_flag_65538_33 + 1)
-	cjne	a,(_main_flash_flag_65538_33 + 1),00229$
-	inc	(_main_flash_flag_65538_33 + 2)
-	cjne	a,(_main_flash_flag_65538_33 + 2),00229$
-	inc	(_main_flash_flag_65538_33 + 3)
-00229$:
-;	main.c:129: if (flash_flag >= 8000)  // 頻率
+	cjne	a,_main_flash_flag_65538_37,00241$
+	inc	(_main_flash_flag_65538_37 + 1)
+	cjne	a,(_main_flash_flag_65538_37 + 1),00241$
+	inc	(_main_flash_flag_65538_37 + 2)
+	cjne	a,(_main_flash_flag_65538_37 + 2),00241$
+	inc	(_main_flash_flag_65538_37 + 3)
+00241$:
+;	main.c:138: if (flash_flag >= 8000)  // 頻率
 	clr	c
-	mov	a,_main_flash_flag_65538_33
+	mov	a,_main_flash_flag_65538_37
 	subb	a,#0x40
-	mov	a,(_main_flash_flag_65538_33 + 1)
+	mov	a,(_main_flash_flag_65538_37 + 1)
 	subb	a,#0x1f
-	mov	a,(_main_flash_flag_65538_33 + 2)
+	mov	a,(_main_flash_flag_65538_37 + 2)
 	subb	a,#0x00
-	mov	a,(_main_flash_flag_65538_33 + 3)
+	mov	a,(_main_flash_flag_65538_37 + 3)
 	xrl	a,#0x80
 	subb	a,#0x80
 	jc	00102$
-;	main.c:130: flash_flag = 0;
+;	main.c:139: flash_flag = 0;
 	clr	a
-	mov	_main_flash_flag_65538_33,a
-	mov	(_main_flash_flag_65538_33 + 1),a
-	mov	(_main_flash_flag_65538_33 + 2),a
-	mov	(_main_flash_flag_65538_33 + 3),a
+	mov	_main_flash_flag_65538_37,a
+	mov	(_main_flash_flag_65538_37 + 1),a
+	mov	(_main_flash_flag_65538_37 + 2),a
+	mov	(_main_flash_flag_65538_37 + 3),a
 00102$:
-;	main.c:131: P0     =count^0b11111111;
+;	main.c:140: P0     =count^0b11111111;
 	mov	a,#0xff
-	xrl	a,_main_count_65537_32
+	xrl	a,_main_count_65537_36
 	mov	r2,a
 	mov	_P0,r2
-;	main.c:132: count *=2; //shift
-	mov	a,_main_count_65537_32
-	add	a,_main_count_65537_32
-	mov	_main_count_65537_32,a
-	mov	a,(_main_count_65537_32 + 1)
+;	main.c:141: count *=2; //shift
+	mov	a,_main_count_65537_36
+	add	a,_main_count_65537_36
+	mov	_main_count_65537_36,a
+	mov	a,(_main_count_65537_36 + 1)
 	rlc	a
-	mov	(_main_count_65537_32 + 1),a
-;	main.c:133: short key = keyPressed(row);
-	mov	dpl,_main_row_65537_32
-	mov	dph,(_main_row_65537_32 + 1)
+	mov	(_main_count_65537_36 + 1),a
+;	main.c:142: short key = keyPressed(row);
+	mov	dpl,_main_row_65537_36
+	mov	dph,(_main_row_65537_36 + 1)
 	push	ar5
 	push	ar4
 	lcall	_keyPressed
@@ -1157,94 +1247,51 @@ _main:
 	mov	r3,dph
 	pop	ar4
 	pop	ar5
-;	main.c:134: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
+;	main.c:143: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
 	mov	a,r2
-	cjne	a,_main_previous_65537_32,00231$
+	cjne	a,_main_previous_65537_36,00243$
 	mov	a,r3
-	cjne	a,(_main_previous_65537_32 + 1),00231$
-	ljmp	00126$
-00231$:
-	cjne	r2,#0xff,00232$
-	cjne	r3,#0xff,00232$
-	ljmp	00126$
-00232$:
-;	main.c:135: previous = key;
-	mov	_main_previous_65537_32,r2
-	mov	(_main_previous_65537_32 + 1),r3
-;	main.c:141: if (key == 10) isSetting = true;
+	cjne	a,(_main_previous_65537_36 + 1),00243$
+	ljmp	00128$
+00243$:
+	cjne	r2,#0xff,00244$
+	cjne	r3,#0xff,00244$
+	ljmp	00128$
+00244$:
+;	main.c:144: previous = key;
+	mov	_main_previous_65537_36,r2
+	mov	(_main_previous_65537_36 + 1),r3
+;	main.c:150: if (key == 10) isSetting = true;
 	cjne	r2,#0x0a,00104$
 	cjne	r3,#0x00,00104$
 	mov	r5,#0x01
 00104$:
-;	main.c:142: if (key == 11) isSetting = false;
+;	main.c:151: if (key == 11) isSetting = false;
 	cjne	r2,#0x0b,00106$
 	cjne	r3,#0x00,00106$
 	mov	r5,#0x00
 00106$:
-;	main.c:143: if (key == 12) setting_bi_time = true;
+;	main.c:152: if (key == 12) setting_bi_time = true;
 	cjne	r2,#0x0c,00108$
 	cjne	r3,#0x00,00108$
 	mov	r4,#0x01
 00108$:
-;	main.c:144: if (key == 13) setting_bi_time = false;
+;	main.c:153: if (key == 13) setting_bi_time = false;
 	cjne	r2,#0x0d,00110$
 	cjne	r3,#0x00,00110$
 	mov	r4,#0x00
 00110$:
-;	main.c:147: if (isSetting) {
-	mov	a,r5
-	jz	00117$
-;	main.c:149: if (key >= 0 && key <= 9)
-	mov	a,r3
-	jb	acc.7,00112$
-	clr	c
-	mov	a,#0x09
-	subb	a,r2
-	mov	a,#(0x00 ^ 0x80)
-	mov	b,r3
-	xrl	b,#0x80
-	subb	a,b
-	jc	00112$
-;	main.c:150: num[index++] = key;
-	mov	r6,_main_index_65538_33
-	mov	r7,(_main_index_65538_33 + 1)
-	inc	_main_index_65538_33
-	clr	a
-	cjne	a,_main_index_65538_33,00244$
-	inc	(_main_index_65538_33 + 1)
-00244$:
-	mov	a,r6
-	add	a,r6
-	mov	r6,a
-	mov	a,r7
-	rlc	a
-	mov	r7,a
-	mov	a,r6
-	add	a,#_main_num_65537_32
-	mov	r0,a
-	mov	@r0,ar2
-	inc	r0
-	mov	@r0,ar3
+;	main.c:154: if (key == 14) play_sound = false;
+	cjne	r2,#0x0e,00112$
+	cjne	r3,#0x00,00112$
+	mov	_play_sound,#0x00
 00112$:
-;	main.c:151: if (index == 4) index = 0;
-	mov	a,#0x04
-	cjne	a,_main_index_65538_33,00245$
-	clr	a
-	cjne	a,(_main_index_65538_33 + 1),00245$
-	sjmp	00246$
-00245$:
-	sjmp	00117$
-00246$:
-	clr	a
-	mov	_main_index_65538_33,a
-	mov	(_main_index_65538_33 + 1),a
-00117$:
-;	main.c:154: if (setting_bi_time) {
-	mov	a,r4
-	jz	00126$
-;	main.c:155: if (key >= 0 && key <= 9)
+;	main.c:157: if (isSetting) {
+	mov	a,r5
+	jz	00119$
+;	main.c:159: if (key >= 0 && key <= 9)
 	mov	a,r3
-	jb	acc.7,00119$
+	jb	acc.7,00114$
 	clr	c
 	mov	a,#0x09
 	subb	a,r2
@@ -1252,15 +1299,15 @@ _main:
 	mov	b,r3
 	xrl	b,#0x80
 	subb	a,b
-	jc	00119$
-;	main.c:156: num_bi[index++] = key;
-	mov	r6,_main_index_65538_33
-	mov	r7,(_main_index_65538_33 + 1)
-	inc	_main_index_65538_33
+	jc	00114$
+;	main.c:160: num[index++] = key;
+	mov	r6,_main_index_65538_37
+	mov	r7,(_main_index_65538_37 + 1)
+	inc	_main_index_65538_37
 	clr	a
-	cjne	a,_main_index_65538_33,00250$
-	inc	(_main_index_65538_33 + 1)
-00250$:
+	cjne	a,_main_index_65538_37,00258$
+	inc	(_main_index_65538_37 + 1)
+00258$:
 	mov	a,r6
 	add	a,r6
 	mov	r6,a
@@ -1268,143 +1315,206 @@ _main:
 	rlc	a
 	mov	r7,a
 	mov	a,r6
-	add	a,#_main_num_bi_65537_32
+	add	a,#_main_num_65537_36
 	mov	r0,a
 	mov	@r0,ar2
 	inc	r0
 	mov	@r0,ar3
-00119$:
-;	main.c:157: if (index == 4) index = 0;
+00114$:
+;	main.c:161: if (index == 4) index = 0;
 	mov	a,#0x04
-	cjne	a,_main_index_65538_33,00251$
+	cjne	a,_main_index_65538_37,00259$
 	clr	a
-	cjne	a,(_main_index_65538_33 + 1),00251$
-	sjmp	00252$
-00251$:
-	sjmp	00126$
-00252$:
+	cjne	a,(_main_index_65538_37 + 1),00259$
+	sjmp	00260$
+00259$:
+	sjmp	00119$
+00260$:
 	clr	a
-	mov	_main_index_65538_33,a
-	mov	(_main_index_65538_33 + 1),a
-00126$:
-;	main.c:161: if (!isSetting && !setting_bi_time) {
-	mov	a,r5
-	jnz	00129$
+	mov	_main_index_65538_37,a
+	mov	(_main_index_65538_37 + 1),a
+00119$:
+;	main.c:164: if (setting_bi_time) {
 	mov	a,r4
-	jnz	00129$
-;	main.c:162: run_clock(num);
-	mov	dptr,#_main_num_65537_32
+	jz	00128$
+;	main.c:165: if (key >= 0 && key <= 9)
+	mov	a,r3
+	jb	acc.7,00121$
+	clr	c
+	mov	a,#0x09
+	subb	a,r2
+	mov	a,#(0x00 ^ 0x80)
+	mov	b,r3
+	xrl	b,#0x80
+	subb	a,b
+	jc	00121$
+;	main.c:166: num_bi[index++] = key;
+	mov	r6,_main_index_65538_37
+	mov	r7,(_main_index_65538_37 + 1)
+	inc	_main_index_65538_37
+	clr	a
+	cjne	a,_main_index_65538_37,00264$
+	inc	(_main_index_65538_37 + 1)
+00264$:
+	mov	a,r6
+	add	a,r6
+	mov	r6,a
+	mov	a,r7
+	rlc	a
+	mov	r7,a
+	mov	a,r6
+	add	a,#_main_num_bi_65537_36
+	mov	r0,a
+	mov	@r0,ar2
+	inc	r0
+	mov	@r0,ar3
+00121$:
+;	main.c:167: if (index == 4) index = 0;
+	mov	a,#0x04
+	cjne	a,_main_index_65538_37,00265$
+	clr	a
+	cjne	a,(_main_index_65538_37 + 1),00265$
+	sjmp	00266$
+00265$:
+	sjmp	00128$
+00266$:
+	clr	a
+	mov	_main_index_65538_37,a
+	mov	(_main_index_65538_37 + 1),a
+00128$:
+;	main.c:171: if (!isSetting && !setting_bi_time) {
+	mov	a,r5
+	jnz	00131$
+	mov	a,r4
+	jnz	00131$
+;	main.c:172: run_clock(num);
+	mov	dptr,#_main_num_65537_36
 	mov	b,#0x40
 	push	ar5
 	push	ar4
 	lcall	_run_clock
 	pop	ar4
 	pop	ar5
-00129$:
-;	main.c:165: row++;
-	inc	_main_row_65537_32
+00131$:
+;	main.c:174: row++;
+	inc	_main_row_65537_36
 	clr	a
-	cjne	a,_main_row_65537_32,00255$
-	inc	(_main_row_65537_32 + 1)
-00255$:
-;	main.c:166: if (count == 0x10) {	//用count從上往下掃 
+	cjne	a,_main_row_65537_36,00269$
+	inc	(_main_row_65537_36 + 1)
+00269$:
+;	main.c:175: if (count == 0x10) {	//用count從上往下掃 
 	mov	a,#0x10
-	cjne	a,_main_count_65537_32,00256$
+	cjne	a,_main_count_65537_36,00270$
 	clr	a
-	cjne	a,(_main_count_65537_32 + 1),00256$
-	sjmp	00257$
-00256$:
-	sjmp	00132$
-00257$:
-;	main.c:167: count = 1;
-	mov	_main_count_65537_32,#0x01
-;	main.c:168: row   = 0;
+	cjne	a,(_main_count_65537_36 + 1),00270$
+	sjmp	00271$
+00270$:
+	sjmp	00134$
+00271$:
+;	main.c:176: count = 1;
+	mov	_main_count_65537_36,#0x01
+;	main.c:177: row   = 0;
 	clr	a
-	mov	(_main_count_65537_32 + 1),a
-	mov	_main_row_65537_32,a
-	mov	(_main_row_65537_32 + 1),a
-;	main.c:169: P1 = 0b11111111;
-	mov	_P1,#0xff
-00132$:
-;	main.c:172: if (setting_bi_time || isSetting)
-	mov	a,r4
-	jnz	00136$
-	mov	a,r5
-	jz	00137$
-00136$:
-;	main.c:173: if (isSetting)
-	mov	a,r5
-	jz	00134$
-;	main.c:174: display(table, alpha, num, 1, flash_flag);
-	mov	_display_PARM_2,#_main_alpha_65537_32
-	mov	(_display_PARM_2 + 1),#0x00
-	mov	(_display_PARM_2 + 2),#0x40
-	mov	_display_PARM_3,#_main_num_65537_32
-	mov	(_display_PARM_3 + 1),#0x00
-	mov	(_display_PARM_3 + 2),#0x40
-	mov	_display_PARM_4,#0x01
-	mov	_display_PARM_5,_main_flash_flag_65538_33
-	mov	(_display_PARM_5 + 1),(_main_flash_flag_65538_33 + 1)
-	mov	(_display_PARM_5 + 2),(_main_flash_flag_65538_33 + 2)
-	mov	(_display_PARM_5 + 3),(_main_flash_flag_65538_33 + 3)
-	mov	dptr,#_main_table_65537_32
-	mov	b,#0x40
-	push	ar5
-	push	ar4
-	lcall	_display
-	pop	ar4
-	pop	ar5
-	sjmp	00138$
+	mov	(_main_count_65537_36 + 1),a
+	mov	_main_row_65537_36,a
+	mov	(_main_row_65537_36 + 1),a
 00134$:
-;	main.c:176: display(table, alpha, num_bi, 1, flash_flag);
-	mov	_display_PARM_2,#_main_alpha_65537_32
+;	main.c:179: P1 = 0b11111111; // 讓頻率一致 閃爍時4個位置同步
+	mov	_P1,#0xff
+;	main.c:180: if (setting_bi_time || isSetting)
+	mov	a,r4
+	jnz	00138$
+	mov	a,r5
+	jz	00139$
+00138$:
+;	main.c:181: if (isSetting)
+	mov	a,r5
+	jz	00136$
+;	main.c:182: display(table, alpha, num, 1, flash_flag);
+	mov	_display_PARM_2,#_main_alpha_65537_36
 	mov	(_display_PARM_2 + 1),#0x00
 	mov	(_display_PARM_2 + 2),#0x40
-	mov	_display_PARM_3,#_main_num_bi_65537_32
+	mov	_display_PARM_3,#_main_num_65537_36
 	mov	(_display_PARM_3 + 1),#0x00
 	mov	(_display_PARM_3 + 2),#0x40
 	mov	_display_PARM_4,#0x01
-	mov	_display_PARM_5,_main_flash_flag_65538_33
-	mov	(_display_PARM_5 + 1),(_main_flash_flag_65538_33 + 1)
-	mov	(_display_PARM_5 + 2),(_main_flash_flag_65538_33 + 2)
-	mov	(_display_PARM_5 + 3),(_main_flash_flag_65538_33 + 3)
-	mov	dptr,#_main_table_65537_32
+	mov	_display_PARM_5,_main_flash_flag_65538_37
+	mov	(_display_PARM_5 + 1),(_main_flash_flag_65538_37 + 1)
+	mov	(_display_PARM_5 + 2),(_main_flash_flag_65538_37 + 2)
+	mov	(_display_PARM_5 + 3),(_main_flash_flag_65538_37 + 3)
+	mov	dptr,#_main_table_65537_36
 	mov	b,#0x40
 	push	ar5
 	push	ar4
 	lcall	_display
 	pop	ar4
 	pop	ar5
-	sjmp	00138$
-00137$:
-;	main.c:178: display(table, alpha, num, 0, flash_flag);
-	mov	_display_PARM_2,#_main_alpha_65537_32
+	sjmp	00140$
+00136$:
+;	main.c:184: display(table, alpha, num_bi, 1, flash_flag);
+	mov	_display_PARM_2,#_main_alpha_65537_36
 	mov	(_display_PARM_2 + 1),#0x00
 	mov	(_display_PARM_2 + 2),#0x40
-	mov	_display_PARM_3,#_main_num_65537_32
+	mov	_display_PARM_3,#_main_num_bi_65537_36
+	mov	(_display_PARM_3 + 1),#0x00
+	mov	(_display_PARM_3 + 2),#0x40
+	mov	_display_PARM_4,#0x01
+	mov	_display_PARM_5,_main_flash_flag_65538_37
+	mov	(_display_PARM_5 + 1),(_main_flash_flag_65538_37 + 1)
+	mov	(_display_PARM_5 + 2),(_main_flash_flag_65538_37 + 2)
+	mov	(_display_PARM_5 + 3),(_main_flash_flag_65538_37 + 3)
+	mov	dptr,#_main_table_65537_36
+	mov	b,#0x40
+	push	ar5
+	push	ar4
+	lcall	_display
+	pop	ar4
+	pop	ar5
+	sjmp	00140$
+00139$:
+;	main.c:186: display(table, alpha, num, 0, flash_flag);
+	mov	_display_PARM_2,#_main_alpha_65537_36
+	mov	(_display_PARM_2 + 1),#0x00
+	mov	(_display_PARM_2 + 2),#0x40
+	mov	_display_PARM_3,#_main_num_65537_36
 	mov	(_display_PARM_3 + 1),#0x00
 	mov	(_display_PARM_3 + 2),#0x40
 	mov	_display_PARM_4,#0x00
-	mov	_display_PARM_5,_main_flash_flag_65538_33
-	mov	(_display_PARM_5 + 1),(_main_flash_flag_65538_33 + 1)
-	mov	(_display_PARM_5 + 2),(_main_flash_flag_65538_33 + 2)
-	mov	(_display_PARM_5 + 3),(_main_flash_flag_65538_33 + 3)
-	mov	dptr,#_main_table_65537_32
+	mov	_display_PARM_5,_main_flash_flag_65538_37
+	mov	(_display_PARM_5 + 1),(_main_flash_flag_65538_37 + 1)
+	mov	(_display_PARM_5 + 2),(_main_flash_flag_65538_37 + 2)
+	mov	(_display_PARM_5 + 3),(_main_flash_flag_65538_37 + 3)
+	mov	dptr,#_main_table_65537_36
 	mov	b,#0x40
 	push	ar5
 	push	ar4
 	lcall	_display
 	pop	ar4
 	pop	ar5
-00138$:
-;	main.c:179: check_sound_trigger();
+00140$:
+;	main.c:187: check_sound_trigger(num, num_bi);
+	mov	_check_sound_trigger_PARM_2,#_main_num_bi_65537_36
+	mov	(_check_sound_trigger_PARM_2 + 1),#0x00
+	mov	(_check_sound_trigger_PARM_2 + 2),#0x40
+	mov	dptr,#_main_num_65537_36
+	mov	b,#0x40
 	push	ar5
 	push	ar4
 	lcall	_check_sound_trigger
 	pop	ar4
 	pop	ar5
-;	main.c:182: }
-	ljmp	00141$
+;	main.c:188: if (play_sound) play();
+	mov	a,_play_sound
+	jnz	00275$
+	ljmp	00145$
+00275$:
+	push	ar5
+	push	ar4
+	lcall	_play
+	pop	ar4
+	pop	ar5
+;	main.c:191: }
+	ljmp	00145$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)
