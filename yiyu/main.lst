@@ -1252,7 +1252,7 @@
                                    1252 ;	assignBit
       00043C D2 8E            [12] 1253 	setb	_TR1
       00043E                       1254 00107$:
-                                   1255 ;	main.c:105: }
+                                   1255 ;	main.c:104: }
       00043E 22               [24] 1256 	ret
                                    1257 ;------------------------------------------------------------
                                    1258 ;Allocation info for local variables in function 'init'
@@ -1261,16 +1261,16 @@
                                    1261 ;i                         Allocated to registers r6 r7 
                                    1262 ;i                         Allocated to registers r6 r7 
                                    1263 ;------------------------------------------------------------
-                                   1264 ;	main.c:111: void init(){
+                                   1264 ;	main.c:106: void init(){
                                    1265 ;	-----------------------------------------
                                    1266 ;	 function init
                                    1267 ;	-----------------------------------------
       00043F                       1268 _init:
-                                   1269 ;	main.c:112: music_index=0;
+                                   1269 ;	main.c:107: music_index=0;
       00043F E4               [12] 1270 	clr	a
       000440 F5*02            [12] 1271 	mov	_music_index,a
       000442 F5*03            [12] 1272 	mov	(_music_index + 1),a
-                                   1273 ;	main.c:114: for(int i=7;i<16;i++){
+                                   1273 ;	main.c:109: for(int i=7;i<16;i++){
       000444 7E 07            [12] 1274 	mov	r6,#0x07
       000446 7F 00            [12] 1275 	mov	r7,#0x00
       000448                       1276 00104$:
@@ -1281,7 +1281,7 @@
       00044D 64 80            [12] 1281 	xrl	a,#0x80
       00044F 94 80            [12] 1282 	subb	a,#0x80
       000451 50 2C            [24] 1283 	jnc	00101$
-                                   1284 ;	main.c:115: table[i]=table[i-7]*2;
+                                   1284 ;	main.c:110: table[i]=table[i-7]*2;
       000453 EE               [12] 1285 	mov	a,r6
       000454 2E               [12] 1286 	add	a,r6
       000455 FC               [12] 1287 	mov	r4,a
@@ -1310,13 +1310,13 @@
       000474 09               [12] 1310 	inc	r1
       000475 A7 05            [24] 1311 	mov	@r1,ar5
       000477 19               [12] 1312 	dec	r1
-                                   1313 ;	main.c:114: for(int i=7;i<16;i++){
+                                   1313 ;	main.c:109: for(int i=7;i<16;i++){
       000478 0E               [12] 1314 	inc	r6
       000479 BE 00 CC         [24] 1315 	cjne	r6,#0x00,00104$
       00047C 0F               [12] 1316 	inc	r7
       00047D 80 C9            [24] 1317 	sjmp	00104$
       00047F                       1318 00101$:
-                                   1319 ;	main.c:117: for(int i=0;i<16;i++){
+                                   1319 ;	main.c:112: for(int i=0;i<16;i++){
       00047F 7E 00            [12] 1320 	mov	r6,#0x00
       000481 7F 00            [12] 1321 	mov	r7,#0x00
       000483                       1322 00107$:
@@ -1329,7 +1329,7 @@
       00048C 40 01            [24] 1329 	jc	00131$
       00048E 22               [24] 1330 	ret
       00048F                       1331 00131$:
-                                   1332 ;	main.c:118: tmp=1.0/table[i]*1000000;
+                                   1332 ;	main.c:113: tmp=1.0/table[i]*1000000;
       00048F EE               [12] 1333 	mov	a,r6
       000490 2E               [12] 1334 	add	a,r6
       000491 FC               [12] 1335 	mov	r4,a
@@ -1380,7 +1380,7 @@
       0004E8 E5 81            [12] 1380 	mov	a,sp
       0004EA 24 FC            [12] 1381 	add	a,#0xfc
       0004EC F5 81            [12] 1382 	mov	sp,a
-                                   1383 ;	main.c:119: table[i]=tmp;
+                                   1383 ;	main.c:114: table[i]=tmp;
       0004EE 8A 82            [24] 1384 	mov	dpl,r2
       0004F0 8B 83            [24] 1385 	mov	dph,r3
       0004F2 8C F0            [24] 1386 	mov	b,r4
@@ -1395,12 +1395,12 @@
       000504 09               [12] 1395 	inc	r1
       000505 A7 F0            [24] 1396 	mov	@r1,b
       000507 19               [12] 1397 	dec	r1
-                                   1398 ;	main.c:117: for(int i=0;i<16;i++){
+                                   1398 ;	main.c:112: for(int i=0;i<16;i++){
       000508 0E               [12] 1399 	inc	r6
       000509 BE 00 01         [24] 1400 	cjne	r6,#0x00,00132$
       00050C 0F               [12] 1401 	inc	r7
       00050D                       1402 00132$:
-                                   1403 ;	main.c:121: }
+                                   1403 ;	main.c:116: }
       00050D 02r04r83         [24] 1404 	ljmp	00107$
                                    1405 ;------------------------------------------------------------
                                    1406 ;Allocation info for local variables in function 'main'
@@ -1418,41 +1418,41 @@
                                    1418 ;setting_bi_time           Allocated to registers r4 
                                    1419 ;key                       Allocated to registers r2 r3 
                                    1420 ;------------------------------------------------------------
-                                   1421 ;	main.c:123: int main() {
+                                   1421 ;	main.c:118: int main() {
                                    1422 ;	-----------------------------------------
                                    1423 ;	 function main
                                    1424 ;	-----------------------------------------
       000510                       1425 _main:
-                                   1426 ;	main.c:124: init();
+                                   1426 ;	main.c:119: init();
       000510 12r04r3F         [24] 1427 	lcall	_init
-                                   1428 ;	main.c:135: P1_5=0;
+                                   1428 ;	main.c:130: P1_5=0;
                                    1429 ;	assignBit
       000513 C2 95            [12] 1430 	clr	_P1_5
-                                   1431 ;	main.c:137: EA = 1;
+                                   1431 ;	main.c:132: EA = 1;
                                    1432 ;	assignBit
       000515 D2 AF            [12] 1433 	setb	_EA
-                                   1434 ;	main.c:138: TMOD = 0b00010001;
+                                   1434 ;	main.c:133: TMOD = 0b00010001;
       000517 75 89 11         [24] 1435 	mov	_TMOD,#0x11
-                                   1436 ;	main.c:139: IE   = 0x8A;
+                                   1436 ;	main.c:134: IE   = 0x8A;
       00051A 75 A8 8A         [24] 1437 	mov	_IE,#0x8a
-                                   1438 ;	main.c:140: TR0  = 1;	//timer 0 control bit
+                                   1438 ;	main.c:135: TR0  = 1;	//timer 0 control bit
                                    1439 ;	assignBit
       00051D D2 8C            [12] 1440 	setb	_TR0
-                                   1441 ;	main.c:141: TR1  = 0;	//speaker timer 1 control bit
+                                   1441 ;	main.c:136: TR1  = 0;	//speaker timer 1 control bit
                                    1442 ;	assignBit
       00051F C2 8E            [12] 1443 	clr	_TR1
-                                   1444 ;	main.c:143: short previous = -1;
+                                   1444 ;	main.c:138: short previous = -1;
       000521 75*14 FF         [24] 1445 	mov	_main_previous_65537_42,#0xff
       000524 75*15 FF         [24] 1446 	mov	(_main_previous_65537_42 + 1),#0xff
-                                   1447 ;	main.c:144: short row = 0;
+                                   1447 ;	main.c:139: short row = 0;
       000527 E4               [12] 1448 	clr	a
       000528 F5*16            [12] 1449 	mov	_main_row_65537_42,a
       00052A F5*17            [12] 1450 	mov	(_main_row_65537_42 + 1),a
-                                   1451 ;	main.c:145: short count = 1;
+                                   1451 ;	main.c:140: short count = 1;
       00052C 75*18 01         [24] 1452 	mov	_main_count_65537_42,#0x01
                                    1453 ;	1-genFromRTrack replaced	mov	(_main_count_65537_42 + 1),#0x00
       00052F F5*19            [12] 1454 	mov	(_main_count_65537_42 + 1),a
-                                   1455 ;	main.c:146: short num[4] = {0};
+                                   1455 ;	main.c:141: short num[4] = {0};
       000531 F5*1A            [12] 1456 	mov	(_main_num_65537_42 + 0),a
       000533 F5*1B            [12] 1457 	mov	(_main_num_65537_42 + 1),a
       000535 F5*1C            [12] 1458 	mov	((_main_num_65537_42 + 0x0002) + 0),a
@@ -1461,7 +1461,7 @@
       00053B F5*1F            [12] 1461 	mov	((_main_num_65537_42 + 0x0004) + 1),a
       00053D F5*20            [12] 1462 	mov	((_main_num_65537_42 + 0x0006) + 0),a
       00053F F5*21            [12] 1463 	mov	((_main_num_65537_42 + 0x0006) + 1),a
-                                   1464 ;	main.c:147: short num_bi[4] = {-1};
+                                   1464 ;	main.c:142: short num_bi[4] = {-1};
       000541 75*22 FF         [24] 1465 	mov	(_main_num_bi_65537_42 + 0),#0xff
       000544 75*23 FF         [24] 1466 	mov	(_main_num_bi_65537_42 + 1),#0xff
       000547 F5*24            [12] 1467 	mov	((_main_num_bi_65537_42 + 0x0002) + 0),a
@@ -1470,7 +1470,7 @@
       00054D F5*27            [12] 1470 	mov	((_main_num_bi_65537_42 + 0x0004) + 1),a
       00054F F5*28            [12] 1471 	mov	((_main_num_bi_65537_42 + 0x0006) + 0),a
       000551 F5*29            [12] 1472 	mov	((_main_num_bi_65537_42 + 0x0006) + 1),a
-                                   1473 ;	main.c:148: const short alpha[11] = {
+                                   1473 ;	main.c:143: const short alpha[11] = {
       000553 75*2A 03         [24] 1474 	mov	(_main_alpha_65537_42 + 0),#0x03
                                    1475 ;	1-genFromRTrack replaced	mov	(_main_alpha_65537_42 + 1),#0x00
       000556 F5*2B            [12] 1476 	mov	(_main_alpha_65537_42 + 1),a
@@ -1504,23 +1504,23 @@
       000585 75*3E FF         [24] 1504 	mov	((_main_alpha_65537_42 + 0x0014) + 0),#0xff
                                    1505 ;	1-genFromRTrack replaced	mov	((_main_alpha_65537_42 + 0x0014) + 1),#0x00
       000588 F5*3F            [12] 1506 	mov	((_main_alpha_65537_42 + 0x0014) + 1),a
-                                   1507 ;	main.c:162: P0 = 0b00001111;
+                                   1507 ;	main.c:157: P0 = 0b00001111;
       00058A 75 80 0F         [24] 1508 	mov	_P0,#0x0f
-                                   1509 ;	main.c:163: short index = 0;
+                                   1509 ;	main.c:158: short index = 0;
       00058D F5*40            [12] 1510 	mov	_main_index_65538_43,a
       00058F F5*41            [12] 1511 	mov	(_main_index_65538_43 + 1),a
-                                   1512 ;	main.c:164: long flash_flag = 0;
+                                   1512 ;	main.c:159: long flash_flag = 0;
       000591 F5*42            [12] 1513 	mov	_main_flash_flag_65538_43,a
       000593 F5*43            [12] 1514 	mov	(_main_flash_flag_65538_43 + 1),a
       000595 F5*44            [12] 1515 	mov	(_main_flash_flag_65538_43 + 2),a
       000597 F5*45            [12] 1516 	mov	(_main_flash_flag_65538_43 + 3),a
-                                   1517 ;	main.c:165: bool isSetting = false;
+                                   1517 ;	main.c:160: bool isSetting = false;
       000599 7D 00            [12] 1518 	mov	r5,#0x00
-                                   1519 ;	main.c:167: bool setting_bi_time = false;
+                                   1519 ;	main.c:162: bool setting_bi_time = false;
       00059B 7C 00            [12] 1520 	mov	r4,#0x00
-                                   1521 ;	main.c:168: while (1) {
+                                   1521 ;	main.c:163: while (1) {
       00059D                       1522 00145$:
-                                   1523 ;	main.c:169: flash_flag++;
+                                   1523 ;	main.c:164: flash_flag++;
       00059D 05*42            [12] 1524 	inc	_main_flash_flag_65538_43
       00059F E4               [12] 1525 	clr	a
       0005A0 B5*42 0C         [24] 1526 	cjne	a,_main_flash_flag_65538_43,00241$
@@ -1530,7 +1530,7 @@
       0005AA B5*44 02         [24] 1530 	cjne	a,(_main_flash_flag_65538_43 + 2),00241$
       0005AD 05*45            [12] 1531 	inc	(_main_flash_flag_65538_43 + 3)
       0005AF                       1532 00241$:
-                                   1533 ;	main.c:170: if (flash_flag >= 8000)  // 頻率
+                                   1533 ;	main.c:165: if (flash_flag >= 8000)  // 頻率
       0005AF C3               [12] 1534 	clr	c
       0005B0 E5*42            [12] 1535 	mov	a,_main_flash_flag_65538_43
       0005B2 94 40            [12] 1536 	subb	a,#0x40
@@ -1542,26 +1542,26 @@
       0005BE 64 80            [12] 1542 	xrl	a,#0x80
       0005C0 94 80            [12] 1543 	subb	a,#0x80
       0005C2 40 09            [24] 1544 	jc	00102$
-                                   1545 ;	main.c:171: flash_flag = 0;
+                                   1545 ;	main.c:166: flash_flag = 0;
       0005C4 E4               [12] 1546 	clr	a
       0005C5 F5*42            [12] 1547 	mov	_main_flash_flag_65538_43,a
       0005C7 F5*43            [12] 1548 	mov	(_main_flash_flag_65538_43 + 1),a
       0005C9 F5*44            [12] 1549 	mov	(_main_flash_flag_65538_43 + 2),a
       0005CB F5*45            [12] 1550 	mov	(_main_flash_flag_65538_43 + 3),a
       0005CD                       1551 00102$:
-                                   1552 ;	main.c:172: P0     =count^0b11111111;
+                                   1552 ;	main.c:167: P0     =count^0b11111111;
       0005CD 74 FF            [12] 1553 	mov	a,#0xff
       0005CF 65*18            [12] 1554 	xrl	a,_main_count_65537_42
       0005D1 FA               [12] 1555 	mov	r2,a
       0005D2 8A 80            [24] 1556 	mov	_P0,r2
-                                   1557 ;	main.c:173: count *=2; //shift
+                                   1557 ;	main.c:168: count *=2; //shift
       0005D4 E5*18            [12] 1558 	mov	a,_main_count_65537_42
       0005D6 25*18            [12] 1559 	add	a,_main_count_65537_42
       0005D8 F5*18            [12] 1560 	mov	_main_count_65537_42,a
       0005DA E5*19            [12] 1561 	mov	a,(_main_count_65537_42 + 1)
       0005DC 33               [12] 1562 	rlc	a
       0005DD F5*19            [12] 1563 	mov	(_main_count_65537_42 + 1),a
-                                   1564 ;	main.c:174: short key = keyPressed(row);
+                                   1564 ;	main.c:169: short key = keyPressed(row);
       0005DF 85*16 82         [24] 1565 	mov	dpl,_main_row_65537_42
       0005E2 85*17 83         [24] 1566 	mov	dph,(_main_row_65537_42 + 1)
       0005E5 C0 05            [24] 1567 	push	ar5
@@ -1571,321 +1571,343 @@
       0005EE AB 83            [24] 1571 	mov	r3,dph
       0005F0 D0 04            [24] 1572 	pop	ar4
       0005F2 D0 05            [24] 1573 	pop	ar5
-                                   1574 ;	main.c:175: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
+                                   1574 ;	main.c:170: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
       0005F4 EA               [12] 1575 	mov	a,r2
       0005F5 B5*14 07         [24] 1576 	cjne	a,_main_previous_65537_42,00243$
       0005F8 EB               [12] 1577 	mov	a,r3
       0005F9 B5*15 03         [24] 1578 	cjne	a,(_main_previous_65537_42 + 1),00243$
-      0005FC 02r06rC2         [24] 1579 	ljmp	00130$
+      0005FC 02r06rCC         [24] 1579 	ljmp	00130$
       0005FF                       1580 00243$:
       0005FF BA FF 06         [24] 1581 	cjne	r2,#0xff,00244$
       000602 BB FF 03         [24] 1582 	cjne	r3,#0xff,00244$
-      000605 02r06rC2         [24] 1583 	ljmp	00130$
+      000605 02r06rCC         [24] 1583 	ljmp	00130$
       000608                       1584 00244$:
-                                   1585 ;	main.c:176: previous = key;
+                                   1585 ;	main.c:171: previous = key;
       000608 8A*14            [24] 1586 	mov	_main_previous_65537_42,r2
       00060A 8B*15            [24] 1587 	mov	(_main_previous_65537_42 + 1),r3
-                                   1588 ;	main.c:182: if (key == 10) isSetting = true;
-      00060C BA 0A 05         [24] 1589 	cjne	r2,#0x0a,00104$
-      00060F BB 00 02         [24] 1590 	cjne	r3,#0x00,00104$
-      000612 7D 01            [12] 1591 	mov	r5,#0x01
-      000614                       1592 00104$:
-                                   1593 ;	main.c:183: if (key == 11) isSetting = false;
-      000614 BA 0B 05         [24] 1594 	cjne	r2,#0x0b,00106$
-      000617 BB 00 02         [24] 1595 	cjne	r3,#0x00,00106$
-      00061A 7D 00            [12] 1596 	mov	r5,#0x00
-      00061C                       1597 00106$:
-                                   1598 ;	main.c:184: if (key == 12) setting_bi_time = true;
-      00061C BA 0C 05         [24] 1599 	cjne	r2,#0x0c,00108$
-      00061F BB 00 02         [24] 1600 	cjne	r3,#0x00,00108$
-      000622 7C 01            [12] 1601 	mov	r4,#0x01
-      000624                       1602 00108$:
-                                   1603 ;	main.c:185: if (key == 13) setting_bi_time = false;
-      000624 BA 0D 05         [24] 1604 	cjne	r2,#0x0d,00110$
-      000627 BB 00 02         [24] 1605 	cjne	r3,#0x00,00110$
-      00062A 7C 00            [12] 1606 	mov	r4,#0x00
-      00062C                       1607 00110$:
-                                   1608 ;	main.c:186: if (key == 14) TR1 = 0;
-      00062C BA 0E 05         [24] 1609 	cjne	r2,#0x0e,00112$
-      00062F BB 00 02         [24] 1610 	cjne	r3,#0x00,00112$
-                                   1611 ;	assignBit
-      000632 C2 8E            [12] 1612 	clr	_TR1
-      000634                       1613 00112$:
-                                   1614 ;	main.c:187: if (key == 15) TR1 = 1;
-      000634 BA 0F 05         [24] 1615 	cjne	r2,#0x0f,00114$
-      000637 BB 00 02         [24] 1616 	cjne	r3,#0x00,00114$
-                                   1617 ;	assignBit
-      00063A D2 8E            [12] 1618 	setb	_TR1
-      00063C                       1619 00114$:
-                                   1620 ;	main.c:190: if (isSetting) {
-      00063C ED               [12] 1621 	mov	a,r5
-      00063D 60 40            [24] 1622 	jz	00121$
-                                   1623 ;	main.c:192: if (key >= 0 && key <= 9)
-      00063F EB               [12] 1624 	mov	a,r3
-      000640 20 E7 2A         [24] 1625 	jb	acc.7,00116$
-      000643 C3               [12] 1626 	clr	c
-      000644 74 09            [12] 1627 	mov	a,#0x09
-      000646 9A               [12] 1628 	subb	a,r2
-      000647 74 80            [12] 1629 	mov	a,#(0x00 ^ 0x80)
-      000649 8B F0            [24] 1630 	mov	b,r3
-      00064B 63 F0 80         [24] 1631 	xrl	b,#0x80
-      00064E 95 F0            [12] 1632 	subb	a,b
-      000650 40 1B            [24] 1633 	jc	00116$
-                                   1634 ;	main.c:193: num[index++] = key;
-      000652 AE*40            [24] 1635 	mov	r6,_main_index_65538_43
-      000654 AF*41            [24] 1636 	mov	r7,(_main_index_65538_43 + 1)
-      000656 05*40            [12] 1637 	inc	_main_index_65538_43
-      000658 E4               [12] 1638 	clr	a
-      000659 B5*40 02         [24] 1639 	cjne	a,_main_index_65538_43,00260$
-      00065C 05*41            [12] 1640 	inc	(_main_index_65538_43 + 1)
-      00065E                       1641 00260$:
-      00065E EE               [12] 1642 	mov	a,r6
-      00065F 2E               [12] 1643 	add	a,r6
-      000660 FE               [12] 1644 	mov	r6,a
-      000661 EF               [12] 1645 	mov	a,r7
-      000662 33               [12] 1646 	rlc	a
-      000663 FF               [12] 1647 	mov	r7,a
-      000664 EE               [12] 1648 	mov	a,r6
-      000665 24r1A            [12] 1649 	add	a,#_main_num_65537_42
-      000667 F8               [12] 1650 	mov	r0,a
-      000668 A6 02            [24] 1651 	mov	@r0,ar2
-      00066A 08               [12] 1652 	inc	r0
-      00066B A6 03            [24] 1653 	mov	@r0,ar3
-      00066D                       1654 00116$:
-                                   1655 ;	main.c:194: if (index == 4) index = 0;
-      00066D 74 04            [12] 1656 	mov	a,#0x04
-      00066F B5*40 06         [24] 1657 	cjne	a,_main_index_65538_43,00261$
-      000672 E4               [12] 1658 	clr	a
-      000673 B5*41 02         [24] 1659 	cjne	a,(_main_index_65538_43 + 1),00261$
-      000676 80 02            [24] 1660 	sjmp	00262$
-      000678                       1661 00261$:
-      000678 80 05            [24] 1662 	sjmp	00121$
-      00067A                       1663 00262$:
-      00067A E4               [12] 1664 	clr	a
-      00067B F5*40            [12] 1665 	mov	_main_index_65538_43,a
-      00067D F5*41            [12] 1666 	mov	(_main_index_65538_43 + 1),a
-      00067F                       1667 00121$:
-                                   1668 ;	main.c:197: if (setting_bi_time) {
-      00067F EC               [12] 1669 	mov	a,r4
-      000680 60 40            [24] 1670 	jz	00130$
-                                   1671 ;	main.c:198: if (key >= 0 && key <= 9)
-      000682 EB               [12] 1672 	mov	a,r3
-      000683 20 E7 2A         [24] 1673 	jb	acc.7,00123$
-      000686 C3               [12] 1674 	clr	c
-      000687 74 09            [12] 1675 	mov	a,#0x09
-      000689 9A               [12] 1676 	subb	a,r2
-      00068A 74 80            [12] 1677 	mov	a,#(0x00 ^ 0x80)
-      00068C 8B F0            [24] 1678 	mov	b,r3
-      00068E 63 F0 80         [24] 1679 	xrl	b,#0x80
-      000691 95 F0            [12] 1680 	subb	a,b
-      000693 40 1B            [24] 1681 	jc	00123$
-                                   1682 ;	main.c:199: num_bi[index++] = key;
-      000695 AE*40            [24] 1683 	mov	r6,_main_index_65538_43
-      000697 AF*41            [24] 1684 	mov	r7,(_main_index_65538_43 + 1)
-      000699 05*40            [12] 1685 	inc	_main_index_65538_43
-      00069B E4               [12] 1686 	clr	a
-      00069C B5*40 02         [24] 1687 	cjne	a,_main_index_65538_43,00266$
-      00069F 05*41            [12] 1688 	inc	(_main_index_65538_43 + 1)
-      0006A1                       1689 00266$:
-      0006A1 EE               [12] 1690 	mov	a,r6
-      0006A2 2E               [12] 1691 	add	a,r6
-      0006A3 FE               [12] 1692 	mov	r6,a
-      0006A4 EF               [12] 1693 	mov	a,r7
-      0006A5 33               [12] 1694 	rlc	a
-      0006A6 FF               [12] 1695 	mov	r7,a
-      0006A7 EE               [12] 1696 	mov	a,r6
-      0006A8 24r22            [12] 1697 	add	a,#_main_num_bi_65537_42
-      0006AA F8               [12] 1698 	mov	r0,a
-      0006AB A6 02            [24] 1699 	mov	@r0,ar2
-      0006AD 08               [12] 1700 	inc	r0
-      0006AE A6 03            [24] 1701 	mov	@r0,ar3
-      0006B0                       1702 00123$:
-                                   1703 ;	main.c:200: if (index == 4) index = 0;
-      0006B0 74 04            [12] 1704 	mov	a,#0x04
-      0006B2 B5*40 06         [24] 1705 	cjne	a,_main_index_65538_43,00267$
-      0006B5 E4               [12] 1706 	clr	a
-      0006B6 B5*41 02         [24] 1707 	cjne	a,(_main_index_65538_43 + 1),00267$
-      0006B9 80 02            [24] 1708 	sjmp	00268$
-      0006BB                       1709 00267$:
-      0006BB 80 05            [24] 1710 	sjmp	00130$
-      0006BD                       1711 00268$:
-      0006BD E4               [12] 1712 	clr	a
-      0006BE F5*40            [12] 1713 	mov	_main_index_65538_43,a
-      0006C0 F5*41            [12] 1714 	mov	(_main_index_65538_43 + 1),a
-      0006C2                       1715 00130$:
-                                   1716 ;	main.c:204: if (!isSetting && !setting_bi_time) {
-      0006C2 ED               [12] 1717 	mov	a,r5
-      0006C3 70 14            [24] 1718 	jnz	00133$
-      0006C5 EC               [12] 1719 	mov	a,r4
-      0006C6 70 11            [24] 1720 	jnz	00133$
-                                   1721 ;	main.c:205: run_clock(num);
-      0006C8 90r00r1A         [24] 1722 	mov	dptr,#_main_num_65537_42
-      0006CB 75 F0 40         [24] 1723 	mov	b,#0x40
-      0006CE C0 05            [24] 1724 	push	ar5
-      0006D0 C0 04            [24] 1725 	push	ar4
-      0006D2 12r00r00         [24] 1726 	lcall	_run_clock
-      0006D5 D0 04            [24] 1727 	pop	ar4
-      0006D7 D0 05            [24] 1728 	pop	ar5
-      0006D9                       1729 00133$:
-                                   1730 ;	main.c:207: row++;
-      0006D9 05*16            [12] 1731 	inc	_main_row_65537_42
-      0006DB E4               [12] 1732 	clr	a
-      0006DC B5*16 02         [24] 1733 	cjne	a,_main_row_65537_42,00271$
-      0006DF 05*17            [12] 1734 	inc	(_main_row_65537_42 + 1)
-      0006E1                       1735 00271$:
-                                   1736 ;	main.c:208: if (count == 0x10) {	//用count從上往下掃 
-      0006E1 74 10            [12] 1737 	mov	a,#0x10
-      0006E3 B5*18 06         [24] 1738 	cjne	a,_main_count_65537_42,00272$
-      0006E6 E4               [12] 1739 	clr	a
-      0006E7 B5*19 02         [24] 1740 	cjne	a,(_main_count_65537_42 + 1),00272$
-      0006EA 80 02            [24] 1741 	sjmp	00273$
-      0006EC                       1742 00272$:
-      0006EC 80 0A            [24] 1743 	sjmp	00136$
-      0006EE                       1744 00273$:
-                                   1745 ;	main.c:209: count = 1;
-      0006EE 75*18 01         [24] 1746 	mov	_main_count_65537_42,#0x01
-                                   1747 ;	main.c:210: row   = 0;
-      0006F1 E4               [12] 1748 	clr	a
-      0006F2 F5*19            [12] 1749 	mov	(_main_count_65537_42 + 1),a
-      0006F4 F5*16            [12] 1750 	mov	_main_row_65537_42,a
-      0006F6 F5*17            [12] 1751 	mov	(_main_row_65537_42 + 1),a
-      0006F8                       1752 00136$:
-                                   1753 ;	main.c:213: if (setting_bi_time || isSetting)
-      0006F8 EC               [12] 1754 	mov	a,r4
-      0006F9 70 03            [24] 1755 	jnz	00140$
-      0006FB ED               [12] 1756 	mov	a,r5
-      0006FC 60 59            [24] 1757 	jz	00141$
-      0006FE                       1758 00140$:
-                                   1759 ;	main.c:214: if (isSetting)
-      0006FE ED               [12] 1760 	mov	a,r5
-      0006FF 60 2B            [24] 1761 	jz	00138$
-                                   1762 ;	main.c:215: display(alpha, num, 1, flash_flag);
-      000701 75*00r1A         [24] 1763 	mov	_display_PARM_2,#_main_num_65537_42
-      000704 75*01 00         [24] 1764 	mov	(_display_PARM_2 + 1),#0x00
-      000707 75*02 40         [24] 1765 	mov	(_display_PARM_2 + 2),#0x40
-      00070A 75*03 01         [24] 1766 	mov	_display_PARM_3,#0x01
-      00070D 85*42*04         [24] 1767 	mov	_display_PARM_4,_main_flash_flag_65538_43
-      000710 85*43*05         [24] 1768 	mov	(_display_PARM_4 + 1),(_main_flash_flag_65538_43 + 1)
-      000713 85*44*06         [24] 1769 	mov	(_display_PARM_4 + 2),(_main_flash_flag_65538_43 + 2)
-      000716 85*45*07         [24] 1770 	mov	(_display_PARM_4 + 3),(_main_flash_flag_65538_43 + 3)
-      000719 90r00r2A         [24] 1771 	mov	dptr,#_main_alpha_65537_42
-      00071C 75 F0 40         [24] 1772 	mov	b,#0x40
-      00071F C0 05            [24] 1773 	push	ar5
-      000721 C0 04            [24] 1774 	push	ar4
-      000723 12r02r2F         [24] 1775 	lcall	_display
-      000726 D0 04            [24] 1776 	pop	ar4
-      000728 D0 05            [24] 1777 	pop	ar5
-      00072A 80 54            [24] 1778 	sjmp	00142$
-      00072C                       1779 00138$:
-                                   1780 ;	main.c:217: display(alpha, num_bi, 1, flash_flag);
-      00072C 75*00r22         [24] 1781 	mov	_display_PARM_2,#_main_num_bi_65537_42
-      00072F 75*01 00         [24] 1782 	mov	(_display_PARM_2 + 1),#0x00
-      000732 75*02 40         [24] 1783 	mov	(_display_PARM_2 + 2),#0x40
-      000735 75*03 01         [24] 1784 	mov	_display_PARM_3,#0x01
-      000738 85*42*04         [24] 1785 	mov	_display_PARM_4,_main_flash_flag_65538_43
-      00073B 85*43*05         [24] 1786 	mov	(_display_PARM_4 + 1),(_main_flash_flag_65538_43 + 1)
-      00073E 85*44*06         [24] 1787 	mov	(_display_PARM_4 + 2),(_main_flash_flag_65538_43 + 2)
-      000741 85*45*07         [24] 1788 	mov	(_display_PARM_4 + 3),(_main_flash_flag_65538_43 + 3)
-      000744 90r00r2A         [24] 1789 	mov	dptr,#_main_alpha_65537_42
-      000747 75 F0 40         [24] 1790 	mov	b,#0x40
-      00074A C0 05            [24] 1791 	push	ar5
-      00074C C0 04            [24] 1792 	push	ar4
-      00074E 12r02r2F         [24] 1793 	lcall	_display
-      000751 D0 04            [24] 1794 	pop	ar4
-      000753 D0 05            [24] 1795 	pop	ar5
-      000755 80 29            [24] 1796 	sjmp	00142$
-      000757                       1797 00141$:
-                                   1798 ;	main.c:219: display(alpha, num, 0, flash_flag);
-      000757 75*00r1A         [24] 1799 	mov	_display_PARM_2,#_main_num_65537_42
-      00075A 75*01 00         [24] 1800 	mov	(_display_PARM_2 + 1),#0x00
-      00075D 75*02 40         [24] 1801 	mov	(_display_PARM_2 + 2),#0x40
-      000760 75*03 00         [24] 1802 	mov	_display_PARM_3,#0x00
-      000763 85*42*04         [24] 1803 	mov	_display_PARM_4,_main_flash_flag_65538_43
-      000766 85*43*05         [24] 1804 	mov	(_display_PARM_4 + 1),(_main_flash_flag_65538_43 + 1)
-      000769 85*44*06         [24] 1805 	mov	(_display_PARM_4 + 2),(_main_flash_flag_65538_43 + 2)
-      00076C 85*45*07         [24] 1806 	mov	(_display_PARM_4 + 3),(_main_flash_flag_65538_43 + 3)
-      00076F 90r00r2A         [24] 1807 	mov	dptr,#_main_alpha_65537_42
-      000772 75 F0 40         [24] 1808 	mov	b,#0x40
-      000775 C0 05            [24] 1809 	push	ar5
-      000777 C0 04            [24] 1810 	push	ar4
-      000779 12r02r2F         [24] 1811 	lcall	_display
-      00077C D0 04            [24] 1812 	pop	ar4
-      00077E D0 05            [24] 1813 	pop	ar5
-      000780                       1814 00142$:
-                                   1815 ;	main.c:220: check_sound_trigger(num, num_bi);
-      000780 75*00r22         [24] 1816 	mov	_check_sound_trigger_PARM_2,#_main_num_bi_65537_42
-      000783 75*01 00         [24] 1817 	mov	(_check_sound_trigger_PARM_2 + 1),#0x00
-      000786 75*02 40         [24] 1818 	mov	(_check_sound_trigger_PARM_2 + 2),#0x40
-      000789 90r00r1A         [24] 1819 	mov	dptr,#_main_num_65537_42
-      00078C 75 F0 40         [24] 1820 	mov	b,#0x40
-      00078F C0 05            [24] 1821 	push	ar5
-      000791 C0 04            [24] 1822 	push	ar4
-      000793 12r03rDD         [24] 1823 	lcall	_check_sound_trigger
-      000796 D0 04            [24] 1824 	pop	ar4
-      000798 D0 05            [24] 1825 	pop	ar5
-                                   1826 ;	main.c:224: }
-      00079A 02r05r9D         [24] 1827 	ljmp	00145$
-                                   1828 	.area CSEG    (CODE)
-                                   1829 	.area CONST   (CODE)
-      000000                       1830 _table_LED:
-      000000 01 00                 1831 	.byte #0x01, #0x00	;  1
-      000002 01 00                 1832 	.byte #0x01, #0x00	;  1
-      000004 01 00                 1833 	.byte #0x01, #0x00	;  1
-      000006 00 00                 1834 	.byte #0x00, #0x00	;  0
-      000008 01 00                 1835 	.byte #0x01, #0x00	;  1
-      00000A 01 00                 1836 	.byte #0x01, #0x00	;  1
-      00000C 00 00                 1837 	.byte #0x00, #0x00	;  0
-      00000E 01 00                 1838 	.byte #0x01, #0x00	;  1
-      000010 01 00                 1839 	.byte #0x01, #0x00	;  1
-      000012 00 00                 1840 	.byte #0x00, #0x00	;  0
-      000014 01 00                 1841 	.byte #0x01, #0x00	;  1
-      000016 01 00                 1842 	.byte #0x01, #0x00	;  1
-      000018 00 00                 1843 	.byte #0x00, #0x00	;  0
-      00001A 01 00                 1844 	.byte #0x01, #0x00	;  1
-      00001C 01 00                 1845 	.byte #0x01, #0x00	;  1
-      00001E 01 00                 1846 	.byte #0x01, #0x00	;  1
-      000020                       1847 _music:
-      000020 01 00                 1848 	.byte #0x01, #0x00	;  1
-      000022 01 00                 1849 	.byte #0x01, #0x00	;  1
-      000024 05 00                 1850 	.byte #0x05, #0x00	;  5
-      000026 05 00                 1851 	.byte #0x05, #0x00	;  5
-      000028 06 00                 1852 	.byte #0x06, #0x00	;  6
-      00002A 06 00                 1853 	.byte #0x06, #0x00	;  6
-      00002C 05 00                 1854 	.byte #0x05, #0x00	;  5
-      00002E 04 00                 1855 	.byte #0x04, #0x00	;  4
-      000030 04 00                 1856 	.byte #0x04, #0x00	;  4
-      000032 03 00                 1857 	.byte #0x03, #0x00	;  3
-      000034 03 00                 1858 	.byte #0x03, #0x00	;  3
-      000036 02 00                 1859 	.byte #0x02, #0x00	;  2
-      000038 02 00                 1860 	.byte #0x02, #0x00	;  2
-      00003A 01 00                 1861 	.byte #0x01, #0x00	;  1
-      00003C 05 00                 1862 	.byte #0x05, #0x00	;  5
-      00003E 05 00                 1863 	.byte #0x05, #0x00	;  5
-      000040 04 00                 1864 	.byte #0x04, #0x00	;  4
-      000042 04 00                 1865 	.byte #0x04, #0x00	;  4
-      000044 03 00                 1866 	.byte #0x03, #0x00	;  3
-      000046 03 00                 1867 	.byte #0x03, #0x00	;  3
-      000048 02 00                 1868 	.byte #0x02, #0x00	;  2
-      00004A 05 00                 1869 	.byte #0x05, #0x00	;  5
-      00004C 05 00                 1870 	.byte #0x05, #0x00	;  5
-      00004E 04 00                 1871 	.byte #0x04, #0x00	;  4
-      000050 04 00                 1872 	.byte #0x04, #0x00	;  4
-      000052 03 00                 1873 	.byte #0x03, #0x00	;  3
-      000054 03 00                 1874 	.byte #0x03, #0x00	;  3
-      000056 02 00                 1875 	.byte #0x02, #0x00	;  2
-      000058 01 00                 1876 	.byte #0x01, #0x00	;  1
-      00005A 01 00                 1877 	.byte #0x01, #0x00	;  1
-      00005C 05 00                 1878 	.byte #0x05, #0x00	;  5
-      00005E 05 00                 1879 	.byte #0x05, #0x00	;  5
-      000060 06 00                 1880 	.byte #0x06, #0x00	;  6
-      000062 06 00                 1881 	.byte #0x06, #0x00	;  6
-      000064 05 00                 1882 	.byte #0x05, #0x00	;  5
-      000066 04 00                 1883 	.byte #0x04, #0x00	;  4
-      000068 04 00                 1884 	.byte #0x04, #0x00	;  4
-      00006A 03 00                 1885 	.byte #0x03, #0x00	;  3
-      00006C 03 00                 1886 	.byte #0x03, #0x00	;  3
-      00006E 02 00                 1887 	.byte #0x02, #0x00	;  2
-      000070 02 00                 1888 	.byte #0x02, #0x00	;  2
-      000072 01 00                 1889 	.byte #0x01, #0x00	;  1
-                                   1890 	.area XINIT   (CODE)
-                                   1891 	.area CABS    (ABS,CODE)
+                                   1588 ;	main.c:173: if (key == 10) {
+      00060C BA 0A 0A         [24] 1589 	cjne	r2,#0x0a,00104$
+      00060F BB 00 07         [24] 1590 	cjne	r3,#0x00,00104$
+                                   1591 ;	main.c:174: index = 0;
+      000612 E4               [12] 1592 	clr	a
+      000613 F5*40            [12] 1593 	mov	_main_index_65538_43,a
+      000615 F5*41            [12] 1594 	mov	(_main_index_65538_43 + 1),a
+                                   1595 ;	main.c:175: isSetting = true;
+      000617 7D 01            [12] 1596 	mov	r5,#0x01
+      000619                       1597 00104$:
+                                   1598 ;	main.c:177: if (key == 11) isSetting = false;
+      000619 BA 0B 05         [24] 1599 	cjne	r2,#0x0b,00106$
+      00061C BB 00 02         [24] 1600 	cjne	r3,#0x00,00106$
+      00061F 7D 00            [12] 1601 	mov	r5,#0x00
+      000621                       1602 00106$:
+                                   1603 ;	main.c:178: if (key == 12) {
+      000621 BA 0C 0A         [24] 1604 	cjne	r2,#0x0c,00108$
+      000624 BB 00 07         [24] 1605 	cjne	r3,#0x00,00108$
+                                   1606 ;	main.c:179: index = 0;
+      000627 E4               [12] 1607 	clr	a
+      000628 F5*40            [12] 1608 	mov	_main_index_65538_43,a
+      00062A F5*41            [12] 1609 	mov	(_main_index_65538_43 + 1),a
+                                   1610 ;	main.c:180: setting_bi_time = true;
+      00062C 7C 01            [12] 1611 	mov	r4,#0x01
+      00062E                       1612 00108$:
+                                   1613 ;	main.c:182: if (key == 13) setting_bi_time = false;
+      00062E BA 0D 05         [24] 1614 	cjne	r2,#0x0d,00110$
+      000631 BB 00 02         [24] 1615 	cjne	r3,#0x00,00110$
+      000634 7C 00            [12] 1616 	mov	r4,#0x00
+      000636                       1617 00110$:
+                                   1618 ;	main.c:183: if (key == 14) TR1 = 0;
+      000636 BA 0E 05         [24] 1619 	cjne	r2,#0x0e,00112$
+      000639 BB 00 02         [24] 1620 	cjne	r3,#0x00,00112$
+                                   1621 ;	assignBit
+      00063C C2 8E            [12] 1622 	clr	_TR1
+      00063E                       1623 00112$:
+                                   1624 ;	main.c:184: if (key == 15) TR1 = 1;
+      00063E BA 0F 05         [24] 1625 	cjne	r2,#0x0f,00114$
+      000641 BB 00 02         [24] 1626 	cjne	r3,#0x00,00114$
+                                   1627 ;	assignBit
+      000644 D2 8E            [12] 1628 	setb	_TR1
+      000646                       1629 00114$:
+                                   1630 ;	main.c:187: if (isSetting) {
+      000646 ED               [12] 1631 	mov	a,r5
+      000647 60 40            [24] 1632 	jz	00121$
+                                   1633 ;	main.c:189: if (key >= 0 && key <= 9)
+      000649 EB               [12] 1634 	mov	a,r3
+      00064A 20 E7 2A         [24] 1635 	jb	acc.7,00116$
+      00064D C3               [12] 1636 	clr	c
+      00064E 74 09            [12] 1637 	mov	a,#0x09
+      000650 9A               [12] 1638 	subb	a,r2
+      000651 74 80            [12] 1639 	mov	a,#(0x00 ^ 0x80)
+      000653 8B F0            [24] 1640 	mov	b,r3
+      000655 63 F0 80         [24] 1641 	xrl	b,#0x80
+      000658 95 F0            [12] 1642 	subb	a,b
+      00065A 40 1B            [24] 1643 	jc	00116$
+                                   1644 ;	main.c:190: num[index++] = key;
+      00065C AE*40            [24] 1645 	mov	r6,_main_index_65538_43
+      00065E AF*41            [24] 1646 	mov	r7,(_main_index_65538_43 + 1)
+      000660 05*40            [12] 1647 	inc	_main_index_65538_43
+      000662 E4               [12] 1648 	clr	a
+      000663 B5*40 02         [24] 1649 	cjne	a,_main_index_65538_43,00260$
+      000666 05*41            [12] 1650 	inc	(_main_index_65538_43 + 1)
+      000668                       1651 00260$:
+      000668 EE               [12] 1652 	mov	a,r6
+      000669 2E               [12] 1653 	add	a,r6
+      00066A FE               [12] 1654 	mov	r6,a
+      00066B EF               [12] 1655 	mov	a,r7
+      00066C 33               [12] 1656 	rlc	a
+      00066D FF               [12] 1657 	mov	r7,a
+      00066E EE               [12] 1658 	mov	a,r6
+      00066F 24r1A            [12] 1659 	add	a,#_main_num_65537_42
+      000671 F8               [12] 1660 	mov	r0,a
+      000672 A6 02            [24] 1661 	mov	@r0,ar2
+      000674 08               [12] 1662 	inc	r0
+      000675 A6 03            [24] 1663 	mov	@r0,ar3
+      000677                       1664 00116$:
+                                   1665 ;	main.c:191: if (index == 4) index = 0;
+      000677 74 04            [12] 1666 	mov	a,#0x04
+      000679 B5*40 06         [24] 1667 	cjne	a,_main_index_65538_43,00261$
+      00067C E4               [12] 1668 	clr	a
+      00067D B5*41 02         [24] 1669 	cjne	a,(_main_index_65538_43 + 1),00261$
+      000680 80 02            [24] 1670 	sjmp	00262$
+      000682                       1671 00261$:
+      000682 80 05            [24] 1672 	sjmp	00121$
+      000684                       1673 00262$:
+      000684 E4               [12] 1674 	clr	a
+      000685 F5*40            [12] 1675 	mov	_main_index_65538_43,a
+      000687 F5*41            [12] 1676 	mov	(_main_index_65538_43 + 1),a
+      000689                       1677 00121$:
+                                   1678 ;	main.c:194: if (setting_bi_time) {
+      000689 EC               [12] 1679 	mov	a,r4
+      00068A 60 40            [24] 1680 	jz	00130$
+                                   1681 ;	main.c:195: if (key >= 0 && key <= 9)
+      00068C EB               [12] 1682 	mov	a,r3
+      00068D 20 E7 2A         [24] 1683 	jb	acc.7,00123$
+      000690 C3               [12] 1684 	clr	c
+      000691 74 09            [12] 1685 	mov	a,#0x09
+      000693 9A               [12] 1686 	subb	a,r2
+      000694 74 80            [12] 1687 	mov	a,#(0x00 ^ 0x80)
+      000696 8B F0            [24] 1688 	mov	b,r3
+      000698 63 F0 80         [24] 1689 	xrl	b,#0x80
+      00069B 95 F0            [12] 1690 	subb	a,b
+      00069D 40 1B            [24] 1691 	jc	00123$
+                                   1692 ;	main.c:196: num_bi[index++] = key;
+      00069F AE*40            [24] 1693 	mov	r6,_main_index_65538_43
+      0006A1 AF*41            [24] 1694 	mov	r7,(_main_index_65538_43 + 1)
+      0006A3 05*40            [12] 1695 	inc	_main_index_65538_43
+      0006A5 E4               [12] 1696 	clr	a
+      0006A6 B5*40 02         [24] 1697 	cjne	a,_main_index_65538_43,00266$
+      0006A9 05*41            [12] 1698 	inc	(_main_index_65538_43 + 1)
+      0006AB                       1699 00266$:
+      0006AB EE               [12] 1700 	mov	a,r6
+      0006AC 2E               [12] 1701 	add	a,r6
+      0006AD FE               [12] 1702 	mov	r6,a
+      0006AE EF               [12] 1703 	mov	a,r7
+      0006AF 33               [12] 1704 	rlc	a
+      0006B0 FF               [12] 1705 	mov	r7,a
+      0006B1 EE               [12] 1706 	mov	a,r6
+      0006B2 24r22            [12] 1707 	add	a,#_main_num_bi_65537_42
+      0006B4 F8               [12] 1708 	mov	r0,a
+      0006B5 A6 02            [24] 1709 	mov	@r0,ar2
+      0006B7 08               [12] 1710 	inc	r0
+      0006B8 A6 03            [24] 1711 	mov	@r0,ar3
+      0006BA                       1712 00123$:
+                                   1713 ;	main.c:197: if (index == 4) index = 0;
+      0006BA 74 04            [12] 1714 	mov	a,#0x04
+      0006BC B5*40 06         [24] 1715 	cjne	a,_main_index_65538_43,00267$
+      0006BF E4               [12] 1716 	clr	a
+      0006C0 B5*41 02         [24] 1717 	cjne	a,(_main_index_65538_43 + 1),00267$
+      0006C3 80 02            [24] 1718 	sjmp	00268$
+      0006C5                       1719 00267$:
+      0006C5 80 05            [24] 1720 	sjmp	00130$
+      0006C7                       1721 00268$:
+      0006C7 E4               [12] 1722 	clr	a
+      0006C8 F5*40            [12] 1723 	mov	_main_index_65538_43,a
+      0006CA F5*41            [12] 1724 	mov	(_main_index_65538_43 + 1),a
+      0006CC                       1725 00130$:
+                                   1726 ;	main.c:201: if (!isSetting && !setting_bi_time) {
+      0006CC ED               [12] 1727 	mov	a,r5
+      0006CD 70 14            [24] 1728 	jnz	00133$
+      0006CF EC               [12] 1729 	mov	a,r4
+      0006D0 70 11            [24] 1730 	jnz	00133$
+                                   1731 ;	main.c:202: run_clock(num);
+      0006D2 90r00r1A         [24] 1732 	mov	dptr,#_main_num_65537_42
+      0006D5 75 F0 40         [24] 1733 	mov	b,#0x40
+      0006D8 C0 05            [24] 1734 	push	ar5
+      0006DA C0 04            [24] 1735 	push	ar4
+      0006DC 12r00r00         [24] 1736 	lcall	_run_clock
+      0006DF D0 04            [24] 1737 	pop	ar4
+      0006E1 D0 05            [24] 1738 	pop	ar5
+      0006E3                       1739 00133$:
+                                   1740 ;	main.c:204: row++;
+      0006E3 05*16            [12] 1741 	inc	_main_row_65537_42
+      0006E5 E4               [12] 1742 	clr	a
+      0006E6 B5*16 02         [24] 1743 	cjne	a,_main_row_65537_42,00271$
+      0006E9 05*17            [12] 1744 	inc	(_main_row_65537_42 + 1)
+      0006EB                       1745 00271$:
+                                   1746 ;	main.c:205: if (count == 0x10) {	//用count從上往下掃 
+      0006EB 74 10            [12] 1747 	mov	a,#0x10
+      0006ED B5*18 06         [24] 1748 	cjne	a,_main_count_65537_42,00272$
+      0006F0 E4               [12] 1749 	clr	a
+      0006F1 B5*19 02         [24] 1750 	cjne	a,(_main_count_65537_42 + 1),00272$
+      0006F4 80 02            [24] 1751 	sjmp	00273$
+      0006F6                       1752 00272$:
+      0006F6 80 0A            [24] 1753 	sjmp	00136$
+      0006F8                       1754 00273$:
+                                   1755 ;	main.c:206: count = 1;
+      0006F8 75*18 01         [24] 1756 	mov	_main_count_65537_42,#0x01
+                                   1757 ;	main.c:207: row   = 0;
+      0006FB E4               [12] 1758 	clr	a
+      0006FC F5*19            [12] 1759 	mov	(_main_count_65537_42 + 1),a
+      0006FE F5*16            [12] 1760 	mov	_main_row_65537_42,a
+      000700 F5*17            [12] 1761 	mov	(_main_row_65537_42 + 1),a
+      000702                       1762 00136$:
+                                   1763 ;	main.c:210: P1_0 = 1;
+                                   1764 ;	assignBit
+      000702 D2 90            [12] 1765 	setb	_P1_0
+                                   1766 ;	main.c:211: P1_1 = 1;
+                                   1767 ;	assignBit
+      000704 D2 91            [12] 1768 	setb	_P1_1
+                                   1769 ;	main.c:212: P1_2 = 1;
+                                   1770 ;	assignBit
+      000706 D2 92            [12] 1771 	setb	_P1_2
+                                   1772 ;	main.c:213: P1_3 = 1;
+                                   1773 ;	assignBit
+      000708 D2 93            [12] 1774 	setb	_P1_3
+                                   1775 ;	main.c:215: if (setting_bi_time || isSetting)
+      00070A EC               [12] 1776 	mov	a,r4
+      00070B 70 03            [24] 1777 	jnz	00140$
+      00070D ED               [12] 1778 	mov	a,r5
+      00070E 60 59            [24] 1779 	jz	00141$
+      000710                       1780 00140$:
+                                   1781 ;	main.c:216: if (isSetting)
+      000710 ED               [12] 1782 	mov	a,r5
+      000711 60 2B            [24] 1783 	jz	00138$
+                                   1784 ;	main.c:217: display(alpha, num, 1, flash_flag);
+      000713 75*00r1A         [24] 1785 	mov	_display_PARM_2,#_main_num_65537_42
+      000716 75*01 00         [24] 1786 	mov	(_display_PARM_2 + 1),#0x00
+      000719 75*02 40         [24] 1787 	mov	(_display_PARM_2 + 2),#0x40
+      00071C 75*03 01         [24] 1788 	mov	_display_PARM_3,#0x01
+      00071F 85*42*04         [24] 1789 	mov	_display_PARM_4,_main_flash_flag_65538_43
+      000722 85*43*05         [24] 1790 	mov	(_display_PARM_4 + 1),(_main_flash_flag_65538_43 + 1)
+      000725 85*44*06         [24] 1791 	mov	(_display_PARM_4 + 2),(_main_flash_flag_65538_43 + 2)
+      000728 85*45*07         [24] 1792 	mov	(_display_PARM_4 + 3),(_main_flash_flag_65538_43 + 3)
+      00072B 90r00r2A         [24] 1793 	mov	dptr,#_main_alpha_65537_42
+      00072E 75 F0 40         [24] 1794 	mov	b,#0x40
+      000731 C0 05            [24] 1795 	push	ar5
+      000733 C0 04            [24] 1796 	push	ar4
+      000735 12r02r2F         [24] 1797 	lcall	_display
+      000738 D0 04            [24] 1798 	pop	ar4
+      00073A D0 05            [24] 1799 	pop	ar5
+      00073C 80 54            [24] 1800 	sjmp	00142$
+      00073E                       1801 00138$:
+                                   1802 ;	main.c:219: display(alpha, num_bi, 1, flash_flag);
+      00073E 75*00r22         [24] 1803 	mov	_display_PARM_2,#_main_num_bi_65537_42
+      000741 75*01 00         [24] 1804 	mov	(_display_PARM_2 + 1),#0x00
+      000744 75*02 40         [24] 1805 	mov	(_display_PARM_2 + 2),#0x40
+      000747 75*03 01         [24] 1806 	mov	_display_PARM_3,#0x01
+      00074A 85*42*04         [24] 1807 	mov	_display_PARM_4,_main_flash_flag_65538_43
+      00074D 85*43*05         [24] 1808 	mov	(_display_PARM_4 + 1),(_main_flash_flag_65538_43 + 1)
+      000750 85*44*06         [24] 1809 	mov	(_display_PARM_4 + 2),(_main_flash_flag_65538_43 + 2)
+      000753 85*45*07         [24] 1810 	mov	(_display_PARM_4 + 3),(_main_flash_flag_65538_43 + 3)
+      000756 90r00r2A         [24] 1811 	mov	dptr,#_main_alpha_65537_42
+      000759 75 F0 40         [24] 1812 	mov	b,#0x40
+      00075C C0 05            [24] 1813 	push	ar5
+      00075E C0 04            [24] 1814 	push	ar4
+      000760 12r02r2F         [24] 1815 	lcall	_display
+      000763 D0 04            [24] 1816 	pop	ar4
+      000765 D0 05            [24] 1817 	pop	ar5
+      000767 80 29            [24] 1818 	sjmp	00142$
+      000769                       1819 00141$:
+                                   1820 ;	main.c:221: display(alpha, num, 0, flash_flag);
+      000769 75*00r1A         [24] 1821 	mov	_display_PARM_2,#_main_num_65537_42
+      00076C 75*01 00         [24] 1822 	mov	(_display_PARM_2 + 1),#0x00
+      00076F 75*02 40         [24] 1823 	mov	(_display_PARM_2 + 2),#0x40
+      000772 75*03 00         [24] 1824 	mov	_display_PARM_3,#0x00
+      000775 85*42*04         [24] 1825 	mov	_display_PARM_4,_main_flash_flag_65538_43
+      000778 85*43*05         [24] 1826 	mov	(_display_PARM_4 + 1),(_main_flash_flag_65538_43 + 1)
+      00077B 85*44*06         [24] 1827 	mov	(_display_PARM_4 + 2),(_main_flash_flag_65538_43 + 2)
+      00077E 85*45*07         [24] 1828 	mov	(_display_PARM_4 + 3),(_main_flash_flag_65538_43 + 3)
+      000781 90r00r2A         [24] 1829 	mov	dptr,#_main_alpha_65537_42
+      000784 75 F0 40         [24] 1830 	mov	b,#0x40
+      000787 C0 05            [24] 1831 	push	ar5
+      000789 C0 04            [24] 1832 	push	ar4
+      00078B 12r02r2F         [24] 1833 	lcall	_display
+      00078E D0 04            [24] 1834 	pop	ar4
+      000790 D0 05            [24] 1835 	pop	ar5
+      000792                       1836 00142$:
+                                   1837 ;	main.c:222: check_sound_trigger(num, num_bi);
+      000792 75*00r22         [24] 1838 	mov	_check_sound_trigger_PARM_2,#_main_num_bi_65537_42
+      000795 75*01 00         [24] 1839 	mov	(_check_sound_trigger_PARM_2 + 1),#0x00
+      000798 75*02 40         [24] 1840 	mov	(_check_sound_trigger_PARM_2 + 2),#0x40
+      00079B 90r00r1A         [24] 1841 	mov	dptr,#_main_num_65537_42
+      00079E 75 F0 40         [24] 1842 	mov	b,#0x40
+      0007A1 C0 05            [24] 1843 	push	ar5
+      0007A3 C0 04            [24] 1844 	push	ar4
+      0007A5 12r03rDD         [24] 1845 	lcall	_check_sound_trigger
+      0007A8 D0 04            [24] 1846 	pop	ar4
+      0007AA D0 05            [24] 1847 	pop	ar5
+                                   1848 ;	main.c:224: }
+      0007AC 02r05r9D         [24] 1849 	ljmp	00145$
+                                   1850 	.area CSEG    (CODE)
+                                   1851 	.area CONST   (CODE)
+      000000                       1852 _table_LED:
+      000000 01 00                 1853 	.byte #0x01, #0x00	;  1
+      000002 01 00                 1854 	.byte #0x01, #0x00	;  1
+      000004 01 00                 1855 	.byte #0x01, #0x00	;  1
+      000006 00 00                 1856 	.byte #0x00, #0x00	;  0
+      000008 01 00                 1857 	.byte #0x01, #0x00	;  1
+      00000A 01 00                 1858 	.byte #0x01, #0x00	;  1
+      00000C 00 00                 1859 	.byte #0x00, #0x00	;  0
+      00000E 01 00                 1860 	.byte #0x01, #0x00	;  1
+      000010 01 00                 1861 	.byte #0x01, #0x00	;  1
+      000012 00 00                 1862 	.byte #0x00, #0x00	;  0
+      000014 01 00                 1863 	.byte #0x01, #0x00	;  1
+      000016 01 00                 1864 	.byte #0x01, #0x00	;  1
+      000018 00 00                 1865 	.byte #0x00, #0x00	;  0
+      00001A 01 00                 1866 	.byte #0x01, #0x00	;  1
+      00001C 01 00                 1867 	.byte #0x01, #0x00	;  1
+      00001E 01 00                 1868 	.byte #0x01, #0x00	;  1
+      000020                       1869 _music:
+      000020 01 00                 1870 	.byte #0x01, #0x00	;  1
+      000022 01 00                 1871 	.byte #0x01, #0x00	;  1
+      000024 05 00                 1872 	.byte #0x05, #0x00	;  5
+      000026 05 00                 1873 	.byte #0x05, #0x00	;  5
+      000028 06 00                 1874 	.byte #0x06, #0x00	;  6
+      00002A 06 00                 1875 	.byte #0x06, #0x00	;  6
+      00002C 05 00                 1876 	.byte #0x05, #0x00	;  5
+      00002E 04 00                 1877 	.byte #0x04, #0x00	;  4
+      000030 04 00                 1878 	.byte #0x04, #0x00	;  4
+      000032 03 00                 1879 	.byte #0x03, #0x00	;  3
+      000034 03 00                 1880 	.byte #0x03, #0x00	;  3
+      000036 02 00                 1881 	.byte #0x02, #0x00	;  2
+      000038 02 00                 1882 	.byte #0x02, #0x00	;  2
+      00003A 01 00                 1883 	.byte #0x01, #0x00	;  1
+      00003C 05 00                 1884 	.byte #0x05, #0x00	;  5
+      00003E 05 00                 1885 	.byte #0x05, #0x00	;  5
+      000040 04 00                 1886 	.byte #0x04, #0x00	;  4
+      000042 04 00                 1887 	.byte #0x04, #0x00	;  4
+      000044 03 00                 1888 	.byte #0x03, #0x00	;  3
+      000046 03 00                 1889 	.byte #0x03, #0x00	;  3
+      000048 02 00                 1890 	.byte #0x02, #0x00	;  2
+      00004A 05 00                 1891 	.byte #0x05, #0x00	;  5
+      00004C 05 00                 1892 	.byte #0x05, #0x00	;  5
+      00004E 04 00                 1893 	.byte #0x04, #0x00	;  4
+      000050 04 00                 1894 	.byte #0x04, #0x00	;  4
+      000052 03 00                 1895 	.byte #0x03, #0x00	;  3
+      000054 03 00                 1896 	.byte #0x03, #0x00	;  3
+      000056 02 00                 1897 	.byte #0x02, #0x00	;  2
+      000058 01 00                 1898 	.byte #0x01, #0x00	;  1
+      00005A 01 00                 1899 	.byte #0x01, #0x00	;  1
+      00005C 05 00                 1900 	.byte #0x05, #0x00	;  5
+      00005E 05 00                 1901 	.byte #0x05, #0x00	;  5
+      000060 06 00                 1902 	.byte #0x06, #0x00	;  6
+      000062 06 00                 1903 	.byte #0x06, #0x00	;  6
+      000064 05 00                 1904 	.byte #0x05, #0x00	;  5
+      000066 04 00                 1905 	.byte #0x04, #0x00	;  4
+      000068 04 00                 1906 	.byte #0x04, #0x00	;  4
+      00006A 03 00                 1907 	.byte #0x03, #0x00	;  3
+      00006C 03 00                 1908 	.byte #0x03, #0x00	;  3
+      00006E 02 00                 1909 	.byte #0x02, #0x00	;  2
+      000070 02 00                 1910 	.byte #0x02, #0x00	;  2
+      000072 01 00                 1911 	.byte #0x01, #0x00	;  1
+                                   1912 	.area XINIT   (CODE)
+                                   1913 	.area CABS    (ABS,CODE)

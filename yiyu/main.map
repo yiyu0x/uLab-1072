@@ -80,9 +80,9 @@ C:   00000096  l_SSEG
 C:   000000B1  s_GSFINAL                       
 C:   000000B4  s_CSEG                          
 C:   00000100  l_IRAM                          
-C:   00000B0C  l_CSEG                          
-C:   00000BC0  s_CONST                         
-C:   00000C34  s_XINIT                         
+C:   00000B1E  l_CSEG                          
+C:   00000BD2  s_CONST                         
+C:   00000C46  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -348,7 +348,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                000000B4    00000B0C =        2828. bytes (REL,CON,CODE)
+CSEG                                000000B4    00000B1E =        2846. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -360,38 +360,38 @@ C:   000002E3  _display                           main
 C:   00000491  _check_sound_trigger               main
 C:   000004F3  _init                              main
 C:   000005C4  _main                              main
-C:   00000851  ___fsmul                           _fsmul
-C:   000008F4  fsgetargs                          _fsget2args
-C:   00000922  fs_normalize_a                     _fsnormalize
-C:   00000955  __gptrput                          _gptrput
-C:   00000970  ___sint2fs                         _sint2fs
-C:   0000097D  ___fs2sint                         _fs2sint
-C:   000009B1  fs_round_and_return                _fsreturnval
-C:   000009C9  fs_zerocheck_return                _fsreturnval
-C:   000009D2  fs_return_zero                     _fsreturnval
-C:   000009DA  fs_direct_return                   _fsreturnval
-C:   000009E8  fs_return_inf                      _fsreturnval
-C:   000009F5  fs_return_nan                      _fsreturnval
-C:   00000A00  ___fsdiv                           _fsdiv
-C:   00000AC3  __gptrget                          _gptrget
-C:   00000ADF  ___slong2fs                        _slong2fs
-C:   00000AE8  slong2fs_doit                      _slong2fs
-C:   00000B0C  ___fs2slong                        _fs2slong
-C:   00000B67  __sdcc_external_startup            _startup
-C:   00000B6B  fsgetarg                           _fsget1arg
-C:   00000B7D  fs_rshift_a                        _fsrshift
+C:   00000863  ___fsmul                           _fsmul
+C:   00000906  fsgetargs                          _fsget2args
+C:   00000934  fs_normalize_a                     _fsnormalize
+C:   00000967  __gptrput                          _gptrput
+C:   00000982  ___sint2fs                         _sint2fs
+C:   0000098F  ___fs2sint                         _fs2sint
+C:   000009C3  fs_round_and_return                _fsreturnval
+C:   000009DB  fs_zerocheck_return                _fsreturnval
+C:   000009E4  fs_return_zero                     _fsreturnval
+C:   000009EC  fs_direct_return                   _fsreturnval
+C:   000009FA  fs_return_inf                      _fsreturnval
+C:   00000A07  fs_return_nan                      _fsreturnval
+C:   00000A12  ___fsdiv                           _fsdiv
+C:   00000AD5  __gptrget                          _gptrget
+C:   00000AF1  ___slong2fs                        _slong2fs
+C:   00000AFA  slong2fs_doit                      _slong2fs
+C:   00000B1E  ___fs2slong                        _fs2slong
+C:   00000B79  __sdcc_external_startup            _startup
+C:   00000B7D  fsgetarg                           _fsget1arg
+C:   00000B8F  fs_rshift_a                        _fsrshift
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00000BC0    00000074 =         116. bytes (REL,CON,CODE)
+CONST                               00000BD2    00000074 =         116. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000BC0  _table_LED                         main
-C:   00000BE0  _music                             main
+C:   00000BD2  _table_LED                         main
+C:   00000BF2  _music                             main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
 

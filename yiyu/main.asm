@@ -1252,7 +1252,7 @@ _check_sound_trigger:
 ;	assignBit
 	setb	_TR1
 00107$:
-;	main.c:105: }
+;	main.c:104: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'init'
@@ -1261,16 +1261,16 @@ _check_sound_trigger:
 ;i                         Allocated to registers r6 r7 
 ;i                         Allocated to registers r6 r7 
 ;------------------------------------------------------------
-;	main.c:111: void init(){
+;	main.c:106: void init(){
 ;	-----------------------------------------
 ;	 function init
 ;	-----------------------------------------
 _init:
-;	main.c:112: music_index=0;
+;	main.c:107: music_index=0;
 	clr	a
 	mov	_music_index,a
 	mov	(_music_index + 1),a
-;	main.c:114: for(int i=7;i<16;i++){
+;	main.c:109: for(int i=7;i<16;i++){
 	mov	r6,#0x07
 	mov	r7,#0x00
 00104$:
@@ -1281,7 +1281,7 @@ _init:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jnc	00101$
-;	main.c:115: table[i]=table[i-7]*2;
+;	main.c:110: table[i]=table[i-7]*2;
 	mov	a,r6
 	add	a,r6
 	mov	r4,a
@@ -1310,13 +1310,13 @@ _init:
 	inc	r1
 	mov	@r1,ar5
 	dec	r1
-;	main.c:114: for(int i=7;i<16;i++){
+;	main.c:109: for(int i=7;i<16;i++){
 	inc	r6
 	cjne	r6,#0x00,00104$
 	inc	r7
 	sjmp	00104$
 00101$:
-;	main.c:117: for(int i=0;i<16;i++){
+;	main.c:112: for(int i=0;i<16;i++){
 	mov	r6,#0x00
 	mov	r7,#0x00
 00107$:
@@ -1329,7 +1329,7 @@ _init:
 	jc	00131$
 	ret
 00131$:
-;	main.c:118: tmp=1.0/table[i]*1000000;
+;	main.c:113: tmp=1.0/table[i]*1000000;
 	mov	a,r6
 	add	a,r6
 	mov	r4,a
@@ -1380,7 +1380,7 @@ _init:
 	mov	a,sp
 	add	a,#0xfc
 	mov	sp,a
-;	main.c:119: table[i]=tmp;
+;	main.c:114: table[i]=tmp;
 	mov	dpl,r2
 	mov	dph,r3
 	mov	b,r4
@@ -1395,12 +1395,12 @@ _init:
 	inc	r1
 	mov	@r1,b
 	dec	r1
-;	main.c:117: for(int i=0;i<16;i++){
+;	main.c:112: for(int i=0;i<16;i++){
 	inc	r6
 	cjne	r6,#0x00,00132$
 	inc	r7
 00132$:
-;	main.c:121: }
+;	main.c:116: }
 	ljmp	00107$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
@@ -1418,41 +1418,41 @@ _init:
 ;setting_bi_time           Allocated to registers r4 
 ;key                       Allocated to registers r2 r3 
 ;------------------------------------------------------------
-;	main.c:123: int main() {
+;	main.c:118: int main() {
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:124: init();
+;	main.c:119: init();
 	lcall	_init
-;	main.c:135: P1_5=0;
+;	main.c:130: P1_5=0;
 ;	assignBit
 	clr	_P1_5
-;	main.c:137: EA = 1;
+;	main.c:132: EA = 1;
 ;	assignBit
 	setb	_EA
-;	main.c:138: TMOD = 0b00010001;
+;	main.c:133: TMOD = 0b00010001;
 	mov	_TMOD,#0x11
-;	main.c:139: IE   = 0x8A;
+;	main.c:134: IE   = 0x8A;
 	mov	_IE,#0x8a
-;	main.c:140: TR0  = 1;	//timer 0 control bit
+;	main.c:135: TR0  = 1;	//timer 0 control bit
 ;	assignBit
 	setb	_TR0
-;	main.c:141: TR1  = 0;	//speaker timer 1 control bit
+;	main.c:136: TR1  = 0;	//speaker timer 1 control bit
 ;	assignBit
 	clr	_TR1
-;	main.c:143: short previous = -1;
+;	main.c:138: short previous = -1;
 	mov	_main_previous_65537_42,#0xff
 	mov	(_main_previous_65537_42 + 1),#0xff
-;	main.c:144: short row = 0;
+;	main.c:139: short row = 0;
 	clr	a
 	mov	_main_row_65537_42,a
 	mov	(_main_row_65537_42 + 1),a
-;	main.c:145: short count = 1;
+;	main.c:140: short count = 1;
 	mov	_main_count_65537_42,#0x01
 ;	1-genFromRTrack replaced	mov	(_main_count_65537_42 + 1),#0x00
 	mov	(_main_count_65537_42 + 1),a
-;	main.c:146: short num[4] = {0};
+;	main.c:141: short num[4] = {0};
 	mov	(_main_num_65537_42 + 0),a
 	mov	(_main_num_65537_42 + 1),a
 	mov	((_main_num_65537_42 + 0x0002) + 0),a
@@ -1461,7 +1461,7 @@ _main:
 	mov	((_main_num_65537_42 + 0x0004) + 1),a
 	mov	((_main_num_65537_42 + 0x0006) + 0),a
 	mov	((_main_num_65537_42 + 0x0006) + 1),a
-;	main.c:147: short num_bi[4] = {-1};
+;	main.c:142: short num_bi[4] = {-1};
 	mov	(_main_num_bi_65537_42 + 0),#0xff
 	mov	(_main_num_bi_65537_42 + 1),#0xff
 	mov	((_main_num_bi_65537_42 + 0x0002) + 0),a
@@ -1470,7 +1470,7 @@ _main:
 	mov	((_main_num_bi_65537_42 + 0x0004) + 1),a
 	mov	((_main_num_bi_65537_42 + 0x0006) + 0),a
 	mov	((_main_num_bi_65537_42 + 0x0006) + 1),a
-;	main.c:148: const short alpha[11] = {
+;	main.c:143: const short alpha[11] = {
 	mov	(_main_alpha_65537_42 + 0),#0x03
 ;	1-genFromRTrack replaced	mov	(_main_alpha_65537_42 + 1),#0x00
 	mov	(_main_alpha_65537_42 + 1),a
@@ -1504,23 +1504,23 @@ _main:
 	mov	((_main_alpha_65537_42 + 0x0014) + 0),#0xff
 ;	1-genFromRTrack replaced	mov	((_main_alpha_65537_42 + 0x0014) + 1),#0x00
 	mov	((_main_alpha_65537_42 + 0x0014) + 1),a
-;	main.c:162: P0 = 0b00001111;
+;	main.c:157: P0 = 0b00001111;
 	mov	_P0,#0x0f
-;	main.c:163: short index = 0;
+;	main.c:158: short index = 0;
 	mov	_main_index_65538_43,a
 	mov	(_main_index_65538_43 + 1),a
-;	main.c:164: long flash_flag = 0;
+;	main.c:159: long flash_flag = 0;
 	mov	_main_flash_flag_65538_43,a
 	mov	(_main_flash_flag_65538_43 + 1),a
 	mov	(_main_flash_flag_65538_43 + 2),a
 	mov	(_main_flash_flag_65538_43 + 3),a
-;	main.c:165: bool isSetting = false;
+;	main.c:160: bool isSetting = false;
 	mov	r5,#0x00
-;	main.c:167: bool setting_bi_time = false;
+;	main.c:162: bool setting_bi_time = false;
 	mov	r4,#0x00
-;	main.c:168: while (1) {
+;	main.c:163: while (1) {
 00145$:
-;	main.c:169: flash_flag++;
+;	main.c:164: flash_flag++;
 	inc	_main_flash_flag_65538_43
 	clr	a
 	cjne	a,_main_flash_flag_65538_43,00241$
@@ -1530,7 +1530,7 @@ _main:
 	cjne	a,(_main_flash_flag_65538_43 + 2),00241$
 	inc	(_main_flash_flag_65538_43 + 3)
 00241$:
-;	main.c:170: if (flash_flag >= 8000)  // 頻率
+;	main.c:165: if (flash_flag >= 8000)  // 頻率
 	clr	c
 	mov	a,_main_flash_flag_65538_43
 	subb	a,#0x40
@@ -1542,26 +1542,26 @@ _main:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jc	00102$
-;	main.c:171: flash_flag = 0;
+;	main.c:166: flash_flag = 0;
 	clr	a
 	mov	_main_flash_flag_65538_43,a
 	mov	(_main_flash_flag_65538_43 + 1),a
 	mov	(_main_flash_flag_65538_43 + 2),a
 	mov	(_main_flash_flag_65538_43 + 3),a
 00102$:
-;	main.c:172: P0     =count^0b11111111;
+;	main.c:167: P0     =count^0b11111111;
 	mov	a,#0xff
 	xrl	a,_main_count_65537_42
 	mov	r2,a
 	mov	_P0,r2
-;	main.c:173: count *=2; //shift
+;	main.c:168: count *=2; //shift
 	mov	a,_main_count_65537_42
 	add	a,_main_count_65537_42
 	mov	_main_count_65537_42,a
 	mov	a,(_main_count_65537_42 + 1)
 	rlc	a
 	mov	(_main_count_65537_42 + 1),a
-;	main.c:174: short key = keyPressed(row);
+;	main.c:169: short key = keyPressed(row);
 	mov	dpl,_main_row_65537_42
 	mov	dph,(_main_row_65537_42 + 1)
 	push	ar5
@@ -1571,7 +1571,7 @@ _main:
 	mov	r3,dph
 	pop	ar4
 	pop	ar5
-;	main.c:175: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
+;	main.c:170: if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
 	mov	a,r2
 	cjne	a,_main_previous_65537_42,00243$
 	mov	a,r3
@@ -1582,45 +1582,55 @@ _main:
 	cjne	r3,#0xff,00244$
 	ljmp	00130$
 00244$:
-;	main.c:176: previous = key;
+;	main.c:171: previous = key;
 	mov	_main_previous_65537_42,r2
 	mov	(_main_previous_65537_42 + 1),r3
-;	main.c:182: if (key == 10) isSetting = true;
+;	main.c:173: if (key == 10) {
 	cjne	r2,#0x0a,00104$
 	cjne	r3,#0x00,00104$
+;	main.c:174: index = 0;
+	clr	a
+	mov	_main_index_65538_43,a
+	mov	(_main_index_65538_43 + 1),a
+;	main.c:175: isSetting = true;
 	mov	r5,#0x01
 00104$:
-;	main.c:183: if (key == 11) isSetting = false;
+;	main.c:177: if (key == 11) isSetting = false;
 	cjne	r2,#0x0b,00106$
 	cjne	r3,#0x00,00106$
 	mov	r5,#0x00
 00106$:
-;	main.c:184: if (key == 12) setting_bi_time = true;
+;	main.c:178: if (key == 12) {
 	cjne	r2,#0x0c,00108$
 	cjne	r3,#0x00,00108$
+;	main.c:179: index = 0;
+	clr	a
+	mov	_main_index_65538_43,a
+	mov	(_main_index_65538_43 + 1),a
+;	main.c:180: setting_bi_time = true;
 	mov	r4,#0x01
 00108$:
-;	main.c:185: if (key == 13) setting_bi_time = false;
+;	main.c:182: if (key == 13) setting_bi_time = false;
 	cjne	r2,#0x0d,00110$
 	cjne	r3,#0x00,00110$
 	mov	r4,#0x00
 00110$:
-;	main.c:186: if (key == 14) TR1 = 0;
+;	main.c:183: if (key == 14) TR1 = 0;
 	cjne	r2,#0x0e,00112$
 	cjne	r3,#0x00,00112$
 ;	assignBit
 	clr	_TR1
 00112$:
-;	main.c:187: if (key == 15) TR1 = 1;
+;	main.c:184: if (key == 15) TR1 = 1;
 	cjne	r2,#0x0f,00114$
 	cjne	r3,#0x00,00114$
 ;	assignBit
 	setb	_TR1
 00114$:
-;	main.c:190: if (isSetting) {
+;	main.c:187: if (isSetting) {
 	mov	a,r5
 	jz	00121$
-;	main.c:192: if (key >= 0 && key <= 9)
+;	main.c:189: if (key >= 0 && key <= 9)
 	mov	a,r3
 	jb	acc.7,00116$
 	clr	c
@@ -1631,7 +1641,7 @@ _main:
 	xrl	b,#0x80
 	subb	a,b
 	jc	00116$
-;	main.c:193: num[index++] = key;
+;	main.c:190: num[index++] = key;
 	mov	r6,_main_index_65538_43
 	mov	r7,(_main_index_65538_43 + 1)
 	inc	_main_index_65538_43
@@ -1652,7 +1662,7 @@ _main:
 	inc	r0
 	mov	@r0,ar3
 00116$:
-;	main.c:194: if (index == 4) index = 0;
+;	main.c:191: if (index == 4) index = 0;
 	mov	a,#0x04
 	cjne	a,_main_index_65538_43,00261$
 	clr	a
@@ -1665,10 +1675,10 @@ _main:
 	mov	_main_index_65538_43,a
 	mov	(_main_index_65538_43 + 1),a
 00121$:
-;	main.c:197: if (setting_bi_time) {
+;	main.c:194: if (setting_bi_time) {
 	mov	a,r4
 	jz	00130$
-;	main.c:198: if (key >= 0 && key <= 9)
+;	main.c:195: if (key >= 0 && key <= 9)
 	mov	a,r3
 	jb	acc.7,00123$
 	clr	c
@@ -1679,7 +1689,7 @@ _main:
 	xrl	b,#0x80
 	subb	a,b
 	jc	00123$
-;	main.c:199: num_bi[index++] = key;
+;	main.c:196: num_bi[index++] = key;
 	mov	r6,_main_index_65538_43
 	mov	r7,(_main_index_65538_43 + 1)
 	inc	_main_index_65538_43
@@ -1700,7 +1710,7 @@ _main:
 	inc	r0
 	mov	@r0,ar3
 00123$:
-;	main.c:200: if (index == 4) index = 0;
+;	main.c:197: if (index == 4) index = 0;
 	mov	a,#0x04
 	cjne	a,_main_index_65538_43,00267$
 	clr	a
@@ -1713,12 +1723,12 @@ _main:
 	mov	_main_index_65538_43,a
 	mov	(_main_index_65538_43 + 1),a
 00130$:
-;	main.c:204: if (!isSetting && !setting_bi_time) {
+;	main.c:201: if (!isSetting && !setting_bi_time) {
 	mov	a,r5
 	jnz	00133$
 	mov	a,r4
 	jnz	00133$
-;	main.c:205: run_clock(num);
+;	main.c:202: run_clock(num);
 	mov	dptr,#_main_num_65537_42
 	mov	b,#0x40
 	push	ar5
@@ -1727,13 +1737,13 @@ _main:
 	pop	ar4
 	pop	ar5
 00133$:
-;	main.c:207: row++;
+;	main.c:204: row++;
 	inc	_main_row_65537_42
 	clr	a
 	cjne	a,_main_row_65537_42,00271$
 	inc	(_main_row_65537_42 + 1)
 00271$:
-;	main.c:208: if (count == 0x10) {	//用count從上往下掃 
+;	main.c:205: if (count == 0x10) {	//用count從上往下掃 
 	mov	a,#0x10
 	cjne	a,_main_count_65537_42,00272$
 	clr	a
@@ -1742,24 +1752,36 @@ _main:
 00272$:
 	sjmp	00136$
 00273$:
-;	main.c:209: count = 1;
+;	main.c:206: count = 1;
 	mov	_main_count_65537_42,#0x01
-;	main.c:210: row   = 0;
+;	main.c:207: row   = 0;
 	clr	a
 	mov	(_main_count_65537_42 + 1),a
 	mov	_main_row_65537_42,a
 	mov	(_main_row_65537_42 + 1),a
 00136$:
-;	main.c:213: if (setting_bi_time || isSetting)
+;	main.c:210: P1_0 = 1;
+;	assignBit
+	setb	_P1_0
+;	main.c:211: P1_1 = 1;
+;	assignBit
+	setb	_P1_1
+;	main.c:212: P1_2 = 1;
+;	assignBit
+	setb	_P1_2
+;	main.c:213: P1_3 = 1;
+;	assignBit
+	setb	_P1_3
+;	main.c:215: if (setting_bi_time || isSetting)
 	mov	a,r4
 	jnz	00140$
 	mov	a,r5
 	jz	00141$
 00140$:
-;	main.c:214: if (isSetting)
+;	main.c:216: if (isSetting)
 	mov	a,r5
 	jz	00138$
-;	main.c:215: display(alpha, num, 1, flash_flag);
+;	main.c:217: display(alpha, num, 1, flash_flag);
 	mov	_display_PARM_2,#_main_num_65537_42
 	mov	(_display_PARM_2 + 1),#0x00
 	mov	(_display_PARM_2 + 2),#0x40
@@ -1777,7 +1799,7 @@ _main:
 	pop	ar5
 	sjmp	00142$
 00138$:
-;	main.c:217: display(alpha, num_bi, 1, flash_flag);
+;	main.c:219: display(alpha, num_bi, 1, flash_flag);
 	mov	_display_PARM_2,#_main_num_bi_65537_42
 	mov	(_display_PARM_2 + 1),#0x00
 	mov	(_display_PARM_2 + 2),#0x40
@@ -1795,7 +1817,7 @@ _main:
 	pop	ar5
 	sjmp	00142$
 00141$:
-;	main.c:219: display(alpha, num, 0, flash_flag);
+;	main.c:221: display(alpha, num, 0, flash_flag);
 	mov	_display_PARM_2,#_main_num_65537_42
 	mov	(_display_PARM_2 + 1),#0x00
 	mov	(_display_PARM_2 + 2),#0x40
@@ -1812,7 +1834,7 @@ _main:
 	pop	ar4
 	pop	ar5
 00142$:
-;	main.c:220: check_sound_trigger(num, num_bi);
+;	main.c:222: check_sound_trigger(num, num_bi);
 	mov	_check_sound_trigger_PARM_2,#_main_num_bi_65537_42
 	mov	(_check_sound_trigger_PARM_2 + 1),#0x00
 	mov	(_check_sound_trigger_PARM_2 + 2),#0x40

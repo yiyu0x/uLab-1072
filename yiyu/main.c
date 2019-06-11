@@ -101,12 +101,7 @@ void check_sound_trigger(short num[], short num_bi[]) {
 			return;
 	}  
 	TR1 = 1;
-	//
 }
-
-// void play() {
-// 	int i;
-// }
 
 void init(){
 	music_index=0;
@@ -174,14 +169,16 @@ int main() {
 		short key = keyPressed(row);
 		if (key != previous && key != -1) {	//有按且不等於上一按 => 處理debounce
 			previous = key;
-//			num[0] =num[1];
-//			num[1] =num[2];
-//			num[2] =num[3];			
-//			num[3] = key;	//往前推
 			// key == A, 設定模式
-			if (key == 10) isSetting = true;
+			if (key == 10) {
+				index = 0;
+				isSetting = true;
+			}
 			if (key == 11) isSetting = false;
-			if (key == 12) setting_bi_time = true;
+			if (key == 12) {
+				index = 0;
+				setting_bi_time = true;
+			}
 			if (key == 13) setting_bi_time = false;
 			if (key == 14) TR1 = 0;
 			if (key == 15) TR1 = 1;
@@ -210,6 +207,11 @@ int main() {
 			row   = 0;
 		}
 		//P1 = 0b11111111; // 讓頻率一致 閃爍時4個位置同步
+		P1_0 = 1;
+		P1_1 = 1;
+		P1_2 = 1;
+		P1_3 = 1;
+
 		if (setting_bi_time || isSetting)
 			if (isSetting)
 				display(alpha, num, 1, flash_flag);
@@ -218,7 +220,5 @@ int main() {
 		else
 			display(alpha, num, 0, flash_flag);
 		check_sound_trigger(num, num_bi);
-		// if (play_sound) play();
 	}
-
 }
