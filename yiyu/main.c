@@ -2,8 +2,21 @@
 #include <stdbool.h>
 #define PERIOD 65536
 // #define INIT_TIME 3036	//65536-62500
+const short table_LED[4][4] = {
+		{1, 1, 1, 0},
+		{1, 1, 0, 1},
+		{1, 0, 1, 1},
+		{0, 1, 1, 1}
+};
+// short counter_break_music = 0;
 short counter = 0;
-bool play_sound = false;
+short music_index = 0;
+short music_counter = 0;
+const short music[] = {1, 1, 5, 5, 6, 6, 5, 4, 4, 3, 3, 2, 2, 1,
+				5, 5, 4, 4, 3, 3, 2, 5, 5, 4, 4, 3, 3, 2,
+				1, 1, 5, 5, 6, 6, 5, 4, 4, 3, 3, 2, 2, 1};
+
+int table[] = {262, 294, 330, 349, 392, 440, 494};
 void run_clock(short num[]) {
 	if (counter >= 20) {
 		num[3]++;
@@ -29,13 +42,19 @@ void timer_isr (void) __interrupt (1) __using (1) {	//控制聲音頻率
 	// 0.05 秒被叫一次
 	// 0.05 * 20 = 1 -> counter == 20 -> 一秒
 	counter++;
-	// P1 = 0b11111111;
-	// P1_5 = !P1_5;
+	if (music_counter++ >= 20) {
+		music_index++;
+		if (music_index >= 42)
+			music_index = 0;
+		music_counter = 0;
+	}
 }
 
-void timer1 (void) __interrupt (3) __using (2) {	//換下一個音
-	TH1  = 15536 >> 8;
-	TL1  = 15536 & 0xff;
+void timer1 (void) __interrupt (3) __using (2) {	//頻率
+	TH1  = (PERIOD-table[music[music_index]-1]) >> 8;
+	TL1  = (PERIOD-table[music[music_index]-1]) & 0xff;
+	P1_5 = !P1_5;
+
 }
 
 
@@ -52,18 +71,24 @@ short keyPressed(short row) {
 	return -1;	//沒按 return -1
 }
 
-void display(short table[], short alpha[], short num[], bool isSetting, long flash_flag) {
+void display(short alpha[], short num[], bool isSetting, long flash_flag) {
 	if (isSetting) { // flashing
 		if (flash_flag > 7800) { // 頻率
 			for(short i = 0,t=1; i < 4; i++,t*=2) {
-				P1 = table[i];
+				P1_0 = table_LED[i][3];
+				P1_1 = table_LED[i][2];
+				P1_2 = table_LED[i][1];
+				P1_3 = table_LED[i][0];
 				P2 = alpha[num[i]];
 				for(int j = 0; j < 500; j++){}
 			}
 		}
 	} else {
 		for(short i = 0,t=1; i < 4; i++,t*=2) {
-			P1 = table[i];
+			P1_0 = table_LED[i][3];
+			P1_1 = table_LED[i][2];
+			P1_2 = table_LED[i][1];
+			P1_3 = table_LED[i][0];
 			P2 = alpha[num[i]];
 			for(int j = 0; j < 1000; j++){}
 		}
@@ -74,17 +99,29 @@ void check_sound_trigger(short num[], short num_bi[]) {
 	for (int i = 0; i < 4; i++) {
 		if (num[i] != num_bi[i]) 
 			return;
-	}
-	play_sound = true;	
+	}  
+	TR1 = 1;
 	//
-
 }
 
-void play() {
-	P1_5 = !P1_5;
+// void play() {
+// 	int i;
+// }
+
+void init(){
+	music_index=0;
+	float tmp;
+	for(int i=7;i<16;i++){
+		table[i]=table[i-7]*2;
+	}
+	for(int i=0;i<16;i++){
+		tmp=1.0/table[i]*1000000;
+		table[i]=tmp;
+	}
 }
 
 int main() {
+	init();
 	// P0 -> keyboard
 	// P1 -> 顯示器四選一
 	// p2 -> 顯示字母
@@ -101,7 +138,7 @@ int main() {
 	TMOD = 0b00010001;
 	IE   = 0x8A;
 	TR0  = 1;	//timer 0 control bit
-	TR1  = 1;	//timer 1 control bit
+	TR1  = 0;	//speaker timer 1 control bit
 
 	short previous = -1;
 	short row = 0;
@@ -121,12 +158,7 @@ int main() {
 		0b00001001,
 		0b11111111
 	};
-	const short table[4] = {
-		0b11111110,
-		0b11111101,
-		0b11111011,
-		0b11110111
-	};
+
 	P0 = 0b00001111;
 	short index = 0;
 	long flash_flag = 0;
@@ -146,12 +178,13 @@ int main() {
 //			num[1] =num[2];
 //			num[2] =num[3];			
 //			num[3] = key;	//往前推
-			 // key == A, 設定模式
+			// key == A, 設定模式
 			if (key == 10) isSetting = true;
 			if (key == 11) isSetting = false;
 			if (key == 12) setting_bi_time = true;
 			if (key == 13) setting_bi_time = false;
-			if (key == 14) play_sound = false;
+			if (key == 14) TR1 = 0;
+			if (key == 15) TR1 = 1;
 
 
 			if (isSetting) {
@@ -176,16 +209,16 @@ int main() {
 			count = 1;
 			row   = 0;
 		}
-		P1 = 0b11111111; // 讓頻率一致 閃爍時4個位置同步
+		//P1 = 0b11111111; // 讓頻率一致 閃爍時4個位置同步
 		if (setting_bi_time || isSetting)
 			if (isSetting)
-				display(table, alpha, num, 1, flash_flag);
+				display(alpha, num, 1, flash_flag);
 			else
-				display(table, alpha, num_bi, 1, flash_flag);
+				display(alpha, num_bi, 1, flash_flag);
 		else
-			display(table, alpha, num, 0, flash_flag);
+			display(alpha, num, 0, flash_flag);
 		check_sound_trigger(num, num_bi);
-		if (play_sound) play();
+		// if (play_sound) play();
 	}
 
 }

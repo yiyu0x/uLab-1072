@@ -11,7 +11,6 @@ C:   00000000  l_BIT_BANK
 C:   00000000  l_BSEG                          
 C:   00000000  l_BSEG_BYTES                    
 C:   00000000  l_CABS                          
-C:   00000000  l_CONST                         
 C:   00000000  l_GSINIT1                       
 C:   00000000  l_GSINIT5                       
 C:   00000000  l_IABS                          
@@ -42,14 +41,13 @@ C:   00000001  s_XISEG
 C:   00000001  s_XSEG                          
 C:   00000003  l_GSFINAL                       
 C:   00000003  l_GSINIT0                       
-C:   00000007  l_GSINIT                        
 C:   00000008  l_REG_BANK_0                    
 C:   00000008  l_REG_BANK_1                    
 C:   00000008  l_REG_BANK_2                    
 C:   00000008  s_REG_BANK_1                    
 C:   0000000A  l_GSINIT2                       
+C:   0000000C  l_OSEG                          
 C:   00000010  s_REG_BANK_2                    
-C:   00000012  l_OSEG                          
 C:   00000018  s_BIT_BANK                      
 C:   00000018  s_REG_BANK_3                    
 C:   00000020  s_BSEG_BYTES                    
@@ -57,6 +55,8 @@ C:   00000020  s__CODE
 C:   00000021  l_HOME                          
 C:   00000021  s_GSINIT0                       
 C:   00000022  l_GSINIT3                       
+C:   00000024  s_GSINIT1                       
+C:   00000024  s_GSINIT2                       
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
 
@@ -66,23 +66,23 @@ CABS                                00000000    00000000 =           0. bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000024  s_GSINIT1                       
-C:   00000024  s_GSINIT2                       
 C:   0000002A  l_GSINIT4                       
 C:   0000002E  s_GSINIT3                       
+C:   00000037  l_GSINIT                        
 C:   00000050  s_GSINIT4                       
-C:   00000055  s_OSEG                          
-C:   00000067  s_SSEG                          
+C:   0000005E  s_OSEG                          
+C:   0000006A  s_SSEG                          
+C:   00000074  l_CONST                         
 C:   0000007A  s_GSINIT                        
 C:   0000007A  s_GSINIT5                       
 C:   00000080  l_DSEG                          
-C:   00000081  s_GSFINAL                       
-C:   00000084  s_CSEG                          
-C:   00000099  l_SSEG                          
+C:   00000096  l_SSEG                          
+C:   000000B1  s_GSFINAL                       
+C:   000000B4  s_CSEG                          
 C:   00000100  l_IRAM                          
-C:   00000657  l_CSEG                          
-C:   000006DB  s_CONST                         
-C:   000006DB  s_XINIT                         
+C:   00000B0C  l_CSEG                          
+C:   00000BC0  s_CONST                         
+C:   00000C34  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -93,7 +93,7 @@ Area                                    Addr        Size        Decimal Bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000000  .__.ABS.                           _startup
+     00000000  .__.ABS.                           _fsrshift
      00000080  _P0                                main
      00000080  _P0_0                              main
      00000081  _P0_1                              main
@@ -241,33 +241,35 @@ DSEG                                00000000    00000080 =         128. bytes (R
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00000018  _counter                           main
-     0000001A  _play_sound                        main
+     0000001A  _music_index                       main
+     0000001C  _music_counter                     main
+     0000001E  _table                             main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                00000055    00000012 =          18. bytes (REL,OVR)
+OSEG                                0000005E    0000000C =          12. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000055  __gptrput_PARM_2                   _gptrput
-     00000055  _check_sound_trigger_PARM_2        main
-     00000055  _display_PARM_2                    main
-     00000058  _display_PARM_3                    main
-     0000005B  _display_PARM_4                    main
-     0000005C  _display_PARM_5                    main
+     0000005E  __gptrput_PARM_2                   _gptrput
+     0000005E  _check_sound_trigger_PARM_2        main
+     0000005E  _display_PARM_2                    main
+     00000061  _display_PARM_3                    main
+     00000062  _display_PARM_4                    main
+
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                00000067    00000099 =         153. bytes (REL,OVR)
+SSEG                                0000006A    00000096 =         150. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000067  __start__stack                     main
+     0000006A  __start__stack                     main
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
 Hexadecimal  [32-Bits]
@@ -328,7 +330,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT                              0000007A    00000007 =           7. bytes (REL,CON,CODE)
+GSINIT                              0000007A    00000037 =          55. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -337,7 +339,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             00000081    00000003 =           3. bytes (REL,CON,CODE)
+GSFINAL                             000000B1    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -346,23 +348,52 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000084    00000657 =        1623. bytes (REL,CON,CODE)
+CSEG                                000000B4    00000B0C =        2828. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000084  _run_clock                         main
-C:   000001A1  _timer_isr                         main
-C:   000001B8  _timer1                            main
-C:   000001BF  _keyPressed                        main
-C:   0000022E  _display                           main
-C:   00000373  _check_sound_trigger               main
-C:   000003D6  _play                              main
-C:   000003D9  _main                              main
-C:   000006A0  __gptrput                          _gptrput
-C:   000006BB  __gptrget                          _gptrget
-C:   000006D7  __sdcc_external_startup            _startup
+C:   000000B4  _run_clock                         main
+C:   000001D1  _timer_isr                         main
+C:   00000221  _timer1                            main
+C:   00000274  _keyPressed                        main
+C:   000002E3  _display                           main
+C:   00000491  _check_sound_trigger               main
+C:   000004F3  _init                              main
+C:   000005C4  _main                              main
+C:   00000851  ___fsmul                           _fsmul
+C:   000008F4  fsgetargs                          _fsget2args
+C:   00000922  fs_normalize_a                     _fsnormalize
+C:   00000955  __gptrput                          _gptrput
+C:   00000970  ___sint2fs                         _sint2fs
+C:   0000097D  ___fs2sint                         _fs2sint
+C:   000009B1  fs_round_and_return                _fsreturnval
+C:   000009C9  fs_zerocheck_return                _fsreturnval
+C:   000009D2  fs_return_zero                     _fsreturnval
+C:   000009DA  fs_direct_return                   _fsreturnval
+C:   000009E8  fs_return_inf                      _fsreturnval
+C:   000009F5  fs_return_nan                      _fsreturnval
+C:   00000A00  ___fsdiv                           _fsdiv
+C:   00000AC3  __gptrget                          _gptrget
+C:   00000ADF  ___slong2fs                        _slong2fs
+C:   00000AE8  slong2fs_doit                      _slong2fs
+C:   00000B0C  ___fs2slong                        _fs2slong
+C:   00000B67  __sdcc_external_startup            _startup
+C:   00000B6B  fsgetarg                           _fsget1arg
+C:   00000B7D  fs_rshift_a                        _fsrshift
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CONST                               00000BC0    00000074 =         116. bytes (REL,CON,CODE)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+C:   00000BC0  _table_LED                         main
+C:   00000BE0  _music                             main
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
 
 Files Linked                              [ module(s) ]
 
@@ -371,24 +402,46 @@ main.rel                                  [  ]
 
 Libraries Linked                          [ object file ]
 
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fsmul.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fsget2args.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtclear.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fsnormalize.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtxinit.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/libsdcc.lib
                                           [ _gptrput.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtxclear.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _sint2fs.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fs2sint.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fsreturnval.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtpagesfr.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fsdiv.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/mcs51.lib
                                           [ crtstart.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/libsdcc.lib
                                           [ _gptrget.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _slong2fs.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fs2slong.rel ]
 C:\Program Files\SDCC\bin\..\lib\small/libsdcc.lib
                                           [ _startup.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fsget1arg.rel ]
+C:\Program Files\SDCC\bin\..\lib\small/libfloat.lib
+                                          [ _fsrshift.rel ]
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 21.
 
 User Base Address Definitions
 
